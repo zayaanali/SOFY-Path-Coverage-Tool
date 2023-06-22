@@ -6,3 +6,15 @@
 .title{
     text-align: center;
 }
+
+.graph_request{
+    width: 50%;
+    float: right;
+    padding: 20px;
+    border: 2px solid red
+}
+
+.request_container{
+    border: 3px solid #fff;
+    padding: 20px;
+}

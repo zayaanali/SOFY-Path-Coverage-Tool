@@ -9,7 +9,38 @@
 </head>
 
 <body>
+        
+        <script type="module" src="script.js"></script>
         <h1 class="title">Welcome to SOFY Graph Coverage Tool</h1>
+
+
+        <div class="request-container">
+            <div class="graph-request">
+                <h3>Please upload your master file</h3>
+                <form action="master-request.php" method="post" enctype="multipart/form-data">
+                    <input type="file" name="master-graph" id="master-graph">
+                    <input type="submit" value="Upload File">
+                </form>
+            </div>
+            
+            <div class="graph-request">
+                <h3>Please upload your child file(s)</h3>
+                <form action="child-request.php" method="post" enctype="multipart/form-data">
+                    <input type="file" name="child-json" id="child-json">
+                    <input type="submit" value="Upload File">
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <h3>Actions</h3>
+            <div class="graph-actions">
+                <button>Generate Master Graph</button>
+                <button>Generate Coverage Graph</button>
+            </div>
+        </div>
+
+        
 </body>
 
 </html>
