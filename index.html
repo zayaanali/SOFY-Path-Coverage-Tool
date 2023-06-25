@@ -10,25 +10,22 @@
 
 <body>
         
-        <script type="module" src="script.js"></script>
-        <h1 class="title">Welcome to SOFY Graph Coverage Tool</h1>
+        <h1 class="title">SOFY Graph Coverage Tool</h1>
 
 
         <div class="request-container">
             <div class="graph-request">
                 <h3>Please upload your master file</h3>
-                <form action="master-request.php" method="post" enctype="multipart/form-data">
-                    <input type="file" name="master-graph" id="master-graph">
-                    <input type="submit" value="Upload File">
-                </form>
+                <input type="file" id="master-json" accept=".json" />
+                <p>Current Master JSON: </p>
+                <p id="master-display"></p>
             </div>
             
             <div class="graph-request">
                 <h3>Please upload your child file(s)</h3>
-                <form action="child-request.php" method="post" enctype="multipart/form-data">
-                    <input type="file" name="child-json" id="child-json">
-                    <input type="submit" value="Upload File">
-                </form>
+                <input type="file" id="child-json" multiple>
+                <p> Current Child File(s):</p>
+                <p id="child-display"></p>
             </div>
         </div>
 
@@ -40,6 +37,8 @@
             </div>
         </div>
 
+
+        <script src="script.js"></script>
         
 </body>
 
