@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "name": "sofy-path-coverage-tool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "methods.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zayaanali/SOFY-Path-Coverage-Tool.git"
+  },
+  "author": "Zayaan Ali",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zayaanali/SOFY-Path-Coverage-Tool/issues"
+  },
+  "homepage": "https://github.com/zayaanali/SOFY-Path-Coverage-Tool#readme",
+  "dependencies": {
+    "graphology": "^0.25.1",
+    "graphology-simple-path": "^0.2.0"
+  }
+}
