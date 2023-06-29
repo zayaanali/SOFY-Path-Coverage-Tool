@@ -18,3 +18,12 @@
     border: 3px solid #fff;
     padding: 20px;
 }
+
+
+#sigma-container {
+    width: 500px;
+    height: 500px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
