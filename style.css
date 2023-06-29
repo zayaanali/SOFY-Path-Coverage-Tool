@@ -20,7 +20,15 @@
 }
 
 
-#sigma-container {
+#master-graph-container {
+    width: 500px;
+    height: 500px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+#coverage-graph-container {
     width: 500px;
     height: 500px;
     margin: 0;

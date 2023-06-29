@@ -1,0 +1,14 @@
+{
+    "scenarioName": "hilton-test6-child",
+    "scenario": [
+        {   
+            "activityName"  : ".Home"
+        },
+        {   
+            "activityName"  : ".Sign In"
+        },
+        {   
+            "activityName"  : ".Forgot Password"
+        }
+    ]
+  }

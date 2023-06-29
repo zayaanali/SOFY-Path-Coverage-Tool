@@ -1,4 +1,4 @@
-import { buildGraph, getNotVisitedPaths } from './methods.js';
+import { buildGraph, getNotVisitedPaths, displayCoverageGraph } from './methods.js';
 
 var currentMasterStr='';
 var childListStr=[];
@@ -64,7 +64,19 @@ function generateCoverageGraph() {
 
     // get all paths that have not been visited
     var notVisitedPaths = getNotVisitedPaths(childJSONStr);
+    console.log(notVisitedPaths);
     
+    // unroll visited paths
+    var notVisitedEdges=[]
+    for (var paths of notVisitedPaths) {
+        for (edge of paths) {
+            if (!notVisitedEdges.includes(edge))
+                notVisitedEdges.push(edge);
+        }
+    }
+
+    // display coverage graph
+    displayCoverageGraph(notVisitedEdges);
     
     // make new graph with just paths that need to be visited
 
@@ -81,6 +93,8 @@ function generateCoverageGraph() {
 
 
 document.getElementById('generate-master').addEventListener('click', generateMasterGraph);
+document.getElementById('generate-coverage').addEventListener('click', generateCoverageGraph);
+
   
 document.getElementById('master-json').addEventListener('change', masterFileSelect);
 
