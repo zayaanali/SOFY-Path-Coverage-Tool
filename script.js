@@ -1,4 +1,4 @@
-import { buildGraph, getNotVisitedPaths, displayCoverageGraph } from './methods.js';
+import { buildGraph, getNotVisitedPaths, displayCoverageGraph, testFunction } from './methods.js';
 
 var currentMasterStr='';
 var childListStr=[];
@@ -46,16 +46,19 @@ function isValidJSON(str) {
 }
 
 function generateMasterGraph() {    
-    // Check if string is a valid JSON
-    if(!isValidJSON(masterJSONStr))
-        alert("Invalid JSON");
+    // // Check if string is a valid JSON
+    // if(!isValidJSON(masterJSONStr))
+    //     alert("Invalid JSON");
     
     
-    // Convert string to JSON object
-    var masterJSON = JSON.parse(masterJSONStr);
+    // // Convert string to JSON object
+    // var masterJSON = JSON.parse(masterJSONStr);
 
-    // Use JSON object to build the 
-    buildGraph(masterJSON);
+    // // Use JSON object to build the 
+    // buildGraph(masterJSON);
+
+    // run a test function
+    testFunction();
 
 }
 
@@ -64,20 +67,10 @@ function generateCoverageGraph() {
 
     // get all paths that have not been visited
     var notVisitedPaths = getNotVisitedPaths(childJSONStr);
-    console.log(notVisitedPaths);
-    
-    // unroll visited paths
-    var notVisitedEdges=[]
-    for (var paths of notVisitedPaths) {
-        for (edge of paths) {
-            if (!notVisitedEdges.includes(edge))
-                notVisitedEdges.push(edge);
-        }
-    }
-
+ 
     // display coverage graph
-    displayCoverageGraph(notVisitedEdges);
-    
+    displayCoverageGraph(notVisitedPaths);
+
     // make new graph with just paths that need to be visited
 
 
