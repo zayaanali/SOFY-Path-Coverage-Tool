@@ -1,180 +1,183 @@
+import { isValidJSON, getName, getImage } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
-import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
-import NodeProgramBorder from "./node.border";
 
 
 
-function getName(jsonArr, index) {
-    var fullName = jsonArr.scenario[index].activityName;
-    var lastPeriodIndex = fullName.lastIndexOf('.');
-    if (lastPeriodIndex==-1)
-        return fullName;
-    else
-        return fullName.substring(lastPeriodIndex + 1).trim();
-}
-
-function getImage(jsonArr, index) {
-    return jsonArr.scenario[index].snapshotLocation;
-}
-
-function buildGraph(jsonArr) {
+/*
+* This function takes in an array of nodes and builds a graph from it. Returns the built graph
+*/
+function buildGraph(nodeArr) {
 
     // Instantiate directed unweighted graph (using graphology library)
     var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
     
-
-   
-    // Connect each edge in the graph (using data from JSON)
-    const arrLength = jsonArr.scenario.length;
+    // Save length of the array
+    const arrLength = nodeArr.length;
     
     // Add all edges in the json arr to the 
     for (var i=0; i<arrLength;i++) {
-        // add the node and image first
-        // newGraph.mergeNode(getName(jsonArr, i), {image: getImage(jsonArr, index)});
+        // Add node and image. Check if image exists first
+        
+        // image does exist
+        if (nodeArr[i][1]!=null)
+            newGraph.mergeNode(nodeArr[i][0], { type: "image", image: nodeArr[i][1], size: 30 });
+        else
+            newGraph.mergeNode(nodeArr[i][0], { size: 30 });
+        
+        // if there is a node following attach an edge to it
         if (i+1<arrLength)
-            newGraph.mergeEdge(getName(jsonArr, i), getName(jsonArr, i+1));
+            newGraph.mergeEdge(nodeArr[i][0], nodeArr[i+1][0]);
     }
     
-    // store the master graph for use later
-    localStorage.setItem("masterGraph", JSON.stringify(newGraph.export()));
+    return newGraph;
     
-    const container = document.getElementById('master-graph-container');
-    circular.assign(newGraph);
-    const renderer = new Sigma(newGraph, container);
+
 }
 
 
-
-function getNotVisitedPaths(childJSONStr) {
+/*
+* This function takes a graph as well as list of child nodes and returns all of the
+* paths that have not been traversed yet from the start node (first node in the master)
+*/
+function getNotVisitedPaths(masterGraph, childNodes) {
+    
     // Get list of nodes in the master
     var masterNodes=[];
-    var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
-
     masterGraph.forEachNode((node, attributes) => {
         masterNodes.push(node);
-      });
+    });
 
-    // Get list of nodes in the child JSON (from array of strings)
-    var childNodes=[];
-    var arrLength, childJSON;
     
-    // for each child file given
-    for (var i=0; i<childJSONStr.length; i++) {
-        // check if JSON is valid
-        if(!isValidJSON(childJSONStr[i]))
-            alert("Invalid JSON");
-        
-        // iterate through each node and add to an array
-        childJSON = JSON.parse(childJSONStr[i]);
-        arrLength = childJSON.scenario.length;
-        for (var j=0; j<arrLength; j++) {
-            if (!childNodes.includes(getName(childJSON, j)))
-                childNodes.push(getName(childJSON, j));
-        }
-    }
-    ''
-    // Create list of nodes that have yet to be visited
-    var toVisitArr = masterNodes.filter(value => !childNodes.includes(value));
+    // Get list of nodes that have already been visited
+    var visitedNodes=[];
+    for (var tuple of childNodes)
+        if (!visitedNodes.includes(tuple[0]))
+            visitedNodes.push(tuple[0]);
+
+    // Create list of nodes that have yet to be visited. Get all nodes in master not present in child
+    var toVisitArr = masterNodes.filter(value => !visitedNodes.includes(value));
     
-    // all paths from each node to the target nodes, allpaths function
+    // find all paths from start node to all not visited nodes
     var notVisitedPaths=[]
     // for each nodes that needs to be visited
     for (var targetNode of toVisitArr) {
         var paths = allSimplePaths(masterGraph, masterNodes[0], targetNode);
-        
         for (var path of paths) {
             if (!notVisitedPaths.includes(path))
                 notVisitedPaths.push(path);
         }
-        
     }
-    // return the not visited paths
+
     return notVisitedPaths
 }
 
 
-/* Function to display graphs given edge array */
-function displayCoverageGraph(paths) {
- 
-    var coverageGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
-    for (var path of paths) {
-        for (var i=0; i<path[0].length; i++) {
-            if (i+1<path.length) {
-                // console.log(path[i], path[i+1]);
-                coverageGraph.mergeEdge(path[i], path[i+1]);} 
-        }
+/*
+* Takes JSON string and returns tuples containing the node and the image link associated with it 
+*/
+function parseJSON(jsonStr) {
+    
+    // array to return containing node/image tuples
+    var returnArr=[];
+    
+    // Check if the JSON string is a valid JSON
+    if (!isValidJSON(jsonStr))
+        alert("Invalid JSON");
+    
+    // parse the JSON to get it from string to JSON object    
+    var jsonArr = JSON.parse(jsonStr);
+
+    // Get number of nodes in the JSON
+    const arrLength = jsonArr.scenario.length;
+    
+    // Add all edges in the json arr to the 
+    for (var i=0; i<arrLength;i++) {
+        // add name and image tuple to array
+        returnArr.push([getName(jsonArr, i), getImage(jsonArr, i)]);
     }
-
-    const container = document.getElementById('coverage-graph-container');
-    circular.assign(coverageGraph);
-    const renderer = new Sigma(coverageGraph, container)
-
-}   
-
-function isValidJSON(str) {
-    try {
-      JSON.parse(str);
-      return true;
-    } catch (e) {
-      return false;
-    }
+    return returnArr;
 }
 
+/*
+ * Ignore - this function is used for testing purposes
+ */
 function testFunction() {
-    const container = document.getElementById("master-graph-container");
 
-    const graph = new Graph();
+    const testGraph = new Graph();
 
-    const RED = "#FA4F40";
-    const BLUE = "#727EE0";
-    const GREEN = "#5DB346";
-
-    graph.addNode("John", { size: 15, label: "John", type: "image", image: "./user.svg", color: RED });
-    graph.addNode("Mary", { size: 15, label: "Mary", type: "image", image: "./user.svg", color: RED });
-    graph.addNode("Suzan", { size: 15, label: "Suzan", type: "image", image: "./user.svg", color: RED });
-    graph.addNode("Nantes", { size: 15, label: "Nantes", type: "image", image: "./city.svg", color: BLUE });
-    graph.addNode("New-York", { size: 15, label: "New-York", type: "image", image: "./city.svg", color: BLUE });
-    graph.addNode("Sushis", { size: 7, label: "Sushis", type: "border", color: GREEN });
-    graph.addNode("Falafels", { size: 7, label: "Falafels", type: "border", color: GREEN });
-    graph.addNode("Kouign Amann", { size: 7, label: "Kouign Amann", type: "border", color: GREEN });
-
-    graph.addEdge("John", "Mary", { type: "line", label: "works with", size: 5 });
-    graph.addEdge("Mary", "Suzan", { type: "line", label: "works with", size: 5 });
-    graph.addEdge("Mary", "Nantes", { type: "arrow", label: "lives in", size: 5 });
-    graph.addEdge("John", "New-York", { type: "arrow", label: "lives in", size: 5 });
-    graph.addEdge("Suzan", "New-York", { type: "arrow", label: "lives in", size: 5 });
-    graph.addEdge("John", "Falafels", { type: "arrow", label: "eats", size: 5 });
-    graph.addEdge("Mary", "Sushis", { type: "arrow", label: "eats", size: 5 });
-    graph.addEdge("Suzan", "Kouign Amann", { type: "arrow", label: "eats", size: 5 });
-
-    graph.nodes().forEach((node, i) => {
-    const angle = (i * 2 * Math.PI) / graph.order;
-    graph.setNodeAttribute(node, "x", 100 * Math.cos(angle));
-    graph.setNodeAttribute(node, "y", 100 * Math.sin(angle));
+    testGraph.addNode('NODE1', {
+        size: 100,
+        type:"image",
+        image:"http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C3fe0880c-33b3-4e5c-b1b3-c9497f27e19a%5CHilton-TestRun-1%5CImages%5C1687121175233.png",
+        scale:500,
+        color:"#FA4F40"
+    });
+    testGraph.addNode('NODE2', {
+        size:100,
+        type:"image",
+        image:"./user.svg",
+        scale: 500,
+        color:"#727EE0"
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const renderer = new Sigma(graph, container, {
-    // We don't have to declare edgeProgramClasses here, because we only use the default ones ("line" and "arrow")
-    nodeProgramClasses: {
-        image: getNodeProgramImage(),
-        border: NodeProgramBorder,
-    },
-    renderEdgeLabels: true,
-});
+    testGraph.addEdge("NODE1", "NODE2")
 
-// Create the spring layout and start it
-const layout = new ForceSupervisor(graph);
-layout.start();
+    testGraph.nodes().forEach((node, i) => {
+        const angle = (i * 2 * Math.PI) / testGraph.order;
+        testGraph.setNodeAttribute(node, "x", 100 * Math.cos(angle));
+        testGraph.setNodeAttribute(node, "y", 100 * Math.sin(angle));
+      });
 
 
+    const container = document.getElementById('master-graph-container');
+
+    const renderer = new Sigma(testGraph, container, {
+        nodeProgramClasses: {
+          image: getNodeProgramImage()
+    }});
 
 
+    // Sigma.utils.pkg('sigma.canvas.nodes');
+    // const testGraph = new Graph();
+
+    // var node1 = {
+    //     id:'NODE1',
+    //     size: 10, 
+    //     type:"image", 
+    //     image:"http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C3fe0880c-33b3-4e5c-b1b3-c9497f27e19a%5CHilton-TestRun-1%5CImages%5C1687121175233.png"
+    // }
+    // var node2 = {
+    //     id:'NODE2',
+    //     size: 50, 
+    //     type:"image", 
+    //     image:"./user.svg", 
+    //     color:"#727EE0"
+    // }
+
+    // testGraph.addNode(node1);
+    // testGraph.addNode(node2);
+    // testGraph.addEdge(node1,node2);
+
+    // //const container = document.getElementById('master-graph-container');
+    // const renderer = new Sigma({
+    //     graph: testGraph,
+    //     renderer: {
+    //         container: document.getElementById('master-graph-container'),
+    //         type: 'canvas'
+    //     },
+    //     settings: {
+    //         minNodeSize: 8,
+    //         maxNodeSize: 16
+    //     }
+    // });
+    // CustomShapes.init(s);
+    // s.refresh();
 }
 
 
 
-export { buildGraph, getNotVisitedPaths, displayCoverageGraph, testFunction };
+
+export { buildGraph, getNotVisitedPaths, testFunction, parseJSON };
