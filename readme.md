@@ -33,11 +33,17 @@ Upload master file, upload child files. Press generate master graph then press g
 ## Provided Files
 A number of files have been provided within the src folder for testing purposes. Here is a quick rundown of the important ones
 
-<b>hilton-test2-master.json:<b> master for all of the following child files <br>
-<b>hilton-test3-child:<b> Chat + make a reservation <br>
-<b>hilton-test4-child:<b> sign in, join, booking <br>
-<b>hilton-test5-child:<b> sign in, join, offers, stays, booking, reservation <br>
-<b>hilton-test6-child:<b> no actions <br>
-<b>hilton-test7-child:<b> try to have mostly full coverage but not all paths <br>
+<b>hilton-test2-master.json:<b> 
+master for all of the following child files <br>
+<b>hilton-test3-child:<b> 
+Chat + make a reservation <br>
+<b>hilton-test4-child:<b> 
+sign in, join, booking <br>
+<b>hilton-test5-child:<b> 
+sign in, join, offers, stays, booking, reservation <br>
+<b>hilton-test6-child:<b> 
+no actions <br>
+<b>hilton-test7-child:<b> 
+try to have mostly full coverage but not all paths <br>
 
 

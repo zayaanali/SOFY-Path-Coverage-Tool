@@ -1,4 +1,4 @@
-import { isValidJSON, getName, getImage } from './helpers.js';
+import { isValidJSON, getName, getImage, getScenario } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -101,83 +101,93 @@ function parseJSON(jsonStr) {
     return returnArr;
 }
 
+
 /*
- * Ignore - this function is used for testing purposes
+ * Generate an html table for nested arrays
+*/
+function generateTable(array) {
+    var table = document.createElement('table');
+
+    for (var i = 0; i < array.length; i++) {
+      var row = document.createElement('tr');
+
+      for (var j = 0; j < array[i].length; j++) {
+        var cell = document.createElement('td');
+        var cellText = document.createTextNode(array[i][j]);
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+      }
+
+      table.appendChild(row);
+    }
+
+    return table;
+}
+/*
+ * creates a JSON for a corresponding path to be able to run a test
  */
-function testFunction() {
+function createPathJSON(master, path) {
+    // create a deep copy of the master to modify
+    var newJSON = JSON.parse(JSON.stringify(master));
+    
+    // set the scenario to empty
+    newJSON.scenario=[];
 
-    const testGraph = new Graph();
-
-    testGraph.addNode('NODE1', {
-        size: 100,
-        type:"image",
-        image:"http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C3fe0880c-33b3-4e5c-b1b3-c9497f27e19a%5CHilton-TestRun-1%5CImages%5C1687121175233.png",
-        scale:500,
-        color:"#FA4F40"
-    });
-    testGraph.addNode('NODE2', {
-        size:100,
-        type:"image",
-        image:"./user.svg",
-        scale: 500,
-        color:"#727EE0"
-    });
-
-    testGraph.addEdge("NODE1", "NODE2")
-
-    testGraph.nodes().forEach((node, i) => {
-        const angle = (i * 2 * Math.PI) / testGraph.order;
-        testGraph.setNodeAttribute(node, "x", 100 * Math.cos(angle));
-        testGraph.setNodeAttribute(node, "y", 100 * Math.sin(angle));
-      });
-
-
-    const container = document.getElementById('master-graph-container');
-
-    const renderer = new Sigma(testGraph, container, {
-        nodeProgramClasses: {
-          image: getNodeProgramImage()
-    }});
-
-
-    // Sigma.utils.pkg('sigma.canvas.nodes');
-    // const testGraph = new Graph();
-
-    // var node1 = {
-    //     id:'NODE1',
-    //     size: 10, 
-    //     type:"image", 
-    //     image:"http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C3fe0880c-33b3-4e5c-b1b3-c9497f27e19a%5CHilton-TestRun-1%5CImages%5C1687121175233.png"
-    // }
-    // var node2 = {
-    //     id:'NODE2',
-    //     size: 50, 
-    //     type:"image", 
-    //     image:"./user.svg", 
-    //     color:"#727EE0"
-    // }
-
-    // testGraph.addNode(node1);
-    // testGraph.addNode(node2);
-    // testGraph.addEdge(node1,node2);
-
-    // //const container = document.getElementById('master-graph-container');
-    // const renderer = new Sigma({
-    //     graph: testGraph,
-    //     renderer: {
-    //         container: document.getElementById('master-graph-container'),
-    //         type: 'canvas'
-    //     },
-    //     settings: {
-    //         minNodeSize: 8,
-    //         maxNodeSize: 16
-    //     }
-    // });
-    // CustomShapes.init(s);
-    // s.refresh();
+    // for each node on the path, add the node to the scenario
+    for (var node of path)
+        newJSON.scenario.push(getScenario(master, node));
+    
+    return newJSON
 }
 
 
 
 
-export { buildGraph, getNotVisitedPaths, testFunction, parseJSON };
+
+/*
+ * Ignore - this function is used for testing purposes
+ */
+function testFunction() {
+
+    // const testGraph = new Graph();
+
+    // testGraph.addNode('NODE1', {
+    //     size: 100,
+    //     type:"image",
+    //     image:"http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C3fe0880c-33b3-4e5c-b1b3-c9497f27e19a%5CHilton-TestRun-1%5CImages%5C1687121175233.png",
+    //     scale:500,
+    //     color:"#FA4F40"
+    // });
+    // testGraph.addNode('NODE2', {
+    //     size:100,
+    //     type:"image",
+    //     image:"./user.svg",
+    //     scale: 500,
+    //     color:"#727EE0"
+    // });
+
+    // testGraph.addEdge("NODE1", "NODE2")
+
+    // testGraph.nodes().forEach((node, i) => {
+    //     const angle = (i * 2 * Math.PI) / testGraph.order;
+    //     testGraph.setNodeAttribute(node, "x", 100 * Math.cos(angle));
+    //     testGraph.setNodeAttribute(node, "y", 100 * Math.sin(angle));
+    //   });
+
+
+    // const container = document.getElementById('master-graph-container');
+
+    // const renderer = new Sigma(testGraph, container, {
+    //     nodeProgramClasses: {
+    //       image: getNodeProgramImage()
+    // }});
+
+}
+
+
+
+
+
+
+
+export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON };

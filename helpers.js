@@ -40,7 +40,36 @@ function findImage(nodeArr, nodeToFind) {
             return node[1];
     }
 }
+/**
+ * This function takes a master file an activity name and then returns the entire scenario data
+ */
+function getScenario(master, activityName) {
+    for (var i=0; i<master.scenario.length; i++) {
+        if (activityName==getName(master, i))
+            return master.scenario[i];
+    }
+    
+    return { data: "Node not found" };
 
-export { isValidJSON, getName, getImage, findImage }
+}
+
+var masterJSON = (function() {
+    var retainedValue;
+  
+    function setValue(value) {
+      retainedValue = value;
+    }
+  
+    function getValue() {
+      return retainedValue;
+    }
+  
+    return {
+      setValue: setValue,
+      getValue: getValue
+    };
+})();
+
+export { isValidJSON, getName, getImage, findImage, masterJSON, getScenario }
 
 
