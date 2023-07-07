@@ -23,9 +23,9 @@ function buildGraph(nodeArr) {
         
         // image does exist
         if (nodeArr[i][1]!=null)
-            newGraph.mergeNode(nodeArr[i][0], { type: "image", image: nodeArr[i][1], size: 30 });
+            newGraph.mergeNode(nodeArr[i][0], { type: "image", label: nodeArr[i][0], image: nodeArr[i][1], size: 30 });
         else
-            newGraph.mergeNode(nodeArr[i][0], { size: 30 });
+            newGraph.mergeNode(nodeArr[i][0], { size: 30, label: nodeArr[i][0] });
         
         // if there is a node following attach an edge to it
         if (i+1<arrLength)
@@ -105,23 +105,57 @@ function parseJSON(jsonStr) {
 /*
  * Generate an html table for nested arrays
 */
-function generateTable(array) {
+function generateTable(masterJSON, array) {
     var table = document.createElement('table');
 
-    for (var i = 0; i < array.length; i++) {
-      var row = document.createElement('tr');
+      for (var i = 0; i < array.length; i++) {
+        var row = document.createElement('tr');
 
-      for (var j = 0; j < array[i].length; j++) {
-        var cell = document.createElement('td');
-        var cellText = document.createTextNode(array[i][j]);
-        cell.appendChild(cellText);
-        row.appendChild(cell);
-      }
+        for (var j = 0; j < array[i].length; j++) {
+          var cell = document.createElement('td');
+          var cellText = document.createTextNode(array[i][j]);
+          cell.appendChild(cellText);
+          row.appendChild(cell);
+        }
 
-      table.appendChild(row);
+        var buttonCell = document.createElement('td');
+        var button = document.createElement('button');
+        button.textContent = 'Download Test JSON';
+        button.addEventListener('click', createButtonHandler(array[i])); // Attach event handler to the button
+        buttonCell.appendChild(button);
+        row.appendChild(buttonCell);
+
+        table.appendChild(row);
     }
 
     return table;
+
+    // Function to create an event handler for the button
+    function createButtonHandler(arrayElement) {
+        return function() {
+          // Perform your desired action with the array element
+          var newJSON = createPathJSON(masterJSON, arrayElement);
+          downloadJSON("SOFY-TEST", newJSON);
+          console.log(newJSON)
+        };
+    }
+
+    function downloadJSON(filename, jsonContent) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(jsonContent)));
+        element.setAttribute('download', filename);
+        
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        
+        element.click();
+        
+        document.body.removeChild(element);
+    }
+
+
+
+  
 }
 /*
  * creates a JSON for a corresponding path to be able to run a test
@@ -149,38 +183,69 @@ function createPathJSON(master, path) {
  */
 function testFunction() {
 
-    // const testGraph = new Graph();
+    const testGraph = new Graph();
 
-    // testGraph.addNode('NODE1', {
-    //     size: 100,
-    //     type:"image",
-    //     image:"http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C3fe0880c-33b3-4e5c-b1b3-c9497f27e19a%5CHilton-TestRun-1%5CImages%5C1687121175233.png",
-    //     scale:500,
-    //     color:"#FA4F40"
-    // });
-    // testGraph.addNode('NODE2', {
-    //     size:100,
-    //     type:"image",
-    //     image:"./user.svg",
-    //     scale: 500,
-    //     color:"#727EE0"
-    // });
+    testGraph.addNode('NODE1');
+    testGraph.addNode('NODE2');
+    testGraph.addNode('NODE3')
 
-    // testGraph.addEdge("NODE1", "NODE2")
+    testGraph.addEdge("NODE1", "NODE2");
+    testGraph.addEdge("NODE2", "NODE3");
 
-    // testGraph.nodes().forEach((node, i) => {
-    //     const angle = (i * 2 * Math.PI) / testGraph.order;
-    //     testGraph.setNodeAttribute(node, "x", 100 * Math.cos(angle));
-    //     testGraph.setNodeAttribute(node, "y", 100 * Math.sin(angle));
-    //   });
+    // change edge sizes
+    testGraph.edges().forEach(key => {
+        testGraph.setEdgeAttribute(key, 'size', 5);
+    })
 
+    circular.assign(testGraph);
+    const container = document.getElementById('master-graph-container');
 
-    // const container = document.getElementById('master-graph-container');
+    let hoveredEdge = null;
+    const renderer = new Sigma(testGraph, container, {
+        enableEdgeClickEvents: true,
+        enableEdgeWheelEvents: true,
+        enableEdgeHoverEvents: "debounce",
+        edgeReducer(edge, data) {
+            const res = { ...data };
+            if (edge === hoveredEdge) res.color = "#cc0000";
+            return res;
+          },
+    });
+    const nodeEvents = [
+        "enterNode",
+        "leaveNode",
+        "downNode",
+        "clickNode",
+        "rightClickNode",
+        "doubleClickNode",
+        "wheelNode",
+      ];
+      const edgeEvents = ["downEdge", "clickEdge", "rightClickEdge", "doubleClickEdge", "wheelEdge"];
+      const stageEvents = ["downStage", "clickStage", "doubleClickStage", "wheelStage"];
+      
+      
+      renderer.on("enterEdge", ({ edge }) => {
 
-    // const renderer = new Sigma(testGraph, container, {
-    //     nodeProgramClasses: {
-    //       image: getNodeProgramImage()
-    // }});
+        hoveredEdge = edge;
+        renderer.refresh();
+      });
+
+      renderer.on("clickEdge", ({ edge }) => {
+
+        console.log(edge);
+        console.log(testGraph.source(edge))
+        console.log(testGraph.target(edge))
+  
+        renderer.refresh();
+      });
+
+      renderer.on("leaveEdge", ({ edge }) => {
+
+        hoveredEdge = null;
+        renderer.refresh();
+      });
+      
+
 
 }
 

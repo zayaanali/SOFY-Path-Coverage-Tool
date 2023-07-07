@@ -154,15 +154,15 @@ function generateCoverageGraph() {
             if (i+1<path.length) {
                 // add first node (name and image)
                 if (findImage(masterNodes, path[i])!=null)
-                    coverageGraph.mergeNode(path[i], { type: "image", image: findImage(masterNodes, path[i]), size: 30 });
+                    coverageGraph.mergeNode(path[i], { type: "image", label: path[i], image: findImage(masterNodes, path[i]), size: 30 });
                 else    
-                    coverageGraph.mergeNode(path[i], { size: 30 });
+                    coverageGraph.mergeNode(path[i], { size: 30, label: path[i] });
 
                 // add second node (name and image)
                 if (findImage(masterNodes, path[i+1])!=null)
-                    coverageGraph.mergeNode(path[i+1], { type: "image", image: findImage(masterNodes, path[i+1]), size: 30 });
+                    coverageGraph.mergeNode(path[i+1], { type: "image", label: path[i+1], image: findImage(masterNodes, path[i+1]), size: 30 });
                 else
-                    coverageGraph.mergeNode(path[i+1], { size: 30 });
+                    coverageGraph.mergeNode(path[i+1], { label: path[i+1], size: 30 });
 
                 // add edge between the two nodes
                 coverageGraph.mergeEdge(path[i], path[i+1]);
@@ -170,25 +170,7 @@ function generateCoverageGraph() {
         }
     }
 
-    var master = JSON.parse(masterJSON.getValue());
-    console.log(master.scenario.length)
-    console.log(createPathJSON(master, notVisitedPaths[0]))
     
-    
-    
-    // display the paths that still need to be taken
-    var arrayDisplay = document.getElementById('paths-display');
-    arrayDisplay.appendChild(generateTable(notVisitedPaths));
-
-
-
-
-
-
-
-
-
-
 
     const container = document.getElementById('coverage-graph-container');
     circular.assign(coverageGraph);
@@ -199,12 +181,100 @@ function generateCoverageGraph() {
     })
 
 
+    let hoveredEdge = null;
     const renderer = new Sigma(coverageGraph, container, {
         nodeProgramClasses: {
-          image: getNodeProgramImage()
-    }});
+            image: getNodeProgramImage()
+        },
+        
+        enableEdgeClickEvents: true,
+        enableEdgeWheelEvents: true,
+        enableEdgeHoverEvents: "debounce",
+        edgeReducer(edge, data) {
+            const res = { ...data };
+            if (edge === hoveredEdge) res.color = "#cc0000";
+            return res;
+          },
+    });
+    
+    const nodeEvents = [
+        "enterNode",
+        "leaveNode",
+        "downNode",
+        "clickNode",
+        "rightClickNode",
+        "doubleClickNode",
+        "wheelNode",
+    ];
+      
+    const edgeEvents = ["downEdge", "clickEdge", "rightClickEdge", "doubleClickEdge", "wheelEdge"];
+    const stageEvents = ["downStage", "clickStage", "doubleClickStage", "wheelStage"];
+    
+    renderer.on("enterEdge", ({ edge }) => {
+        hoveredEdge = edge;
+        renderer.refresh();
+    });
+    renderer.on("leaveEdge", ({ edge }) => {
+        hoveredEdge = null;
+        renderer.refresh();
+    });
+
+    renderer.on("clickEdge", ({ edge }) => {
+        
+        displayPaths(notVisitedPaths, coverageGraph.source(edge), coverageGraph.target(edge));
+        renderer.refresh();
+    });
+    
+    stageEvents.forEach((eventType) => {
+        renderer.on(eventType, ({ event }) => {});
+    });
+
+
+
+
+    // const renderer = new Sigma(coverageGraph, container, {
+    //     nodeProgramClasses: {
+    //       image: getNodeProgramImage()
+    // }});
+      
 
 }
+
+
+/**
+ * This function takes  and displays all of the paths that include the edge
+ */
+function displayPaths(notVisitedPaths, source, target) {
+
+    // Get master JSON
+    var master = JSON.parse(masterJSON.getValue());
+    
+    // array containing paths
+    var paths=[];
+    
+    console.log(source)
+    console.log(target)
+
+    for (var path of notVisitedPaths) {
+        for (var i=0; i<path.length; i++) {
+            if (path[i]==source && i+1<path.length) {
+                if (path[i+1]==target) {
+                    console.log(path[i])
+                    console.log(path[i+1])
+
+                    paths.push(path);
+                }
+            }
+        }
+    }
+
+    // display the paths that still need to be taken
+    var arrayDisplay = document.getElementById('paths-display');
+    arrayDisplay.appendChild(generateTable(master, paths));
+
+}
+
+
 
 /* Functions to run on button press */
 document.getElementById('generate-master').addEventListener('click', generateMasterGraph);
