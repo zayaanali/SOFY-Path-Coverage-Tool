@@ -7,31 +7,84 @@
     text-align: center;
 }
 
-.graph_request{
-    width: 50%;
-    float: right;
-    padding: 20px;
-    border: 2px solid red
-}
-
-.request_container{
-    border: 3px solid #fff;
-    padding: 20px;
+.center {
+    display: flex;
+    justify-content: center;
 }
 
 
-#master-graph-container {
-    width: 500px;
+
+.request-container { 
+    display: flex;
+    column-gap: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+}
+
+.master-request {
+    height: 150px;
+    width: 400px;
+}
+
+.child-request {
+    height: 150px;
+    width: 400px;
+}
+
+
+.graph-display-container {
+    display: flex;
+    column-gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.master-graph-container {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 700px;
     height: 500px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+
   }
   
-#coverage-graph-container {
-    width: 500px;
+.coverage-graph-container {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 700px;
     height: 500px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
+
+}
+
+
+
+#master-graph-display {
+    border: 1px solid black;
+    width: 650px;
+    height: 400px;
+}
+
+#coverage-graph-display {
+    border: 1px solid black;
+    width: 650px;
+    height: 400px;
+}
+
+.paths-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#paths-display {
+    width: 1000px;
+    height: 200px;
+}
+

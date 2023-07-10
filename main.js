@@ -99,6 +99,12 @@ function childFileSelect(evt) {
 * Function to generate master graph given input JSON file
 */
 function generateMasterGraph() {    
+    if (document.getElementById('master-display').textContent=='') {
+            alert('no master file given');
+            throw new Error('master file not given');
+    }
+    
+    
     // Get list of nodes in the master from local storage
     const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
     
@@ -118,11 +124,13 @@ function generateMasterGraph() {
     })
     
     // output to page
-    const container = document.getElementById('master-graph-container');
+    const container = document.getElementById('master-graph-display');
     const renderer = new Sigma(masterGraph, container, {
         nodeProgramClasses: {
           image: getNodeProgramImage()
     }});
+
+    renderer.refresh();
 
 }
 
@@ -130,7 +138,20 @@ function generateMasterGraph() {
 * Function to generate child coverage graph
 */
 function generateCoverageGraph() {
+    // first check for master file
+    if (document.getElementById('master-display').textContent=='') {
+        alert('no master file given');
+        throw new Error('master file not given');
+    }
+
+    // check for child files
+    if (document.getElementById('child-display').textContent=='') {
+        alert('no child file given');
+        throw new Error('child file not given');
+    } 
     
+    // run the master file
+    generateMasterGraph();
     // Get array of master nodes from local storage
     const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
 
@@ -172,7 +193,7 @@ function generateCoverageGraph() {
 
     
 
-    const container = document.getElementById('coverage-graph-container');
+    const container = document.getElementById('coverage-graph-display');
     circular.assign(coverageGraph);
     
     // change edge sizes
@@ -229,14 +250,7 @@ function generateCoverageGraph() {
         renderer.on(eventType, ({ event }) => {});
     });
 
-
-
-
-    // const renderer = new Sigma(coverageGraph, container, {
-    //     nodeProgramClasses: {
-    //       image: getNodeProgramImage()
-    // }});
-      
+    renderer.refresh();
 
 }
 
@@ -252,24 +266,18 @@ function displayPaths(notVisitedPaths, source, target) {
     // array containing paths
     var paths=[];
     
-    console.log(source)
-    console.log(target)
-
     for (var path of notVisitedPaths) {
         for (var i=0; i<path.length; i++) {
             if (path[i]==source && i+1<path.length) {
-                if (path[i+1]==target) {
-                    console.log(path[i])
-                    console.log(path[i+1])
-
+                if (path[i+1]==target)
                     paths.push(path);
-                }
             }
         }
     }
 
     // display the paths that still need to be taken
     var arrayDisplay = document.getElementById('paths-display');
+    arrayDisplay.innerHTML = '';
     arrayDisplay.appendChild(generateTable(master, paths));
 
 }
