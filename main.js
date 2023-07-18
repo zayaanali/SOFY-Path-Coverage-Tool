@@ -1,9 +1,10 @@
 import Graph, { DirectedGraph } from 'graphology';
 import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
+import circlepack from 'graphology-layout/circlepack';
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 /* import various methods from methods.js */
-import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON } from './methods.js';
+import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops } from './methods.js';
 import { findImage, masterJSON } from './helpers.js';
 
 
@@ -116,21 +117,63 @@ function generateMasterGraph() {
 
     
     // Give nodes (x,y) positions in circular manner
-    circular.assign(masterGraph);
+    circular.assign(masterGraph, { scale: 10000 });
 
     // change edge sizes
     masterGraph.edges().forEach(key => {
-        masterGraph.setEdgeAttribute(key, 'size', 5);
+        masterGraph.setEdgeAttribute(key, 'size', 3);
     })
+
+
+    
     
     // output to page
     const container = document.getElementById('master-graph-display');
+    container.innerHTML='';
+
+    let hoveredEdge = null;
     const renderer = new Sigma(masterGraph, container, {
         nodeProgramClasses: {
-          image: getNodeProgramImage()
-    }});
+            image: getNodeProgramImage()
+        }
+    });
+    
+    const nodeEvents = [
+        "enterNode",
+        "leaveNode",
+        "downNode",
+        "clickNode",
+        "rightClickNode",
+        "doubleClickNode",
+        "wheelNode",
+    ];
+    
+    renderer.on("clickNode", ({ node }) => {
+        
+        const actionArr=checkSelfLoops(node)
+        
+        var arrayDisplay = document.getElementById('paths-display');
+        arrayDisplay.innerHTML = '';
+        // Create a table element
+        var table = document.createElement("table");
+
+        // Loop over the array of arrays
+        for (var i = 0; i < actionArr.length; i++) {
+            var row = document.createElement("tr");
+            for (var j = 0; j < actionArr[i].length; j++) {
+                var cell = document.createElement("td");
+                cell.textContent = actionArr[i][j];            
+                row.appendChild(cell);
+            }   
+            table.appendChild(row);
+        }        
+            
+        arrayDisplay.appendChild(table);
+        renderer.refresh();
+    });
 
     renderer.refresh();
+
 
 }
 
@@ -194,11 +237,12 @@ function generateCoverageGraph() {
     
 
     const container = document.getElementById('coverage-graph-display');
+    container.innerHTML='';
     circular.assign(coverageGraph);
     
     // change edge sizes
     coverageGraph.edges().forEach(key => {
-        coverageGraph.setEdgeAttribute(key, 'size', 5);
+        coverageGraph.setEdgeAttribute(key, 'size', 3);
     })
 
 

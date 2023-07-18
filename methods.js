@@ -1,4 +1,4 @@
-import { isValidJSON, getName, getImage, getScenario } from './helpers.js';
+import { isValidJSON, getName, getImage, getScenario, masterJSON } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -178,75 +178,47 @@ function createPathJSON(master, path) {
 
 
 
+
+
+/**
+ * For each node in the graph checks for self-loops. If they exist then shows the different
+ * actions within the self-loop;
+ */
+function checkSelfLoops(node) {
+    // Get master JSON
+    if (!isValidJSON(masterJSON.getValue()))
+        throw new Error("master json not valid");
+    
+    var master = JSON.parse(masterJSON.getValue());
+
+
+    var actionArr=[];
+    
+    // For each node of the 
+    for (var i=0; i<master.scenario.length; i++) {
+        
+        if (getName(master, i)==node && i+1<master.scenario.length && getName(master, i+1)==node) {
+            var actions=[];
+            actions.push(master.scenario[i].action);
+            actions.push(master.scenario[i+1].action);
+            i=i+2;
+            while (i<master.scenario.length && getName(master, i)==node) {
+                actions.push(master.scenario[i].action);
+                i++;
+            }
+            actionArr.push(actions);
+        }
+    }
+    return actionArr
+
+}
+
 /*
  * Ignore - this function is used for testing purposes
  */
 function testFunction() {
 
-    const testGraph = new Graph();
-
-    testGraph.addNode('NODE1');
-    testGraph.addNode('NODE2');
-    testGraph.addNode('NODE3')
-
-    testGraph.addEdge("NODE1", "NODE2");
-    testGraph.addEdge("NODE2", "NODE3");
-
-    // change edge sizes
-    testGraph.edges().forEach(key => {
-        testGraph.setEdgeAttribute(key, 'size', 5);
-    })
-
-    circular.assign(testGraph);
-    const container = document.getElementById('master-graph-container');
-
-    let hoveredEdge = null;
-    const renderer = new Sigma(testGraph, container, {
-        enableEdgeClickEvents: true,
-        enableEdgeWheelEvents: true,
-        enableEdgeHoverEvents: "debounce",
-        edgeReducer(edge, data) {
-            const res = { ...data };
-            if (edge === hoveredEdge) res.color = "#cc0000";
-            return res;
-          },
-    });
-    const nodeEvents = [
-        "enterNode",
-        "leaveNode",
-        "downNode",
-        "clickNode",
-        "rightClickNode",
-        "doubleClickNode",
-        "wheelNode",
-      ];
-      const edgeEvents = ["downEdge", "clickEdge", "rightClickEdge", "doubleClickEdge", "wheelEdge"];
-      const stageEvents = ["downStage", "clickStage", "doubleClickStage", "wheelStage"];
-      
-      
-      renderer.on("enterEdge", ({ edge }) => {
-
-        hoveredEdge = edge;
-        renderer.refresh();
-      });
-
-      renderer.on("clickEdge", ({ edge }) => {
-
-        console.log(edge);
-        console.log(testGraph.source(edge))
-        console.log(testGraph.target(edge))
-  
-        renderer.refresh();
-      });
-
-      renderer.on("leaveEdge", ({ edge }) => {
-
-        hoveredEdge = null;
-        renderer.refresh();
-      });
-      
-
-
+    checkSelfLoops("BottomNavActivity")
 }
 
 
@@ -254,5 +226,4 @@ function testFunction() {
 
 
 
-
-export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON };
+export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops };
