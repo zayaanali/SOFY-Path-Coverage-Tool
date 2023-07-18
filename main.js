@@ -266,20 +266,7 @@ function generateCoverageGraph() {
             return res;
           },
     });
-    
-    const nodeEvents = [
-        "enterNode",
-        "leaveNode",
-        "downNode",
-        "clickNode",
-        "rightClickNode",
-        "doubleClickNode",
-        "wheelNode",
-    ];
-      
-    const edgeEvents = ["downEdge", "clickEdge", "rightClickEdge", "doubleClickEdge", "wheelEdge"];
-    const stageEvents = ["downStage", "clickStage", "doubleClickStage", "wheelStage"];
-    
+        
     renderer.on("enterEdge", ({ edge }) => {
         hoveredEdge = edge;
         renderer.refresh();
@@ -294,10 +281,7 @@ function generateCoverageGraph() {
         displayPaths(notVisitedPaths, coverageGraph.source(edge), coverageGraph.target(edge));
         renderer.refresh();
     });
-    
-    stageEvents.forEach((eventType) => {
-        renderer.on(eventType, ({ event }) => {});
-    });
+
 
     renderer.refresh();
 
@@ -373,6 +357,57 @@ function displayPathToNode(notVisitedPaths, end) {
     arrayDisplay.innerHTML = '';
     arrayDisplay.appendChild(generateTable(master, paths));
 
+    // display create a graph with all of these paths
+    const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
+    let graph = createGraphFromPath(paths, masterNodes);
+
+    const container = document.getElementById('coverage-graph-display');
+    container.innerHTML='';
+    
+    // set layout
+    circular.assign(graph, { scale: 10 });
+    const sensibleSettings = forceAtlas2.inferSettings(graph);
+    const fa2Layout = new FA2Layout(graph, {
+        settings: sensibleSettings,
+    });
+    fa2Layout.start();
+    
+    // change edge sizes
+    graph.edges().forEach(key => {
+        graph.setEdgeAttribute(key, 'size', 3);
+    })
+
+    let hoveredEdge = null;
+    const renderer = new Sigma(graph, container, {
+        nodeProgramClasses: {
+            image: getNodeProgramImage()
+        },
+        
+        enableEdgeClickEvents: true,
+        enableEdgeWheelEvents: true,
+        enableEdgeHoverEvents: "debounce",
+        edgeReducer(edge, data) {
+            const res = { ...data };
+            if (edge === hoveredEdge) res.color = "#cc0000";
+            return res;
+          },
+    });
+        
+    renderer.on("enterEdge", ({ edge }) => {
+        hoveredEdge = edge;
+        renderer.refresh();
+    });
+    renderer.on("leaveEdge", ({ edge }) => {
+        hoveredEdge = null;
+        renderer.refresh();
+    });
+
+    renderer.on("clickEdge", ({ edge }) => {
+        displayPaths(notVisitedPaths, graph.source(edge), graph.target(edge));
+        renderer.refresh();
+    });
+    
+    renderer.refresh();
 }
 
 
