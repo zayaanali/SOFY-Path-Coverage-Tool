@@ -48,7 +48,7 @@
     justify-content: center;
     align-items: center;
     width: 700px;
-    height: 500px;
+    height: 700px;
 
   }
   
@@ -58,7 +58,7 @@
     justify-content: center;
     align-items: center;
     width: 700px;
-    height: 500px;
+    height: 700px;
 
 }
 
@@ -67,14 +67,21 @@
 #master-graph-display {
     border: 1px solid black;
     width: 650px;
-    height: 400px;
+    height: 650px;
 }
 
 #coverage-graph-display {
     border: 1px solid black;
     width: 650px;
-    height: 400px;
+    height: 650px;
 }
+.node-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .paths-container {
     display: flex;

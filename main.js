@@ -1,11 +1,15 @@
 import Graph, { DirectedGraph } from 'graphology';
 import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
-import circlepack from 'graphology-layout/circlepack';
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 /* import various methods from methods.js */
-import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops } from './methods.js';
+import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes } from './methods.js';
 import { findImage, masterJSON } from './helpers.js';
+import FA2Layout from "graphology-layout-forceatlas2/worker";
+import forceAtlas2 from "graphology-layout-forceatlas2";
+
+
+
 
 
 
@@ -117,7 +121,14 @@ function generateMasterGraph() {
 
     
     // Give nodes (x,y) positions in circular manner
-    circular.assign(masterGraph, { scale: 10000 });
+    circular.assign(masterGraph, { scale: 10 });
+
+    const sensibleSettings = forceAtlas2.inferSettings(masterGraph);
+    const fa2Layout = new FA2Layout(masterGraph, {
+        settings: sensibleSettings,
+    });
+
+    fa2Layout.start();
 
     // change edge sizes
     masterGraph.edges().forEach(key => {
@@ -135,19 +146,24 @@ function generateMasterGraph() {
     const renderer = new Sigma(masterGraph, container, {
         nodeProgramClasses: {
             image: getNodeProgramImage()
-        }
+        },
+        enableEdgeHoverEvents: "debounce",
+        edgeReducer(edge, data) {
+            const res = { ...data };
+            if (edge === hoveredEdge) res.color = "#cc0000";
+            return res;
+        },
     });
     
-    const nodeEvents = [
-        "enterNode",
-        "leaveNode",
-        "downNode",
-        "clickNode",
-        "rightClickNode",
-        "doubleClickNode",
-        "wheelNode",
-    ];
-    
+    renderer.on("enterEdge", ({ edge }) => {
+        hoveredEdge = edge;
+        renderer.refresh();
+    });
+    renderer.on("leaveEdge", ({ edge }) => {
+        hoveredEdge = null;
+        renderer.refresh();
+    });
+
     renderer.on("clickNode", ({ node }) => {
         
         const actionArr=checkSelfLoops(node)
@@ -206,7 +222,8 @@ function generateCoverageGraph() {
     var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
     
     // Get not visited paths
-    var notVisitedPaths = getNotVisitedPaths(masterGraph, childNodes);
+    var notVisitedNodes = getNotVisitedNodes(masterGraph, childNodes)
+    var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
     
     // Create graph from not visited paths
     var coverageGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
@@ -238,7 +255,19 @@ function generateCoverageGraph() {
 
     const container = document.getElementById('coverage-graph-display');
     container.innerHTML='';
-    circular.assign(coverageGraph);
+    
+    // set layout
+    circular.assign(coverageGraph, { scale: 10 });
+    const sensibleSettings = forceAtlas2.inferSettings(masterGraph);
+    const fa2Layout = new FA2Layout(coverageGraph, {
+        settings: sensibleSettings,
+    });
+    fa2Layout.start();
+
+    // change edge sizes
+    masterGraph.edges().forEach(key => {
+        masterGraph.setEdgeAttribute(key, 'size', 3);
+    })
     
     // change edge sizes
     coverageGraph.edges().forEach(key => {

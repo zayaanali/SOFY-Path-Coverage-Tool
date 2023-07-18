@@ -37,13 +37,7 @@ function buildGraph(nodeArr) {
 
 }
 
-
-/*
-* This function takes a graph as well as list of child nodes and returns all of the
-* paths that have not been traversed yet from the start node (first node in the master)
-*/
-function getNotVisitedPaths(masterGraph, childNodes) {
-    
+function getNotVisitedNodes(masterGraph, childNodes) {
     // Get list of nodes in the master
     var masterNodes=[];
     masterGraph.forEachNode((node, attributes) => {
@@ -56,9 +50,23 @@ function getNotVisitedPaths(masterGraph, childNodes) {
     for (var tuple of childNodes)
         if (!visitedNodes.includes(tuple[0]))
             visitedNodes.push(tuple[0]);
+    
 
     // Create list of nodes that have yet to be visited. Get all nodes in master not present in child
     var toVisitArr = masterNodes.filter(value => !visitedNodes.includes(value));
+    
+    return toVisitArr
+}
+/*
+* This function takes a graph as well as list of child nodes and returns all of the
+* paths that have not been traversed yet from the start node (first node in the master)
+*/
+function getNotVisitedPaths(masterGraph, toVisitArr) {
+    // Get list of nodes in the master
+    var masterNodes=[];
+    masterGraph.forEachNode((node, attributes) => {
+        masterNodes.push(node);
+    });
     
     // find all paths from start node to all not visited nodes
     var notVisitedPaths=[]
@@ -226,4 +234,4 @@ function testFunction() {
 
 
 
-export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops };
+export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes };
