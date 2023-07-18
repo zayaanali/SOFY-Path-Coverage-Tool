@@ -3,7 +3,7 @@ import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 /* import various methods from methods.js */
-import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes } from './methods.js';
+import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes, createGraphFromPath } from './methods.js';
 import { findImage, masterJSON } from './helpers.js';
 import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
@@ -224,34 +224,10 @@ function generateCoverageGraph() {
     // Get not visited paths
     var notVisitedNodes = getNotVisitedNodes(masterGraph, childNodes)
     var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
+    displayNodes(notVisitedNodes, notVisitedPaths);
     
-    // Create graph from not visited paths
-    var coverageGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
-
-    // for each path merge each edge
-    for (var path of notVisitedPaths) {
-        for (var i=0; i<path.length; i++) {
-            // if there is a following node in the path
-            if (i+1<path.length) {
-                // add first node (name and image)
-                if (findImage(masterNodes, path[i])!=null)
-                    coverageGraph.mergeNode(path[i], { type: "image", label: path[i], image: findImage(masterNodes, path[i]), size: 30 });
-                else    
-                    coverageGraph.mergeNode(path[i], { size: 30, label: path[i] });
-
-                // add second node (name and image)
-                if (findImage(masterNodes, path[i+1])!=null)
-                    coverageGraph.mergeNode(path[i+1], { type: "image", label: path[i+1], image: findImage(masterNodes, path[i+1]), size: 30 });
-                else
-                    coverageGraph.mergeNode(path[i+1], { label: path[i+1], size: 30 });
-
-                // add edge between the two nodes
-                coverageGraph.mergeEdge(path[i], path[i+1]);
-            } 
-        }
-    }
-
-    
+    // build coverage graph to visit arr
+    var coverageGraph = createGraphFromPath(notVisitedPaths, masterNodes);
 
     const container = document.getElementById('coverage-graph-display');
     container.innerHTML='';
@@ -329,7 +305,7 @@ function generateCoverageGraph() {
 
 
 /**
- * This function takes  and displays all of the paths that include the edge
+ * This function takes and displays all of the paths that include the edge
  */
 function displayPaths(notVisitedPaths, source, target) {
 
@@ -346,6 +322,50 @@ function displayPaths(notVisitedPaths, source, target) {
                     paths.push(path);
             }
         }
+    }
+
+    // display the paths that still need to be taken
+    var arrayDisplay = document.getElementById('paths-display');
+    arrayDisplay.innerHTML = '';
+    arrayDisplay.appendChild(generateTable(master, paths));
+
+}
+
+
+
+function displayNodes(notVisitedNodes, notVisitedPaths) {
+    const container = document.getElementById('node-display')
+    
+    for (var i = 0; i < notVisitedNodes.length; i++) {
+        
+        var button = document.createElement('button');
+        button.innerHTML = notVisitedNodes[i];
+  
+        // Add a click event listener to each button
+        button.addEventListener('click', function() {
+            displayPathToNode(notVisitedPaths, this.innerHTML)
+        });
+  
+        // Append the button to the container
+        container.appendChild(button);
+      }
+}
+
+/**
+ * This function takes end node and display all paths with given end node
+ */
+function displayPathToNode(notVisitedPaths, end) {
+
+    // Get master JSON
+    var master = JSON.parse(masterJSON.getValue());
+    
+    // array containing paths
+    var paths=[];
+    
+    for (var path of notVisitedPaths) {
+        let target = path.length-1;
+        if (path[target]==end)
+            paths.push(path);
     }
 
     // display the paths that still need to be taken

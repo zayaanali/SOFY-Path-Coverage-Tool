@@ -1,4 +1,4 @@
-import { isValidJSON, getName, getImage, getScenario, masterJSON } from './helpers.js';
+import { isValidJSON, getName, getImage, getScenario, masterJSON, findImage } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -80,6 +80,36 @@ function getNotVisitedPaths(masterGraph, toVisitArr) {
     }
 
     return notVisitedPaths
+}
+
+function createGraphFromPath(notVisitedPaths, masterNodes) {
+    
+    // Create graph from not visited paths
+    var coverageGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
+
+    // for each path merge each edge
+    for (var path of notVisitedPaths) {
+        for (var i=0; i<path.length; i++) {
+            // if there is a following node in the path
+            if (i+1<path.length) {
+                // add first node (name and image)
+                if (findImage(masterNodes, path[i])!=null)
+                    coverageGraph.mergeNode(path[i], { type: "image", label: path[i], image: findImage(masterNodes, path[i]), size: 30 });
+                else    
+                    coverageGraph.mergeNode(path[i], { size: 30, label: path[i] });
+
+                // add second node (name and image)
+                if (findImage(masterNodes, path[i+1])!=null)
+                    coverageGraph.mergeNode(path[i+1], { type: "image", label: path[i+1], image: findImage(masterNodes, path[i+1]), size: 30 });
+                else
+                    coverageGraph.mergeNode(path[i+1], { label: path[i+1], size: 30 });
+
+                // add edge between the two nodes
+                coverageGraph.mergeEdge(path[i], path[i+1]);
+            } 
+        }
+    }
+    return coverageGraph;
 }
 
 
@@ -234,4 +264,4 @@ function testFunction() {
 
 
 
-export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes };
+export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes, createGraphFromPath };
