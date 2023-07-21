@@ -81,8 +81,8 @@ function childFileSelect(evt) {
             childFilesNames.push(file.name);
             var content = await readFileContent(file);
             fileNodes = parseJSON(content);
-            for (var tuple of fileNodes)
-                childNodes.push(tuple);
+            for (var node of fileNodes)
+                childNodes.push(node);
         }
     }
 
@@ -109,10 +109,8 @@ function generateMasterGraph() {
             throw new Error('master file not given');
     }
     
-    
     // Get list of nodes in the master from local storage
     const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
-    
     // Build graph using list of nodes
     var masterGraph = buildGraph(masterNodes);
 
@@ -134,9 +132,6 @@ function generateMasterGraph() {
     masterGraph.edges().forEach(key => {
         masterGraph.setEdgeAttribute(key, 'size', 3);
     })
-
-
-    
     
     // output to page
     const container = document.getElementById('master-graph-display');
@@ -164,29 +159,29 @@ function generateMasterGraph() {
         renderer.refresh();
     });
 
-    renderer.on("clickNode", ({ node }) => {
+    // renderer.on("clickNode", ({ node }) => {
         
-        const actionArr=checkSelfLoops(node)
+    //     const actionArr=checkSelfLoops(node)
         
-        var arrayDisplay = document.getElementById('paths-display');
-        arrayDisplay.innerHTML = '';
-        // Create a table element
-        var table = document.createElement("table");
+    //     var arrayDisplay = document.getElementById('paths-display');
+    //     arrayDisplay.innerHTML = '';
+    //     // Create a table element
+    //     var table = document.createElement("table");
 
-        // Loop over the array of arrays
-        for (var i = 0; i < actionArr.length; i++) {
-            var row = document.createElement("tr");
-            for (var j = 0; j < actionArr[i].length; j++) {
-                var cell = document.createElement("td");
-                cell.textContent = actionArr[i][j];            
-                row.appendChild(cell);
-            }   
-            table.appendChild(row);
-        }        
+    //     // Loop over the array of arrays
+    //     for (var i = 0; i < actionArr.length; i++) {
+    //         var row = document.createElement("tr");
+    //         for (var j = 0; j < actionArr[i].length; j++) {
+    //             var cell = document.createElement("td");
+    //             cell.textContent = actionArr[i][j];            
+    //             row.appendChild(cell);
+    //         }   
+    //         table.appendChild(row);
+    //     }        
             
-        arrayDisplay.appendChild(table);
-        renderer.refresh();
-    });
+    //     arrayDisplay.appendChild(table);
+    //     renderer.refresh();
+    // });
 
     renderer.refresh();
 
@@ -214,76 +209,76 @@ function generateCoverageGraph() {
     // Get array of master nodes from local storage
     const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
 
-
     // Get array of childNodes from local storage
     const childNodes = JSON.parse(localStorage.getItem("childNodes"));
+
     
     // Get master graph from local storage
     var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
     
     // Get not visited paths
-    var notVisitedNodes = getNotVisitedNodes(masterGraph, childNodes)
+    var notVisitedNodes = getNotVisitedNodes(masterGraph, childNodes);
     var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
-    displayNodes(notVisitedNodes, notVisitedPaths);
+    // displayNodes(notVisitedNodes, notVisitedPaths);
     
-    // build coverage graph to visit arr
-    var coverageGraph = createGraphFromPath(notVisitedPaths, masterNodes);
+    // // build coverage graph to visit arr
+    // var coverageGraph = createGraphFromPath(notVisitedPaths, masterNodes);
 
-    const container = document.getElementById('coverage-graph-display');
-    container.innerHTML='';
+    // const container = document.getElementById('coverage-graph-display');
+    // container.innerHTML='';
     
-    // set layout
-    circular.assign(coverageGraph, { scale: 10 });
-    const sensibleSettings = forceAtlas2.inferSettings(masterGraph);
-    const fa2Layout = new FA2Layout(coverageGraph, {
-        settings: sensibleSettings,
-    });
-    fa2Layout.start();
+    // // set layout
+    // circular.assign(coverageGraph, { scale: 10 });
+    // const sensibleSettings = forceAtlas2.inferSettings(masterGraph);
+    // const fa2Layout = new FA2Layout(coverageGraph, {
+    //     settings: sensibleSettings,
+    // });
+    // fa2Layout.start();
 
-    // change edge sizes
-    masterGraph.edges().forEach(key => {
-        masterGraph.setEdgeAttribute(key, 'size', 3);
-    })
+    // // change edge sizes
+    // masterGraph.edges().forEach(key => {
+    //     masterGraph.setEdgeAttribute(key, 'size', 3);
+    // })
     
-    // change edge sizes
-    coverageGraph.edges().forEach(key => {
-        coverageGraph.setEdgeAttribute(key, 'size', 3);
-    })
+    // // change edge sizes
+    // coverageGraph.edges().forEach(key => {
+    //     coverageGraph.setEdgeAttribute(key, 'size', 3);
+    // })
 
 
-    let hoveredEdge = null;
-    const renderer = new Sigma(coverageGraph, container, {
-        nodeProgramClasses: {
-            image: getNodeProgramImage()
-        },
+    // let hoveredEdge = null;
+    // const renderer = new Sigma(coverageGraph, container, {
+    //     nodeProgramClasses: {
+    //         image: getNodeProgramImage()
+    //     },
         
-        enableEdgeClickEvents: true,
-        enableEdgeWheelEvents: true,
-        enableEdgeHoverEvents: "debounce",
-        edgeReducer(edge, data) {
-            const res = { ...data };
-            if (edge === hoveredEdge) res.color = "#cc0000";
-            return res;
-          },
-    });
+    //     enableEdgeClickEvents: true,
+    //     enableEdgeWheelEvents: true,
+    //     enableEdgeHoverEvents: "debounce",
+    //     edgeReducer(edge, data) {
+    //         const res = { ...data };
+    //         if (edge === hoveredEdge) res.color = "#cc0000";
+    //         return res;
+    //       },
+    // });
         
-    renderer.on("enterEdge", ({ edge }) => {
-        hoveredEdge = edge;
-        renderer.refresh();
-    });
-    renderer.on("leaveEdge", ({ edge }) => {
-        hoveredEdge = null;
-        renderer.refresh();
-    });
+    // renderer.on("enterEdge", ({ edge }) => {
+    //     hoveredEdge = edge;
+    //     renderer.refresh();
+    // });
+    // renderer.on("leaveEdge", ({ edge }) => {
+    //     hoveredEdge = null;
+    //     renderer.refresh();
+    // });
 
-    renderer.on("clickEdge", ({ edge }) => {
+    // renderer.on("clickEdge", ({ edge }) => {
         
-        displayPaths(notVisitedPaths, coverageGraph.source(edge), coverageGraph.target(edge));
-        renderer.refresh();
-    });
+    //     displayPaths(notVisitedPaths, coverageGraph.source(edge), coverageGraph.target(edge));
+    //     renderer.refresh();
+    // });
 
 
-    renderer.refresh();
+    // renderer.refresh();
 
 }
 

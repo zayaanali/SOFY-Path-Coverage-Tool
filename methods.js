@@ -1,4 +1,4 @@
-import { isValidJSON, getName, getImage, getScenario, masterJSON, findImage } from './helpers.js';
+import { isValidJSON, getName, getImage, getScenario, masterJSON, findImage, getNode } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -20,21 +20,17 @@ function buildGraph(nodeArr) {
     // Add all edges in the json arr to the 
     for (var i=0; i<arrLength;i++) {
         // Add node and image. Check if image exists first
-        
         // image does exist
-        if (nodeArr[i][1]!=null)
-            newGraph.mergeNode(nodeArr[i][0], { type: "image", label: nodeArr[i][0], image: nodeArr[i][1], size: 30 });
+        if (nodeArr[i].image!=null)
+            newGraph.mergeNode(nodeArr[i].nodeID, { type: "image", label: getName(nodeArr, i), image: nodeArr[i].image, size: 10 });
         else
-            newGraph.mergeNode(nodeArr[i][0], { size: 30, label: nodeArr[i][0] });
+            newGraph.mergeNode(nodeArr[i].nodeID, { size: 10, label: getName(nodeArr, i) });
         
         // if there is a node following attach an edge to it
         if (i+1<arrLength)
-            newGraph.mergeEdge(nodeArr[i][0], nodeArr[i+1][0]);
+            newGraph.mergeEdge(nodeArr[i].nodeID, nodeArr[i+1].nodeID);
     }
-    
     return newGraph;
-    
-
 }
 
 function getNotVisitedNodes(masterGraph, childNodes) {
@@ -44,13 +40,12 @@ function getNotVisitedNodes(masterGraph, childNodes) {
         masterNodes.push(node);
     });
 
-    
-    // Get list of nodes that have already been visited
+    // Get list of nodes that have already been visited (remove duplicates)
     var visitedNodes=[];
-    for (var tuple of childNodes)
-        if (!visitedNodes.includes(tuple[0]))
-            visitedNodes.push(tuple[0]);
-    
+    for (var node of childNodes) {
+        if (!visitedNodes.includes(node.nodeID))
+            visitedNodes.push(node.nodeID);
+    }
 
     // Create list of nodes that have yet to be visited. Get all nodes in master not present in child
     var toVisitArr = masterNodes.filter(value => !visitedNodes.includes(value));
@@ -67,18 +62,20 @@ function getNotVisitedPaths(masterGraph, toVisitArr) {
     masterGraph.forEachNode((node, attributes) => {
         masterNodes.push(node);
     });
+
     
     // find all paths from start node to all not visited nodes
     var notVisitedPaths=[]
     // for each nodes that needs to be visited
     for (var targetNode of toVisitArr) {
-        var paths = allSimplePaths(masterGraph, masterNodes[0], targetNode);
-        for (var path of paths) {
-            if (!notVisitedPaths.includes(path))
-                notVisitedPaths.push(path);
-        }
+        var paths = allSimplePaths(masterGraph, masterNodes[0], targetNode, { maxDepth:20 });
+        console.log(paths)
+        // for (var path of paths) {
+        //     if (!notVisitedPaths.includes(path))
+        //         notVisitedPaths.push(path);
+        // }
     }
-
+    console.log(notVisitedPaths)
     return notVisitedPaths
 }
 
@@ -134,8 +131,9 @@ function parseJSON(jsonStr) {
     // Add all edges in the json arr to the 
     for (var i=0; i<arrLength;i++) {
         // add name and image tuple to array
-        returnArr.push([getName(jsonArr, i), getImage(jsonArr, i)]);
+        returnArr.push(getNode(jsonArr, i));
     }
+    
     return returnArr;
 }
 

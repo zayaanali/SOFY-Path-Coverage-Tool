@@ -15,14 +15,36 @@ function isValidJSON(str) {
 /* 
 * Function to get the name of a node from a JSON object
 */
-function getName(jsonArr, index) {
-    var fullName = jsonArr.scenario[index].activityName;
+function getName(nodeArr, index) {
+    var fullName = nodeArr[index].activityName;
     var lastPeriodIndex = fullName.lastIndexOf('.');
     if (lastPeriodIndex==-1)
         return fullName;
     else
         return fullName.substring(lastPeriodIndex + 1).trim();
 }
+
+/* 
+* Function to get all required node information from JSON
+*/
+function getNode(jsonArr, index) {
+    var node = {
+        nodeID: jsonArr.scenario[index].activityName+
+                jsonArr.scenario[index].selectedComponent.xpath+
+                jsonArr.scenario[index].selectedComponent.resourceId+
+                jsonArr.scenario[index].selectedComponent.text,
+        activityName: jsonArr.scenario[index].activityName,
+        xpath: jsonArr.scenario[index].selectedComponent.xpath,
+        resourceID: jsonArr.scenario[index].selectedComponent.resourceId,
+        text: jsonArr.scenario[index].selectedComponent.text,
+        image: jsonArr.scenario[index].snapshotLocation
+    }
+
+    return node;
+}
+
+
+
 
 /* 
 * Function to get the image of a node from a JSON object
@@ -73,6 +95,6 @@ var masterJSON = (function() {
 
 
 
-export { isValidJSON, getName, getImage, findImage, masterJSON, getScenario }
+export { isValidJSON, getName, getImage, findImage, masterJSON, getScenario, getNode }
 
 
