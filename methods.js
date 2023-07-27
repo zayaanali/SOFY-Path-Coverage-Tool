@@ -1,4 +1,4 @@
-import { isValidJSON, getName, getImage, getScenario, masterJSON, findImage, getNode } from './helpers.js';
+import { isValidJSON, getName, getImage, getScenario, masterJSON, findImage, getNode, imageDiff, getSubNode, doesNodeExist, addNode } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -22,9 +22,9 @@ function buildGraph(nodeArr) {
         // Add node and image. Check if image exists first
         // image does exist
         if (nodeArr[i].image!=null)
-            newGraph.mergeNode(nodeArr[i].nodeID, { type: "image", label: getName(nodeArr, i), image: nodeArr[i].image, size: 10 });
+            newGraph.mergeNode(nodeArr[i].nodeID, { type: "image", label: nodeArr[i].actionID, image: nodeArr[i].image, size: 10 });
         else
-            newGraph.mergeNode(nodeArr[i].nodeID, { size: 10, label: getName(nodeArr, i) });
+            newGraph.mergeNode(nodeArr[i].nodeID, { size: 10, label: nodeArr[i].actionID });
         
         // if there is a node following attach an edge to it
         if (i+1<arrLength)
@@ -33,24 +33,44 @@ function buildGraph(nodeArr) {
     return newGraph;
 }
 
-function getNotVisitedNodes(masterGraph, childNodes) {
-    // Get list of nodes in the master
-    var masterNodes=[];
-    masterGraph.forEachNode((node, attributes) => {
-        masterNodes.push(node);
-    });
-
-    // Get list of nodes that have already been visited (remove duplicates)
-    var visitedNodes=[];
-    for (var node of childNodes) {
-        if (!visitedNodes.includes(node.nodeID))
-            visitedNodes.push(node.nodeID);
+function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
+    
+    // Create a deep copy of master array 
+    let toVisitArr= JSON.parse(JSON.stringify(arr));
+    let toRemove=[];
+    
+    // Iterate through each node of the master. If matched with a node in the child mark for removal
+    for (let i=0; i<masterNodeGroup.length; i++) {
+        for (let childNode of childNodeGroup) {
+            let diff = imageDiff(masterNode.image, childNode.image)
+            if (diff<=0.05)
+                toRemove.push(i);
+        }
     }
 
-    // Create list of nodes that have yet to be visited. Get all nodes in master not present in child
-    var toVisitArr = masterNodes.filter(value => !visitedNodes.includes(value));
+    // Remove all nodes that have already been visited and return
+    return toVisitArr.filter((item, index) => !toRemove.includes(index));
     
-    return toVisitArr
+    
+    
+    
+    // // Get list of nodes in the master
+    // var masterNodes=[];
+    // masterGraph.forEachNode((node, attributes) => {
+    //     masterNodes.push(node);
+    // });
+
+    // // Get list of nodes that have already been visited (remove duplicates)
+    // var visitedNodes=[];
+    // for (var node of childNodes) {
+    //     if (!visitedNodes.includes(node.nodeID))
+    //         visitedNodes.push(node.nodeID);
+    // }
+
+    // // Create list of nodes that have yet to be visited. Get all nodes in master not present in child
+    // var toVisitArr = masterNodes.filter(value => !visitedNodes.includes(value));
+    
+    // return toVisitArr
 }
 /*
 * This function takes a graph as well as list of child nodes and returns all of the
@@ -69,13 +89,13 @@ function getNotVisitedPaths(masterGraph, toVisitArr) {
     // for each nodes that needs to be visited
     for (var targetNode of toVisitArr) {
         var paths = allSimplePaths(masterGraph, masterNodes[0], targetNode, { maxDepth:20 });
-        console.log(paths)
+        
         // for (var path of paths) {
         //     if (!notVisitedPaths.includes(path))
         //         notVisitedPaths.push(path);
         // }
     }
-    console.log(notVisitedPaths)
+    
     return notVisitedPaths
 }
 
@@ -113,11 +133,9 @@ function createGraphFromPath(notVisitedPaths, masterNodes) {
 /*
 * Takes JSON string and returns tuples containing the node and the image link associated with it 
 */
-function parseJSON(jsonStr) {
+async function parseJSON(jsonStr, nodeArr) {
     
-    // array to return containing node/image tuples
-    var returnArr=[];
-    
+    let returnArr=[];
     // Check if the JSON string is a valid JSON
     if (!isValidJSON(jsonStr))
         alert("Invalid JSON");
@@ -128,12 +146,15 @@ function parseJSON(jsonStr) {
     // Get number of nodes in the JSON
     const arrLength = jsonArr.scenario.length;
     
-    // Add all edges in the json arr to the 
+    // Building concise node array (placing identical screen as subnodes)
     for (var i=0; i<arrLength;i++) {
-        // add name and image tuple to array
-        returnArr.push(getNode(jsonArr, i));
+       i = await addNode(jsonArr, i, arrLength, nodeArr); // adds the node of the given index to the array of representative nodes       
     }
     
+    // building full node array
+    for (var i=0; i<arrLength;i++) {
+        returnArr.push(getNode(jsonArr, i))
+    }
     return returnArr;
 }
 
@@ -252,10 +273,13 @@ function checkSelfLoops(node) {
 /*
  * Ignore - this function is used for testing purposes
  */
-function testFunction() {
-
-    checkSelfLoops("BottomNavActivity")
+async function testFunction() {
+    const imageURL1 = 'http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C880a1e7d-5b4f-4315-a9e5-61aef9190447%5Chilton-filter-test%5CImages%5C1690229476825.png';
+    const imageURL2 = 'http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C880a1e7d-5b4f-4315-a9e5-61aef9190447%5Chilton-filter-test%5CImages%5C1690229476982.png';
+    console.log(100*await imageDiff(imageURL1,imageURL2))
 }
+
+
 
 
 

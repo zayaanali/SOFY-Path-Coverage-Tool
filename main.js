@@ -19,22 +19,24 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 */
 function masterFileSelect(evt) {
     var masterNodes=[];
+    var nodeArr=[];
     
     localStorage.clear();
 
     // Read file
     var file = evt.target.files[0];
     var reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = async function(e) {
         // Save the file name as well as the parsed contents of the file (get only the node names and images)
         localStorage.setItem("masterFileName", file.name);
-        masterNodes = parseJSON(e.target.result);
+        masterNodes = await parseJSON(e.target.result, nodeArr);
 
         // Save the master itself to retainer function
         masterJSON.setValue(e.target.result);
         
-        // Store the master nodes in local storage
+        // Store the master nodes in local storage as well as node groups
         localStorage.setItem("masterNodes", JSON.stringify(masterNodes));
+        localStorage.setItem("masterNodeGroup", JSON.stringify(nodeArr))
         
         // display the currently uploaded file on the page
         document.getElementById('master-display').textContent = file.name;
@@ -58,6 +60,7 @@ function childFileSelect(evt) {
     
     // array containing parsed json content (node name + image) + temp array
     var childNodes=[];
+    let childNodeGroup=[];
     var fileNodes=[];
         
     
@@ -80,7 +83,7 @@ function childFileSelect(evt) {
         for (var file of files) {
             childFilesNames.push(file.name);
             var content = await readFileContent(file);
-            fileNodes = parseJSON(content);
+            fileNodes =  await parseJSON(content, childNodeGroup);
             for (var node of fileNodes)
                 childNodes.push(node);
         }
@@ -91,6 +94,7 @@ function childFileSelect(evt) {
         // store file names and file contents in local storage
         localStorage.setItem("childFilesNames", JSON.stringify(childFilesNames))
         localStorage.setItem("childNodes", JSON.stringify(childNodes));
+        localStorage.setItem("childNodeGroup", JSON.stringify(childNodeGroup));
 
         // display the currently uploaded files to the page
         document.getElementById('child-display').textContent = childFilesNames;
@@ -159,30 +163,6 @@ function generateMasterGraph() {
         renderer.refresh();
     });
 
-    // renderer.on("clickNode", ({ node }) => {
-        
-    //     const actionArr=checkSelfLoops(node)
-        
-    //     var arrayDisplay = document.getElementById('paths-display');
-    //     arrayDisplay.innerHTML = '';
-    //     // Create a table element
-    //     var table = document.createElement("table");
-
-    //     // Loop over the array of arrays
-    //     for (var i = 0; i < actionArr.length; i++) {
-    //         var row = document.createElement("tr");
-    //         for (var j = 0; j < actionArr[i].length; j++) {
-    //             var cell = document.createElement("td");
-    //             cell.textContent = actionArr[i][j];            
-    //             row.appendChild(cell);
-    //         }   
-    //         table.appendChild(row);
-    //     }        
-            
-    //     arrayDisplay.appendChild(table);
-    //     renderer.refresh();
-    // });
-
     renderer.refresh();
 
 
@@ -208,16 +188,18 @@ function generateCoverageGraph() {
     generateMasterGraph();
     // Get array of master nodes from local storage
     const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
+    const masterNodeGroup = JSON.parse(localStorage.getItem("masterNodeGroup"));
 
     // Get array of childNodes from local storage
     const childNodes = JSON.parse(localStorage.getItem("childNodes"));
+    const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"));
 
     
     // Get master graph from local storage
     var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
     
     // Get not visited paths
-    var notVisitedNodes = getNotVisitedNodes(masterGraph, childNodes);
+    var notVisitedNodes = getNotVisitedNodes(masterNodeGroup, childNodeGroup);
     var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
     // displayNodes(notVisitedNodes, notVisitedPaths);
     
