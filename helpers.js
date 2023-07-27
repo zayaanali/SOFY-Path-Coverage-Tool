@@ -30,7 +30,7 @@ function getName(nodeArr, index) {
 */
 function getNode(jsonArr, idx) {
     var node = {
-        nodeID: jsonArr.scenario[idx].selectedComponent.xpathChecksum,
+        nodeID: jsonArr.scenario[idx].selectedComponent.xpathChecksum+jsonArr.scenario[idx].actionIndex,
         actionID: parseInt(jsonArr.scenario[idx].actionIndex)+1,
         image: jsonArr.scenario[idx].snapshotLocation,
         subNodes: []
@@ -42,7 +42,7 @@ function getNode(jsonArr, idx) {
 
 function getSubNode(jsonArr, idx) {
     var node = {
-        nodeID: jsonArr.scenario[idx].selectedComponent.xpathChecksum,
+        nodeID: jsonArr.scenario[idx].selectedComponent.xpathChecksum+jsonArr.scenario[idx].actionIndex,
         actionID: parseInt(jsonArr.scenario[idx].actionIndex)+1,
         image: jsonArr.scenario[idx].snapshotLocation,
     }
@@ -106,8 +106,6 @@ async function imageDiff(image1, image2) {
     let diff= await compareImages(image1, image2)
     return diff;
   
-    
-    
     async function compareImages(imageUrl1, imageUrl2) { 
         try {
             const image1 = await loadImage(imageUrl1);

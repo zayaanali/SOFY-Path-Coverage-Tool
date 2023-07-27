@@ -171,7 +171,7 @@ function generateMasterGraph() {
 /* 
 * Function to generate child coverage graph
 */
-function generateCoverageGraph() {
+async function generateCoverageGraph() {
     // first check for master file
     if (document.getElementById('master-display').textContent=='') {
         alert('no master file given');
@@ -194,13 +194,14 @@ function generateCoverageGraph() {
     const childNodes = JSON.parse(localStorage.getItem("childNodes"));
     const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"));
 
-    
     // Get master graph from local storage
     var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
     
     // Get not visited paths
-    var notVisitedNodes = getNotVisitedNodes(masterNodeGroup, childNodeGroup);
+    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup);
+    console.log(notVisitedNodes)
     var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
+    console.log(notVisitedPaths)
     // displayNodes(notVisitedNodes, notVisitedPaths);
     
     // // build coverage graph to visit arr

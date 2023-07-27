@@ -33,27 +33,22 @@ function buildGraph(nodeArr) {
     return newGraph;
 }
 
-function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
+async function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
     
     // Create a deep copy of master array 
-    let toVisitArr= JSON.parse(JSON.stringify(arr));
+    let toVisitArr= JSON.parse(JSON.stringify(masterNodeGroup));
     let toRemove=[];
     
     // Iterate through each node of the master. If matched with a node in the child mark for removal
     for (let i=0; i<masterNodeGroup.length; i++) {
         for (let childNode of childNodeGroup) {
-            let diff = imageDiff(masterNode.image, childNode.image)
+            let diff =  await imageDiff(masterNodeGroup[i].image, childNode.image)
             if (diff<=0.05)
                 toRemove.push(i);
         }
     }
-
     // Remove all nodes that have already been visited and return
     return toVisitArr.filter((item, index) => !toRemove.includes(index));
-    
-    
-    
-    
     // // Get list of nodes in the master
     // var masterNodes=[];
     // masterGraph.forEachNode((node, attributes) => {
@@ -77,25 +72,31 @@ function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
 * paths that have not been traversed yet from the start node (first node in the master)
 */
 function getNotVisitedPaths(masterGraph, toVisitArr) {
+    let targetArr=[];
+    for (let node of toVisitArr) {
+        targetArr.push(node.nodeID)
+    }
+    
+    console.log(targetArr)
     // Get list of nodes in the master
     var masterNodes=[];
     masterGraph.forEachNode((node, attributes) => {
         masterNodes.push(node);
     });
 
-    
+    console.log(masterNodes)
     // find all paths from start node to all not visited nodes
     var notVisitedPaths=[]
     // for each nodes that needs to be visited
-    for (var targetNode of toVisitArr) {
+    for (var targetNode of targetArr) {
         var paths = allSimplePaths(masterGraph, masterNodes[0], targetNode, { maxDepth:20 });
-        
-        // for (var path of paths) {
-        //     if (!notVisitedPaths.includes(path))
-        //         notVisitedPaths.push(path);
-        // }
+        for (var path of paths) {
+            if (!notVisitedPaths.includes(path))
+                notVisitedPaths.push(path);
+        }
     }
     
+    console.log(notVisitedPaths)
     return notVisitedPaths
 }
 
