@@ -5,11 +5,14 @@ import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 /* import various methods from methods.js */
 import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes, createGraphFromPath } from './methods.js';
 import { findImage, masterJSON } from './helpers.js';
+
 import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
-
-
+import { hiltonMasterGroup } from './hilton-master-rundata.js';
+import { hiltonMaster } from './hilton-master.js';
+import { hiltonChild } from './hiltonchild-5.js';
+import { hiltonChildGroup } from './hilton-child-rundata.js';
 
 
 
@@ -30,6 +33,7 @@ function masterFileSelect(evt) {
         // Save the file name as well as the parsed contents of the file (get only the node names and images)
         localStorage.setItem("masterFileName", file.name);
         masterNodes = await parseJSON(e.target.result, nodeArr);
+        console.log(nodeArr)
 
         // Save the master itself to retainer function
         masterJSON.setValue(e.target.result);
@@ -172,36 +176,44 @@ function generateMasterGraph() {
 * Function to generate child coverage graph
 */
 async function generateCoverageGraph() {
-    // first check for master file
-    if (document.getElementById('master-display').textContent=='') {
-        alert('no master file given');
-        throw new Error('master file not given');
-    }
+    // // first check for master file
+    // if (document.getElementById('master-display').textContent=='') {
+    //     alert('no master file given');
+    //     throw new Error('master file not given');
+    // }
 
-    // check for child files
-    if (document.getElementById('child-display').textContent=='') {
-        alert('no child file given');
-        throw new Error('child file not given');
-    } 
+    // // check for child files
+    // if (document.getElementById('child-display').textContent=='') {
+    //     alert('no child file given');
+    //     throw new Error('child file not given');
+    // } 
     
-    // run the master file
-    generateMasterGraph();
-    // Get array of master nodes from local storage
-    const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
-    const masterNodeGroup = JSON.parse(localStorage.getItem("masterNodeGroup"));
+    // // run the master file
+    // generateMasterGraph();
+    // // Get array of master nodes from local storage
+    // const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
+    // const masterNodeGroup = JSON.parse(localStorage.getItem("masterNodeGroup"));
 
-    // Get array of childNodes from local storage
-    const childNodes = JSON.parse(localStorage.getItem("childNodes"));
-    const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"));
-
-    // Get master graph from local storage
-    var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
+    // console.log(hiltonChild)
+    // console.log(hiltonChildGroup)
+    // console.log(hiltonMaster)
+    // console.log(hiltonmster)
     
-    // Get not visited paths
-    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup);
+    // // Get array of childNodes from local storage
+    // const childNodes = JSON.parse(localStorage.getItem("childNodes"));
+    // const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"));
+
+    // // Get master graph from local storage
+    // var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
+    
+    // // Get not visited paths
+    // var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup);
+    // var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
+
+    var notVisitedNodes = await getNotVisitedNodes(hiltonMasterGroup, hiltonChildGroup);
     console.log(notVisitedNodes)
-    var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
-    console.log(notVisitedPaths)
+    // var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
+
     // displayNodes(notVisitedNodes, notVisitedPaths);
     
     // // build coverage graph to visit arr

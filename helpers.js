@@ -110,7 +110,8 @@ async function imageDiff(image1, image2) {
         try {
             const image1 = await loadImage(imageUrl1);
             const image2 = await loadImage(imageUrl2);
-    
+            console.log("image1 ", image1.width, " image2 ", image2.width)
+            console.log("image1 ", image1.height, " image2 ", image2.height)
             if (image1.width !== image2.width || image1.height !== image2.height) {
                 alert("Both images should have the same dimensions.");
                 return;
