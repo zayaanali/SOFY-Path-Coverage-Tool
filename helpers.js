@@ -1,4 +1,5 @@
 import Pixelmatch from "pixelmatch";
+import { allowedDiff } from "./main";
 // File containing helper functions
 
 /* 
@@ -110,8 +111,6 @@ async function imageDiff(image1, image2) {
         try {
             const image1 = await loadImage(imageUrl1);
             const image2 = await loadImage(imageUrl2);
-            console.log("image1 ", image1.width, " image2 ", image2.width)
-            console.log("image1 ", image1.height, " image2 ", image2.height)
             if (image1.width !== image2.width || image1.height !== image2.height) {
                 alert("Both images should have the same dimensions.");
                 return;
@@ -179,7 +178,7 @@ async function doesNodeExist(nodeArr, img) {
         // calculate the difference between the current image and the given image
         let diff = await imageDiff(nodeArr[i].image, img);
         // if the difference is less than 0.075 return the index of the matching image
-        if (diff<=0.05)
+        if (diff<=allowedDiff)
             return i;    
     }
 
@@ -213,7 +212,7 @@ async function addNode(jsonArr, i, arrLength, nodeArr) {
          let diff = await imageDiff(curNodeImage, nextImage);
 
          // if the difference is less than 5% they are subnodes
-         if (diff<=0.05) {
+         if (diff<=allowedDiff) {
              // check if the node that compared to is a subnode or representative node
              if (nodeIndex!=-1) // subnode
                  nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, nextIndex)); // use the index found previously

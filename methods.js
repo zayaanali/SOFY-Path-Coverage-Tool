@@ -3,35 +3,145 @@ import Graph, { DirectedGraph } from 'graphology';
 import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
+import { allowedDiff } from './main.js';
 
 
+/*
+* Takes JSON string and returns tuples containing the node and the image link associated with it. Also builds graph
+*/
+async function parseJSON(jsonStr, nodeArr) {
+    
+
+    var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
+    let returnArr=[];
+    // Check if the JSON string is a valid JSON
+    if (!isValidJSON(jsonStr))
+        alert("Invalid JSON");
+    
+    // parse the JSON to get it from string to JSON object    
+    var jsonArr = JSON.parse(jsonStr);
+
+    // Get number of nodes in the JSON
+    const arrLength = jsonArr.scenario.length;
+    
+    // Building concise node array (placing identical screen as subnodes)
+    for (var i=0; i<arrLength;i++) {
+       i = await addNode(jsonArr, i, arrLength, nodeArr); // adds the node of the given index to the array of representative nodes       
+    }
+    
+    // building full node array
+    for (var i=0; i<arrLength;i++) {
+        returnArr.push(getNode(jsonArr, i))
+    }
+    return returnArr;
+}
+
+async function buildGraph(jsonStr, nodeArr) {
+    
+
+    var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
+    let returnArr=[];
+    let node;
+    let tempIndex;
+    // Check if the JSON string is a valid JSON
+    if (!isValidJSON(jsonStr))
+        alert("Invalid JSON");
+    
+    // parse the JSON to get it from string to JSON object    
+    var jsonArr = JSON.parse(jsonStr);
+
+    // Get number of nodes in the JSON
+    const arrLength = jsonArr.scenario.length;
+    let lastNodeIndex=-999; // index of last node that was found (initially set to -999)
+    
+    // Building concise node array (placing identical screen as subnodes)
+    for (var i=0; i<arrLength;i++) {
+        // Get the image of the current node
+        let curNode = jsonArr.scenario[i];
+            
+        // get the index of the node if it already exists in the array
+        let nodeIndex = await doesNodeExist(nodeArr, curNode.image);
+        
+        // if already exists in array
+        if (nodeIndex!=-1) {
+            
+            nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, i));
+            if (lastNodeIndex>0) // if there is a prior representative node (not the first screen)
+                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, nodeArr[nodeIndex].nodeID); // add an edge between the last node in the array and the node that is being added
+            
+            lastNodeIndex=nodeIndex; // set the last node as representative node that was just processed
+            
+        } else { // does not exist in the array yet
+            node=getNode(jsonArr,i);
+            newGraph.mergeNode(node.nodeID, { type: "image", label: node.actionID, image: node.image, size: 10 }); // add node to graph
+            if (lastNodeIndex>0) // if there is a prior representative node (not the first screen)
+                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, node.nodeID); // add an edge between the last node in the array and the node that is being added
+            
+            nodeArr.push(node); // add the node to the array
+            lastNodeIndex=nodeArr.length-1; // last node is now set to node that was just processed
+        }
+            
+        
+        let nextIndex = i+1;
+        let done = false;
+        
+        // for all next nodes check if they are subnodes
+        while (!done && nextIndex<arrLength) {
+            
+            // Get the next image and compute difference between current and next image
+            let nextImage = jsonArr.scenario[nextIndex].snapshotLocation;
+            let diff = await imageDiff(curNode.image, nextImage);
+
+            // if the difference is less than 5% they are subnodes
+            if (diff<=allowedDiff) {
+                // check if the node that compared to is a subnode or representative node
+                if (nodeIndex!=-1) // subnode
+                    nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, nextIndex)); // use the index found previously
+                else // representative node
+                    nodeArr[nodeArr.length-1].subNodes.push(getSubNode(jsonArr, nextIndex)); // use the index of the node that was just added to the array
+                
+                nextIndex++; // increment the temp index
+            } else { // difference is more than 5% so don't do anything
+                done=true;
+                //  i = nextIndex-1; // will be incremented by the forloop
+                return nextIndex-1;
+            }
+        }
+    }
+    
+    // building full node array
+    for (var i=0; i<arrLength;i++) {
+        returnArr.push(getNode(jsonArr, i))
+    }
+    return newGraph;
+}
 
 /*
 * This function takes in an array of nodes and builds a graph from it. Returns the built graph
 */
-function buildGraph(nodeArr) {
+// function buildGraph(nodeArr) {
 
-    // Instantiate directed unweighted graph (using graphology library)
-    var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
+//     // Instantiate directed unweighted graph (using graphology library)
+//     var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
     
-    // Save length of the array
-    const arrLength = nodeArr.length;
+//     // Save length of the array
+//     const arrLength = nodeArr.length;
     
-    // Add all edges in the json arr to the 
-    for (var i=0; i<arrLength;i++) {
-        // Add node and image. Check if image exists first
-        // image does exist
-        if (nodeArr[i].image!=null)
-            newGraph.mergeNode(nodeArr[i].nodeID, { type: "image", label: nodeArr[i].actionID, image: nodeArr[i].image, size: 10 });
-        else
-            newGraph.mergeNode(nodeArr[i].nodeID, { size: 10, label: nodeArr[i].actionID });
+//     // Add all edges in the json arr to the 
+//     for (var i=0; i<arrLength;i++) {
+//         // Add node and image. Check if image exists first
+//         // image does exist
+//         if (nodeArr[i].image!=null)
+//             newGraph.mergeNode(nodeArr[i].nodeID, { type: "image", label: nodeArr[i].actionID, image: nodeArr[i].image, size: 10 });
+//         else
+//             newGraph.mergeNode(nodeArr[i].nodeID, { size: 10, label: nodeArr[i].actionID });
         
-        // if there is a node following attach an edge to it
-        if (i+1<arrLength)
-            newGraph.mergeEdge(nodeArr[i].nodeID, nodeArr[i+1].nodeID);
-    }
-    return newGraph;
-}
+//         // if there is a node following attach an edge to it
+//         if (i+1<arrLength)
+//             newGraph.mergeEdge(nodeArr[i].nodeID, nodeArr[i+1].nodeID);
+//     }
+//     return newGraph;
+// }
 
 async function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
     
@@ -43,7 +153,7 @@ async function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
     for (let i=0; i<masterNodeGroup.length; i++) {
         for (let childNode of childNodeGroup) {
             let diff =  await imageDiff(masterNodeGroup[i].image, childNode.image)
-            if (diff<=0.05)
+            if (diff<=allowedDiff)
                 toRemove.push(i);
         }
     }
@@ -83,13 +193,12 @@ function getNotVisitedPaths(masterGraph, toVisitArr) {
     masterGraph.forEachNode((node, attributes) => {
         masterNodes.push(node);
     });
-
-    console.log(masterNodes)
     // find all paths from start node to all not visited nodes
     var notVisitedPaths=[]
     // for each nodes that needs to be visited
     for (var targetNode of targetArr) {
         var paths = allSimplePaths(masterGraph, masterNodes[0], targetNode, { maxDepth:20 });
+        console.log(paths)
         for (var path of paths) {
             if (!notVisitedPaths.includes(path))
                 notVisitedPaths.push(path);
@@ -131,33 +240,7 @@ function createGraphFromPath(notVisitedPaths, masterNodes) {
 }
 
 
-/*
-* Takes JSON string and returns tuples containing the node and the image link associated with it 
-*/
-async function parseJSON(jsonStr, nodeArr) {
-    
-    let returnArr=[];
-    // Check if the JSON string is a valid JSON
-    if (!isValidJSON(jsonStr))
-        alert("Invalid JSON");
-    
-    // parse the JSON to get it from string to JSON object    
-    var jsonArr = JSON.parse(jsonStr);
 
-    // Get number of nodes in the JSON
-    const arrLength = jsonArr.scenario.length;
-    
-    // Building concise node array (placing identical screen as subnodes)
-    for (var i=0; i<arrLength;i++) {
-       i = await addNode(jsonArr, i, arrLength, nodeArr); // adds the node of the given index to the array of representative nodes       
-    }
-    
-    // building full node array
-    for (var i=0; i<arrLength;i++) {
-        returnArr.push(getNode(jsonArr, i))
-    }
-    return returnArr;
-}
 
 
 /*
