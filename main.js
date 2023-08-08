@@ -3,25 +3,41 @@ import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 /* import various methods from methods.js */
-import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes, createGraphFromPath } from './methods.js';
+import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, displayUnvisitedNodes } from './methods.js';
+import { displayPath } from './methods.js';
 import { findImage, masterJSON } from './helpers.js';
 
 import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
-import { hiltonMasterGroup } from './hilton-master-rundata.js';
-import { hiltonMaster } from './hilton-master.js';
-import { hiltonChild } from './hiltonchild-5.js';
-import { hiltonChildGroup } from './hilton-child-rundata.js';
+import { hiltonChildNoHotel } from './old-run-data/hilton-child-nohotelsearch.js';
+import { hiltonChildNoSignIn } from './old-run-data/hilton-child-nosignin.js';
+import { hiltonMasterGraph } from './old-run-data/hilton-master-graph.js';
+import { hiltonMasterGroup } from './old-run-data/hilton-master-group.js'
+import { notVisited } from './old-src/notVisited.js';
+import { unvisitedNodeSearch } from './old-run-data/unvisited-node-search.js';
+import { unvisitedNodeSignIn } from './old-run-data/unvisited-nodes-signin.js';
+import { masterSearchGroup } from './old-run-data/master-search-node-group-hilton.js';
+import { hiltonSearchGraph } from './old-run-data/search-mastergraph-hilton.js';
+import { unvisitedTest } from './old-run-data/unvisited-test.js';
+import { checkoutChildNodeGroup } from './old-run-data/checkout-nodegroup-child.js';
+import { hotelSearchGraph } from './run-data/hotel-search-master-graph.js';
+import { hotelSearchNodeGroup } from './run-data/hotel-search-master-nodegroup.js';
+import { hotelNoSignInChild } from './run-data/hotel-search-nosignin-child.js';
+import { unvisitedNoSignIn } from './run-data/unvisitedNoSignIn.js';
+import { hotelSignInChild } from './run-data/hotel-search-signin-child.js';
+import { unvisitedSignIn } from './run-data/unvisitedSignIn.js';
 
-var allowedDiff = 0.025;
+
+
+
+var allowedDiff = 0.005;
 
 /* 
 * Function to run when master file is uploaded. Function saves the master file and 
-* file name to local storage so can be used in other functions
+* file name to local storage as well as processes the file to build master graph and node groups
 */
 function masterFileSelect(evt) {
-    var masterNodes=[];
     var nodeArr=[];
     
     localStorage.clear();
@@ -30,18 +46,18 @@ function masterFileSelect(evt) {
     var file = evt.target.files[0];
     var reader = new FileReader();
     reader.onload = async function(e) {
-        // Save the file name as well as the parsed contents of the file (get only the node names and images)
+        // Save the file name
         localStorage.setItem("masterFileName", file.name);
-        let masterGraph= await parseJSON(e.target.result, nodeArr);
+        
+        // Build master graph as well as master node groups and save it
+        let masterGraph= await buildGraph(e.target.result, nodeArr);
         localStorage.setItem("masterGraph", JSON.stringify(masterGraph.export()));
-
+        localStorage.setItem("masterNodeGroup", JSON.stringify(nodeArr))
+        console.log(nodeArr)
+        console.log(masterGraph.export())
         // Save the master itself to retainer function
         masterJSON.setValue(e.target.result);
-        
-        // Store the master nodes in local storage as well as node groups
-        localStorage.setItem("masterNodes", JSON.stringify(masterNodes));
-        localStorage.setItem("masterNodeGroup", JSON.stringify(nodeArr))
-        
+                
         // display the currently uploaded file on the page
         document.getElementById('master-display').textContent = file.name;
     };
@@ -51,7 +67,7 @@ function masterFileSelect(evt) {
 
 /* 
 * Function to run when child files are uploaded. Function saves the child file contents
-* the file names to local storage so can be used in other functions
+* the file names to local storage as well as creates child node groups
 */
 function childFileSelect(evt) {    
 
@@ -63,10 +79,7 @@ function childFileSelect(evt) {
     var childFilesNames=[];
     
     // array containing parsed json content (node name + image) + temp array
-    var childNodes=[];
     let childNodeGroup=[];
-    var fileNodes=[];
-        
     
     // function used to read file content
     async function readFileContent(file) {
@@ -87,9 +100,7 @@ function childFileSelect(evt) {
         for (var file of files) {
             childFilesNames.push(file.name);
             var content = await readFileContent(file);
-            fileNodes =  await parseJSON(content, childNodeGroup);
-            for (var node of fileNodes)
-                childNodes.push(node);
+            await parseJSON(content, childNodeGroup);
         }
     }
 
@@ -97,9 +108,8 @@ function childFileSelect(evt) {
     processFiles().then(function() {
         // store file names and file contents in local storage
         localStorage.setItem("childFilesNames", JSON.stringify(childFilesNames))
-        localStorage.setItem("childNodes", JSON.stringify(childNodes));
         localStorage.setItem("childNodeGroup", JSON.stringify(childNodeGroup));
-
+        console.log(childNodeGroup)
         // display the currently uploaded files to the page
         document.getElementById('child-display').textContent = childFilesNames;
 
@@ -111,20 +121,8 @@ function childFileSelect(evt) {
 /* 
 * Function to generate master graph given input JSON file
 */
-function generateMasterGraph() {    
-    // if (document.getElementById('master-display').textContent=='') {
-    //         alert('no master file given');
-    //         throw new Error('master file not given');
-    // }
-    
-    // // Get list of nodes in the master from local storage
-    // const masterNodes = JSON.parse(localStorage.getItem("masterNodeGroup"));
-    // // Build graph using list of nodes
-    // console.log(masterNodes)
-    // var masterGraph = buildGraph(masterNodes);
-
-    // // store the master graph for use later
-    // localStorage.setItem("masterGraph", JSON.stringify(masterGraph.export()));
+function displayMasterGraph() {    
+   
     var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
 
     
@@ -174,234 +172,45 @@ function generateMasterGraph() {
 
 }
 
+
+
 /* 
 * Function to generate child coverage graph
 */
 async function generateCoverageGraph() {
-    // first check for master file
-    if (document.getElementById('master-display').textContent=='') {
-        alert('no master file given');
-        throw new Error('master file not given');
-    }
-
-    // check for child files
-    if (document.getElementById('child-display').textContent=='') {
-        alert('no child file given');
-        throw new Error('child file not given');
-    } 
+    const maxDiff = 0.015
     
-    // run the master file
-    generateMasterGraph();
-    // Get array of master nodes from local storage
-    const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
-    const masterNodeGroup = JSON.parse(localStorage.getItem("masterNodeGroup"));
-
+    // other options: masterSearchGroup, hiltonMasterGroup, hotelSearchNodeGroup
+    // const masterNodeGroup = hotelSearchNodeGroup
+    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
     
-    // Get array of childNodes from local storage
-    const childNodes = JSON.parse(localStorage.getItem("childNodes"));
-    const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"));
+    // const childNodeGroup = hiltonChildNoHotel;
+    // options: childNoHotel, childNoSignIn, checkoutChildNodeGroup, hotelnosigninchild, hotelsigninchild
+    const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"))
+    // const childNodeGroup = hotelNoSignInChild
 
-    // Get master graph from local storage
-    var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
+
+    // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
+    const masterGraph = Graph.from(JSON.parse(localStorage.getItem('masterGraph')));
+    // var masterGraph = Graph.from(hotelSearchGraph)
     
-    // Get not visited paths
-    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup);
-    var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
-
-    // var notVisitedNodes = await getNotVisitedNodes(hiltonMasterGroup, hiltonChildGroup);
-    // var notVisitedPaths = getNotVisitedPaths(masterGraph, notVisitedNodes);
-    console.log(notVisitedPaths)
-
-    // displayNodes(notVisitedNodes, notVisitedPaths);
+    // var notVisitedHotel = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff)
+    // console.log(notVisitedHotel)
+    // var notvisitedHotelSearch  = 
     
-    // // build coverage graph to visit arr
-    // var coverageGraph = createGraphFromPath(notVisitedPaths, masterNodes);
-
-    // const container = document.getElementById('coverage-graph-display');
-    // container.innerHTML='';
     
-    // // set layout
-    // circular.assign(coverageGraph, { scale: 10 });
-    // const sensibleSettings = forceAtlas2.inferSettings(masterGraph);
-    // const fa2Layout = new FA2Layout(coverageGraph, {
-    //     settings: sensibleSettings,
-    // });
-    // fa2Layout.start();
 
-    // // change edge sizes
-    // masterGraph.edges().forEach(key => {
-    //     masterGraph.setEdgeAttribute(key, 'size', 3);
-    // })
-    
-    // // change edge sizes
-    // coverageGraph.edges().forEach(key => {
-    //     coverageGraph.setEdgeAttribute(key, 'size', 3);
-    // })
-
-
-    // let hoveredEdge = null;
-    // const renderer = new Sigma(coverageGraph, container, {
-    //     nodeProgramClasses: {
-    //         image: getNodeProgramImage()
-    //     },
-        
-    //     enableEdgeClickEvents: true,
-    //     enableEdgeWheelEvents: true,
-    //     enableEdgeHoverEvents: "debounce",
-    //     edgeReducer(edge, data) {
-    //         const res = { ...data };
-    //         if (edge === hoveredEdge) res.color = "#cc0000";
-    //         return res;
-    //       },
-    // });
-        
-    // renderer.on("enterEdge", ({ edge }) => {
-    //     hoveredEdge = edge;
-    //     renderer.refresh();
-    // });
-    // renderer.on("leaveEdge", ({ edge }) => {
-    //     hoveredEdge = null;
-    //     renderer.refresh();
-    // });
-
-    // renderer.on("clickEdge", ({ edge }) => {
-        
-    //     displayPaths(notVisitedPaths, coverageGraph.source(edge), coverageGraph.target(edge));
-    //     renderer.refresh();
-    // });
-
-
-    // renderer.refresh();
+    // options: unvisitedNodeSignin, UnvisitedNodeSearch, unvisitedTest
+    // var notVisitedNodes=unvisitedTest
+    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff);
+    // console.log(notVisitedNodes)
+    displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes)
 
 }
 
 
-/**
- * This function takes and displays all of the paths that include the edge
- */
-function displayPaths(notVisitedPaths, source, target) {
-
-    // Get master JSON
-    var master = JSON.parse(masterJSON.getValue());
-    
-    // array containing paths
-    var paths=[];
-    
-    for (var path of notVisitedPaths) {
-        for (var i=0; i<path.length; i++) {
-            if (path[i]==source && i+1<path.length) {
-                if (path[i+1]==target)
-                    paths.push(path);
-            }
-        }
-    }
-
-    // display the paths that still need to be taken
-    var arrayDisplay = document.getElementById('paths-display');
-    arrayDisplay.innerHTML = '';
-    arrayDisplay.appendChild(generateTable(master, paths));
-
-}
-
-
-
-function displayNodes(notVisitedNodes, notVisitedPaths) {
-    const container = document.getElementById('node-display')
-    
-    for (var i = 0; i < notVisitedNodes.length; i++) {
-        
-        var button = document.createElement('button');
-        button.innerHTML = notVisitedNodes[i];
-  
-        // Add a click event listener to each button
-        button.addEventListener('click', function() {
-            displayPathToNode(notVisitedPaths, this.innerHTML)
-        });
-  
-        // Append the button to the container
-        container.appendChild(button);
-      }
-}
-
-/**
- * This function takes end node and display all paths with given end node
- */
-function displayPathToNode(notVisitedPaths, end) {
-
-    // Get master JSON
-    var master = JSON.parse(masterJSON.getValue());
-    
-    // array containing paths
-    var paths=[];
-    
-    for (var path of notVisitedPaths) {
-        let target = path.length-1;
-        if (path[target]==end)
-            paths.push(path);
-    }
-
-    // display the paths that still need to be taken
-    var arrayDisplay = document.getElementById('paths-display');
-    arrayDisplay.innerHTML = '';
-    arrayDisplay.appendChild(generateTable(master, paths));
-
-    // display create a graph with all of these paths
-    const masterNodes = JSON.parse(localStorage.getItem("masterNodes"));
-    let graph = createGraphFromPath(paths, masterNodes);
-
-    const container = document.getElementById('coverage-graph-display');
-    container.innerHTML='';
-    
-    // set layout
-    circular.assign(graph, { scale: 10 });
-    const sensibleSettings = forceAtlas2.inferSettings(graph);
-    const fa2Layout = new FA2Layout(graph, {
-        settings: sensibleSettings,
-    });
-    fa2Layout.start();
-    
-    // change edge sizes
-    graph.edges().forEach(key => {
-        graph.setEdgeAttribute(key, 'size', 3);
-    })
-
-    let hoveredEdge = null;
-    const renderer = new Sigma(graph, container, {
-        nodeProgramClasses: {
-            image: getNodeProgramImage()
-        },
-        
-        enableEdgeClickEvents: true,
-        enableEdgeWheelEvents: true,
-        enableEdgeHoverEvents: "debounce",
-        edgeReducer(edge, data) {
-            const res = { ...data };
-            if (edge === hoveredEdge) res.color = "#cc0000";
-            return res;
-          },
-    });
-        
-    renderer.on("enterEdge", ({ edge }) => {
-        hoveredEdge = edge;
-        renderer.refresh();
-    });
-    renderer.on("leaveEdge", ({ edge }) => {
-        hoveredEdge = null;
-        renderer.refresh();
-    });
-
-    renderer.on("clickEdge", ({ edge }) => {
-        displayPaths(notVisitedPaths, graph.source(edge), graph.target(edge));
-        renderer.refresh();
-    });
-    
-    renderer.refresh();
-}
-
-export { allowedDiff }
-
-/* Functions to run on button press */
-document.getElementById('generate-master').addEventListener('click', generateMasterGraph);
+// /* Functions to run on button press */
+document.getElementById('generate-master').addEventListener('click', testFunction);
 document.getElementById('generate-coverage').addEventListener('click', generateCoverageGraph);
 document.getElementById('master-json').addEventListener('change', masterFileSelect);
 document.getElementById('child-json').addEventListener('change', childFileSelect);

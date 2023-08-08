@@ -1,10 +1,17 @@
 import { isValidJSON, getName, getImage, getScenario, masterJSON, findImage, getNode, imageDiff, getSubNode, doesNodeExist, addNode } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
-import {allSimpleEdgePaths, allSimplePaths } from 'graphology-simple-path';
+import { allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
-import { allowedDiff } from './main.js';
 
+import FA2Layout from "graphology-layout-forceatlas2/worker";
+import forceAtlas2 from "graphology-layout-forceatlas2";
+import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
+
+
+import { hiltonMasterGroup } from './old-run-data/hilton-master-group.js';
+
+var allowedDiff = 0.005;
 
 /*
 * Takes JSON string and returns tuples containing the node and the image link associated with it. Also builds graph
@@ -52,30 +59,36 @@ async function buildGraph(jsonStr, nodeArr) {
 
     // Get number of nodes in the JSON
     const arrLength = jsonArr.scenario.length;
-    let lastNodeIndex=-999; // index of last node that was found (initially set to -999)
-    
+    let lastNodeIndex=0; // index of last node that was found
+    node=getNode(jsonArr,0);
+    newGraph.mergeNode(node.nodeID, { type: "image", label: node.actionID, image: node.image, size: 10 }); // add node to graph
+    nodeArr.push(node); // add the node to the array
+
     // Building concise node array (placing identical screen as subnodes)
-    for (var i=0; i<arrLength;i++) {
+    for (var i=1; i<arrLength;i++) {
+        
         // Get the image of the current node
         let curNode = jsonArr.scenario[i];
-            
+        
         // get the index of the node if it already exists in the array
-        let nodeIndex = await doesNodeExist(nodeArr, curNode.image);
+        
+        let nodeIndex = await doesNodeExist(nodeArr, curNode.snapshotLocation);
+        
         
         // if already exists in array
         if (nodeIndex!=-1) {
             
             nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, i));
-            if (lastNodeIndex>0) // if there is a prior representative node (not the first screen)
-                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, nodeArr[nodeIndex].nodeID); // add an edge between the last node in the array and the node that is being added
+            if (!newGraph.hasEdge(nodeArr[nodeIndex].nodeID, nodeArr[lastNodeIndex].nodeID))
+                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, nodeArr[nodeIndex].nodeID, { type: "arrow" }); // add an edge between the last node in the array and the node that is being added
             
             lastNodeIndex=nodeIndex; // set the last node as representative node that was just processed
             
         } else { // does not exist in the array yet
             node=getNode(jsonArr,i);
             newGraph.mergeNode(node.nodeID, { type: "image", label: node.actionID, image: node.image, size: 10 }); // add node to graph
-            if (lastNodeIndex>0) // if there is a prior representative node (not the first screen)
-                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, node.nodeID); // add an edge between the last node in the array and the node that is being added
+            if (!newGraph.hasEdge(node.nodeID, nodeArr[lastNodeIndex].nodeID))
+                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, node.nodeID, {type: "arrow" }); // add an edge between the last node in the array and the node that is being added
             
             nodeArr.push(node); // add the node to the array
             lastNodeIndex=nodeArr.length-1; // last node is now set to node that was just processed
@@ -90,7 +103,7 @@ async function buildGraph(jsonStr, nodeArr) {
             
             // Get the next image and compute difference between current and next image
             let nextImage = jsonArr.scenario[nextIndex].snapshotLocation;
-            let diff = await imageDiff(curNode.image, nextImage);
+            let diff = await imageDiff(curNode.snapshotLocation, nextImage);
 
             // if the difference is less than 5% they are subnodes
             if (diff<=allowedDiff) {
@@ -103,8 +116,8 @@ async function buildGraph(jsonStr, nodeArr) {
                 nextIndex++; // increment the temp index
             } else { // difference is more than 5% so don't do anything
                 done=true;
-                //  i = nextIndex-1; // will be incremented by the forloop
-                return nextIndex-1;
+                i = nextIndex-1; // will be incremented by the forloop
+                // return nextIndex-1;
             }
         }
     }
@@ -113,37 +126,11 @@ async function buildGraph(jsonStr, nodeArr) {
     for (var i=0; i<arrLength;i++) {
         returnArr.push(getNode(jsonArr, i))
     }
+    
     return newGraph;
 }
 
-/*
-* This function takes in an array of nodes and builds a graph from it. Returns the built graph
-*/
-// function buildGraph(nodeArr) {
-
-//     // Instantiate directed unweighted graph (using graphology library)
-//     var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
-    
-//     // Save length of the array
-//     const arrLength = nodeArr.length;
-    
-//     // Add all edges in the json arr to the 
-//     for (var i=0; i<arrLength;i++) {
-//         // Add node and image. Check if image exists first
-//         // image does exist
-//         if (nodeArr[i].image!=null)
-//             newGraph.mergeNode(nodeArr[i].nodeID, { type: "image", label: nodeArr[i].actionID, image: nodeArr[i].image, size: 10 });
-//         else
-//             newGraph.mergeNode(nodeArr[i].nodeID, { size: 10, label: nodeArr[i].actionID });
-        
-//         // if there is a node following attach an edge to it
-//         if (i+1<arrLength)
-//             newGraph.mergeEdge(nodeArr[i].nodeID, nodeArr[i+1].nodeID);
-//     }
-//     return newGraph;
-// }
-
-async function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
+async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff) {
     
     // Create a deep copy of master array 
     let toVisitArr= JSON.parse(JSON.stringify(masterNodeGroup));
@@ -153,155 +140,210 @@ async function getNotVisitedNodes(masterNodeGroup, childNodeGroup) {
     for (let i=0; i<masterNodeGroup.length; i++) {
         for (let childNode of childNodeGroup) {
             let diff =  await imageDiff(masterNodeGroup[i].image, childNode.image)
-            if (diff<=allowedDiff)
+            if (diff<=maxDiff)
                 toRemove.push(i);
         }
     }
+   
     // Remove all nodes that have already been visited and return
     return toVisitArr.filter((item, index) => !toRemove.includes(index));
-    // // Get list of nodes in the master
-    // var masterNodes=[];
-    // masterGraph.forEachNode((node, attributes) => {
-    //     masterNodes.push(node);
-    // });
 
-    // // Get list of nodes that have already been visited (remove duplicates)
-    // var visitedNodes=[];
-    // for (var node of childNodes) {
-    //     if (!visitedNodes.includes(node.nodeID))
-    //         visitedNodes.push(node.nodeID);
-    // }
-
-    // // Create list of nodes that have yet to be visited. Get all nodes in master not present in child
-    // var toVisitArr = masterNodes.filter(value => !visitedNodes.includes(value));
-    
-    // return toVisitArr
 }
 /*
 * This function takes a graph as well as list of child nodes and returns all of the
 * paths that have not been traversed yet from the start node (first node in the master)
 */
-function getNotVisitedPaths(masterGraph, toVisitArr) {
-    let targetArr=[];
-    for (let node of toVisitArr) {
-        targetArr.push(node.nodeID)
-    }
+function getNotVisitedPaths(masterGraph, targetNode) {
     
-    console.log(targetArr)
     // Get list of nodes in the master
     var masterNodes=[];
     masterGraph.forEachNode((node, attributes) => {
         masterNodes.push(node);
     });
-    // find all paths from start node to all not visited nodes
-    var notVisitedPaths=[]
-    // for each nodes that needs to be visited
-    for (var targetNode of targetArr) {
-        var paths = allSimplePaths(masterGraph, masterNodes[0], targetNode, { maxDepth:20 });
-        console.log(paths)
-        for (var path of paths) {
-            if (!notVisitedPaths.includes(path))
-                notVisitedPaths.push(path);
+
+    return allSimplePaths(masterGraph, masterNodes[0], targetNode)
+    
+}
+
+
+
+
+
+/**
+ * This function takes in an array of unvisited nodes and displays the image
+ * on the page with buttons for each node
+ */
+function displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes) {
+    var checkedItems=[];
+    displayImages();
+
+    function displayImages() {
+        
+        const imageContainer = document.querySelector('.unvisited-node-display');
+        imageContainer.innerHTML = ''; // Clear previous content
+      
+        for (const node of notVisitedNodes) {
+            const imageElement = document.createElement('img');
+            imageElement.src = node.image;
+        
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.className='image-button';
+            removeButton.addEventListener('click', () => removeImage(node.nodeID));
+
+            const button = document.createElement('button');
+            button.className = 'image-button';
+            button.textContent = 'Generate Paths';
+            button.addEventListener('click', () => {
+                displayPathButtons(masterGraph, masterNodeGroup, node.nodeID)
+            });
+
+            const checkbox = document.createElement('input');
+            checkbox.className='checkboxes'
+            checkbox.type = 'checkbox';
+            checkbox.dataset.id = node.nodeID;
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    checkedItems.push(node);
+                } else {
+                    const indexToRemove = checkedItems.findIndex(item => item.nodeID === node.nodeID);
+                    if (indexToRemove !== -1) {
+                        checkedItems.splice(indexToRemove, 1);
+                    }
+                }
+                console.log('Checked Items:', checkedItems); // Display checked items in console
+            });
+
+            const imageContainerDiv = document.createElement('div');
+            imageContainerDiv.className = 'image-div'
+            imageContainerDiv.appendChild(imageElement);
+            imageContainerDiv.appendChild(button);
+            imageContainerDiv.appendChild(removeButton);
+            imageContainerDiv.appendChild(checkbox);
+            
+            imageContainer.appendChild(imageContainerDiv);
         }
+    }
+    function removeImage(id) {
+        const indexToRemove = notVisitedNodes.findIndex(item => item.nodeID == id);
+        if (indexToRemove !== -1) {
+            notVisitedNodes.splice(indexToRemove, 1);
+            refreshImages();
+        }
+    }
+    function refreshImages() {
+        const imageContainer = document.querySelector('.unvisited-node-display');
+        imageContainer.innerHTML = ''; // Clear previous content
+        displayImages(); // Display the updated images
+    }
+
+    function mergeNodes() {
+        let baseNode = checkedItems[0].nodeID;
+        
+        // Iterate through each of the check
+        for (let i=1; i<checkedItems.length; i++) {
+            
+            masterGraph.forEachInEdge(checkedItems[i].nodeID,
+                (edge, attributes, source, target, sourceAttributes, targetAttributes) => {
+                    masterGraph.mergeEdge(source, baseNode)
+
+            });
+            
+            masterGraph.forEachOutEdge(checkedItems[i].nodeID,
+                (edge, attributes, source, target, sourceAttributes, targetAttributes) => {
+                    masterGraph.mergeEdge(baseNode, target)
+            });
+            
+            masterGraph.dropNode(checkedItems[i].nodeID)
+            removeImage(checkedItems[i].nodeID)
+            console.log(notVisitedNodes)
+        }
+        checkedItems=[]
+
+    }
+    document.getElementById('merge-nodes').addEventListener('click', mergeNodes)
+}
+
+/**
+ * This function takes and displays all of the paths that include the edge
+ */
+function displayPathButtons(masterGraph, masterNodeGroup, target) {
+
+    const notVisitedPaths = getNotVisitedPaths(masterGraph, target, { maxDepth: 20 });
+    // Get the button container element
+    var container = document.getElementById("paths-selection");
+    container.innerHTML='';
+
+    // Loop through the paths array
+    for (var i = 0; i < notVisitedPaths.length; i++) {
+        var path = notVisitedPaths[i];
+
+        // Create a button for the current path
+        var pathButton = document.createElement("button");
+        pathButton.textContent = 'Path '+i; // Display the path name
+
+        // Add an event listener to the path button
+        pathButton.addEventListener("click", displayPath.bind(null, masterNodeGroup, path));
+        container.appendChild(pathButton);
+    }
+
+
+}
+
+
+
+
+
+function displayPath(masterNodeGroup, path) {
+    
+    let imagePath=[];
+    for (let id of path) {
+        let node = masterNodeGroup.find(node => node.nodeID == id);
+        imagePath.push(node.image);
     }
     
-    console.log(notVisitedPaths)
-    return notVisitedPaths
-}
-
-function createGraphFromPath(notVisitedPaths, masterNodes) {
+    const imageContainer = document.getElementById('paths-display');
+    imageContainer.innerHTML='';
     
-    // Create graph from not visited paths
-    var coverageGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
+    imagePath.forEach(url => {
+        // Create an img element and set src
+        const imgElement = document.createElement('img');
+        imgElement.src = url;
+        imgElement.style.marginRight = '10px'; // Add some space between images
 
-    // for each path merge each edge
-    for (var path of notVisitedPaths) {
-        for (var i=0; i<path.length; i++) {
-            // if there is a following node in the path
-            if (i+1<path.length) {
-                // add first node (name and image)
-                if (findImage(masterNodes, path[i])!=null)
-                    coverageGraph.mergeNode(path[i], { type: "image", label: path[i], image: findImage(masterNodes, path[i]), size: 30 });
-                else    
-                    coverageGraph.mergeNode(path[i], { size: 30, label: path[i] });
+        imageContainer.appendChild(imgElement);
+    });
 
-                // add second node (name and image)
-                if (findImage(masterNodes, path[i+1])!=null)
-                    coverageGraph.mergeNode(path[i+1], { type: "image", label: path[i+1], image: findImage(masterNodes, path[i+1]), size: 30 });
-                else
-                    coverageGraph.mergeNode(path[i+1], { label: path[i+1], size: 30 });
+    let buttonContainer = document.getElementById('path-download');
+    buttonContainer.innerHTML='';
+    let button = document.createElement('button');
+    button.textContent = "Download Path";
+    button.addEventListener("click", downloadPath.bind(null, path));
+    buttonContainer.appendChild(button);
 
-                // add edge between the two nodes
-                coverageGraph.mergeEdge(path[i], path[i+1]);
-            } 
-        }
-    }
-    return coverageGraph;
+}
+
+
+function downloadPath(path) {
+    console.log(path)
+    // Get master JSON
+    // var master = JSON.parse(masterJSON.getValue());
+    const master = hiltonMaster;
+    
+    var newJSON = createPathJSON(master, path);
+    
+    console.log(newJSON)
 }
 
 
 
 
 
-/*
- * Generate an html table for nested arrays
-*/
-function generateTable(masterJSON, array) {
-    var table = document.createElement('table');
-
-      for (var i = 0; i < array.length; i++) {
-        var row = document.createElement('tr');
-
-        for (var j = 0; j < array[i].length; j++) {
-          var cell = document.createElement('td');
-          var cellText = document.createTextNode(array[i][j]);
-          cell.appendChild(cellText);
-          row.appendChild(cell);
-        }
-
-        var buttonCell = document.createElement('td');
-        var button = document.createElement('button');
-        button.textContent = 'Download Test JSON';
-        button.addEventListener('click', createButtonHandler(array[i])); // Attach event handler to the button
-        buttonCell.appendChild(button);
-        row.appendChild(buttonCell);
-
-        table.appendChild(row);
-    }
-
-    return table;
-
-    // Function to create an event handler for the button
-    function createButtonHandler(arrayElement) {
-        return function() {
-          // Perform your desired action with the array element
-          var newJSON = createPathJSON(masterJSON, arrayElement);
-          downloadJSON("SOFY-TEST", newJSON);
-          console.log(newJSON)
-        };
-    }
-
-    function downloadJSON(filename, jsonContent) {
-        var element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(jsonContent)));
-        element.setAttribute('download', filename);
-        
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        
-        element.click();
-        
-        document.body.removeChild(element);
-    }
-
-
-
-  
-}
 /*
  * creates a JSON for a corresponding path to be able to run a test
  */
 function createPathJSON(master, path) {
+    
     // create a deep copy of the master to modify
     var newJSON = JSON.parse(JSON.stringify(master));
     
@@ -319,48 +361,105 @@ function createPathJSON(master, path) {
 
 
 
+var idx =24
 
 
-/**
- * For each node in the graph checks for self-loops. If they exist then shows the different
- * actions within the self-loop;
- */
-function checkSelfLoops(node) {
-    // Get master JSON
-    if (!isValidJSON(masterJSON.getValue()))
-        throw new Error("master json not valid");
-    
-    var master = JSON.parse(masterJSON.getValue());
 
-
-    var actionArr=[];
-    
-    // For each node of the 
-    for (var i=0; i<master.scenario.length; i++) {
-        
-        if (getName(master, i)==node && i+1<master.scenario.length && getName(master, i+1)==node) {
-            var actions=[];
-            actions.push(master.scenario[i].action);
-            actions.push(master.scenario[i+1].action);
-            i=i+2;
-            while (i<master.scenario.length && getName(master, i)==node) {
-                actions.push(master.scenario[i].action);
-                i++;
-            }
-            actionArr.push(actions);
-        }
-    }
-    return actionArr
-
-}
 
 /*
  * Ignore - this function is used for testing purposes
  */
 async function testFunction() {
-    const imageURL1 = 'http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C880a1e7d-5b4f-4315-a9e5-61aef9190447%5Chilton-filter-test%5CImages%5C1690229476825.png';
-    const imageURL2 = 'http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C880a1e7d-5b4f-4315-a9e5-61aef9190447%5Chilton-filter-test%5CImages%5C1690229476982.png';
-    console.log(100*await imageDiff(imageURL1,imageURL2))
+    
+    const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C11395809-ccb4-4113-8bad-b5b21a5ded03%5Chotel-search-master2%5CImages%5C1691466801535.png'
+    const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C11395809-ccb4-4113-8bad-b5b21a5ded03%5Cchild-hotelsearch-signin%5CImages%5C1691467198328.png'
+
+    // let diff = await imageDiff(image1, image2)
+    // console.log(diff)
+
+    
+    deepai.setApiKey('');
+    var resp = await deepai.callStandardApi("image-similarity", {
+        image1: img1,
+        image2: img2,
+    });
+    console.log(resp);
+
+    
+
+    
+
+    // let imageArr=[];
+    // for (let node of hiltonMasterGroup) {
+    //     let arr=[]
+    //     arr.push(node.image)
+    //     for (let subnode of node.subNodes)
+    //         arr.push(subnode.image)
+
+    //     imageArr.push(arr)
+    // }
+
+    // const imageContainer = document.getElementById('test-container');
+    // imageContainer.innerHTML='';
+    // console.log(imageArr)
+    // imageArr[idx].forEach(imageUrl => {
+    //     const imgElement = document.createElement('img');
+    //     imgElement.src = imageUrl;
+    //     imgElement.classList.add('image');
+
+    //     imageContainer.appendChild(imgElement);
+    // });
+    // if (imageArr[idx].length>=2)
+    //     console.log(100* await imageDiff(imageArr[24][0], imageArr[29][0]))
+    // console.log(imageArr[24][0], imageArr[29][0])
+    // console.log(idx)
+    // idx++;
+    // var masterGraph = Graph.from(hiltonGraph)
+
+    
+    // // Give nodes (x,y) positions in circular manner
+    // circular.assign(masterGraph, { scale: 10 });
+
+    // const sensibleSettings = forceAtlas2.inferSettings(masterGraph);
+    // const fa2Layout = new FA2Layout(masterGraph, {
+    //     settings: sensibleSettings,
+    // });
+
+    // fa2Layout.start();
+
+    // // change edge sizes
+    // masterGraph.edges().forEach(key => {
+    //     masterGraph.setEdgeAttribute(key, 'size', 3);
+    // })
+    
+    // // output to page
+    // const container = document.getElementById('master-graph-display');
+    // container.innerHTML='';
+
+    // let hoveredEdge = null;
+    // const renderer = new Sigma(masterGraph, container, {
+    //     nodeProgramClasses: {
+    //         image: getNodeProgramImage()
+    //     },
+    //     enableEdgeHoverEvents: "debounce",
+    //     edgeReducer(edge, data) {
+    //         const res = { ...data };
+    //         if (edge === hoveredEdge) res.color = "#cc0000";
+    //         return res;
+    //     },
+    // });
+    
+    // renderer.on("enterEdge", ({ edge }) => {
+    //     hoveredEdge = edge;
+    //     renderer.refresh();
+    // });
+    // renderer.on("leaveEdge", ({ edge }) => {
+    //     hoveredEdge = null;
+    //     renderer.refresh();
+    // });
+
+    // renderer.refresh();
+
 }
 
 
@@ -370,4 +469,8 @@ async function testFunction() {
 
 
 
-export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, generateTable, createPathJSON, checkSelfLoops, getNotVisitedNodes, createGraphFromPath };
+
+
+
+export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes };
+export { displayPath, displayUnvisitedNodes }

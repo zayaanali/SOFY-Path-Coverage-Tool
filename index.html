@@ -20,7 +20,7 @@
                 <input type="file" id="master-json" accept=".json" />
                 <p>Current Master JSON: </p>
                 <p id="master-display"></p>
-                <button id="generate-master">Generate Master Graph</button>
+                <button id="generate-master">Visualize Master Graph</button>
             </div>
             
             <div class="child-request">
@@ -28,38 +28,38 @@
                 <input type="file" id="child-json" multiple>
                 <p> Current Child File(s):</p>
                 <p id="child-display"></p>
-                <button id="generate-coverage">Generate Coverage Graph</button>
+                <button id="generate-coverage">Find Unvisited Paths</button>
             </div>
         </div>
-        
+        <div id="test-container"></div>
         <div class="graph-display-container">   
             <div class="master-graph-container">
                 <h3>Master Graph</h3>
                 <div id="master-graph-display"></div>
-            </div>
-            
-            
-            <div class="coverage-graph-container">
-                <h3>Coverage Graph</h3>
-                <div id="coverage-graph-display"></div>
-            </div>            
+            </div>   
         </div>
 
-        <div class="test-info-container">
-            <div class="node-container">
-                <h4>Unvisited Nodes</h4>
-                <div id="node-display"></div>    
-            </div>
-            <div class="paths-container">
-                <h4>Select an edge/node for additional information</h4>
-                <div id="paths-display"></div>    
-            </div>
+        
+        <div class="unvisited-node-container">
+            <h4 class="center">Unvisited Nodes</h4>
+            <div class="unvisited-node-display"></div>  
+            <button id="merge-nodes">Merge Nodes</button>
         </div>
-
+    
+        <div class="paths-container">
+            <h4>Paths to selected node</h4>
+            <div id="paths-selection"></div>
+            <div id="paths-display"></div>    
+            <div id="path-download"></div>
+        </div>
+        
+        
+        
         
 
         <script src="methods.js" type="module"></script>
         <script src="main.js" type="module"></script>
+        <script src="https://cdnjs.deepai.org/deepai.min.js"></script>
 
         
 </body>

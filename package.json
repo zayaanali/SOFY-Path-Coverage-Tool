@@ -12,6 +12,7 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "deepai": "^1.0.21",
     "graphology": "^0.25.1",
     "graphology-layout": "^0.6.1",
     "graphology-layout-forceatlas2": "^0.10.1",

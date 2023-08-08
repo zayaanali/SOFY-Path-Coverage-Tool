@@ -1,5 +1,5 @@
 import Pixelmatch from "pixelmatch";
-import { allowedDiff } from "./main";
+var allowedDiff = 0.005
 // File containing helper functions
 
 /* 
@@ -72,14 +72,15 @@ function findImage(nodeArr, nodeToFind) {
 /**
  * This function takes a master file an activity name and then returns the entire scenario data
  */
-function getScenario(master, activityName) {
-    for (var i=0; i<master.scenario.length; i++) {
-        if (activityName==getName(master, i))
-            return master.scenario[i];
+function getScenario(master, nodeID) {
+    
+    for (let scenario of master.scenario) {
+        let id= scenario.selectedComponent.xpathChecksum+scenario.actionIndex;
+        if (id==nodeID)
+            return scenario
     }
     
-    return { data: "Node not found" };
-
+    alert('node not found');
 }
 
 var masterJSON = (function() {
@@ -104,6 +105,9 @@ var masterJSON = (function() {
  * Function takes in two image URLs and returns the image percentage diff
  */
 async function imageDiff(image1, image2) {
+    
+
+    
     let diff= await compareImages(image1, image2)
     return diff;
   
@@ -174,6 +178,7 @@ async function imageDiff(image1, image2) {
  */
 async function doesNodeExist(nodeArr, img) {
     // iterate through the node array
+    
     for (let i=0; i<nodeArr.length; i++) {
         // calculate the difference between the current image and the given image
         let diff = await imageDiff(nodeArr[i].image, img);
@@ -230,6 +235,10 @@ async function addNode(jsonArr, i, arrLength, nodeArr) {
 }
 
 
-export { isValidJSON, getName, getImage, findImage, masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode }
+
+
+
+
+export { isValidJSON, getName, getImage, findImage, masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode,  }
 
 
