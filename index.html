@@ -18,16 +18,22 @@
             <div class="master-request">
                 <h3>Please upload your master file</h3>
                 <input type="file" id="master-json" accept=".json" />
-                <p>Current Master JSON: </p>
-                <p id="master-display"></p>
+                <div class="file-display">
+                    <p>Current Master JSON: </p>
+                    <p id="master-display"></p>
+                </div>
+                
                 <button id="generate-master">Visualize Master Graph</button>
             </div>
             
             <div class="child-request">
                 <h3>Please upload your child file(s)</h3>
                 <input type="file" id="child-json" multiple>
-                <p> Current Child File(s):</p>
-                <p id="child-display"></p>
+                <div class="file-display">
+                    <p> Current Child File(s):</p>
+                    <p id="child-display"></p>
+                </div>
+                
                 <button id="generate-coverage">Find Unvisited Paths</button>
             </div>
         </div>

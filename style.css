@@ -32,6 +32,13 @@
     width: 400px;
 }
 
+.file-display {
+    overflow-x: auto;
+    height: 100px;
+    margin-bottom: 5px;
+}
+
+
 
 .graph-display-container {
     display: flex;

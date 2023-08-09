@@ -1,4 +1,4 @@
-import { isValidJSON, getName, getImage, getScenario, masterJSON, findImage, getNode, imageDiff, getSubNode, doesNodeExist, addNode } from './helpers.js';
+import { isValidJSON, getScenario, masterJSON, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import { allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -280,10 +280,10 @@ function displayPathButtons(masterGraph, masterNodeGroup, target) {
 
         // Create a button for the current path
         var pathButton = document.createElement("button");
-        pathButton.textContent = 'Path '+i; // Display the path name
+        pathButton.textContent = 'Path '+(i+1); // Display the path name
 
         // Add an event listener to the path button
-        pathButton.addEventListener("click", displayPath.bind(null, masterNodeGroup, path));
+        pathButton.addEventListener("click", displayPath.bind(null, masterGraph, masterNodeGroup, path));
         container.appendChild(pathButton);
     }
 
@@ -294,25 +294,51 @@ function displayPathButtons(masterGraph, masterNodeGroup, target) {
 
 
 
-function displayPath(masterNodeGroup, path) {
+function displayPath(masterGraph, masterNodeGroup, path) {
     
-    let imagePath=[];
+    let pathArr=[];
     for (let id of path) {
         let node = masterNodeGroup.find(node => node.nodeID == id);
-        imagePath.push(node.image);
+        pathArr.push(node);
     }
     
     const imageContainer = document.getElementById('paths-display');
     imageContainer.innerHTML='';
     
-    imagePath.forEach(url => {
-        // Create an img element and set src
-        const imgElement = document.createElement('img');
-        imgElement.src = url;
-        imgElement.style.marginRight = '10px'; // Add some space between images
+    for (let i=0; i<pathArr.length; i++) {
+        // create div to hold both image and buttons
+        const imageDiv = document.createElement('div');
+        imageDiv.className='image-div';
+        
+        // create div to hold just the buttons
+        const buttonDiv = document.createElement('div');
+        buttonDiv.className='button-div'
 
-        imageContainer.appendChild(imgElement);
-    });
+        // create image element
+        const imgElement = document.createElement('img');
+        imgElement.src = pathArr[i].image;
+
+        // create button elements
+        const removeLeft = document.createElement('button');
+        removeLeft.textContent = 'left'
+        removeLeft.className = 'remove-edge-button'
+        removeLeft.addEventListener('click', () => removeEdge(masterGraph, pathArr[i-1], pathArr[i]) );
+
+        const removeRight = document.createElement('button');
+        removeRight.textContent = 'right'
+        removeRight.className = 'remove-edge-button'
+        removeRight.addEventListener('click', () => removeEdge(masterGraph, pathArr[i], pathArr[i+1]) );
+
+        // Append buttons to button div
+        buttonDiv.appendChild(removeLeft);
+        buttonDiv.appendChild(removeRight);
+
+        // append elements to imagediv
+        imageDiv.appendChild(imgElement);
+        imageDiv.appendChild(buttonDiv);
+
+        imageContainer.appendChild(imageDiv);
+    }
 
     let buttonContainer = document.getElementById('path-download');
     buttonContainer.innerHTML='';
@@ -371,22 +397,21 @@ var idx =24
  */
 async function testFunction() {
     
-    const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C11395809-ccb4-4113-8bad-b5b21a5ded03%5Chotel-search-master2%5CImages%5C1691466801535.png'
-    const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C11395809-ccb4-4113-8bad-b5b21a5ded03%5Cchild-hotelsearch-signin%5CImages%5C1691467198328.png'
-
-    // let diff = await imageDiff(image1, image2)
-    // console.log(diff)
-
     
-    deepai.setApiKey('');
-    var resp = await deepai.callStandardApi("image-similarity", {
-        image1: img1,
-        image2: img2,
-    });
-    console.log(resp);
+    
+    
+    
+    const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C8f2038bd-38d0-4f0b-9eee-5e162fdb5fce%5Csearchtest-master-3%5CImages%5C1691516144270.png'
+    const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C8f2038bd-38d0-4f0b-9eee-5e162fdb5fce%5Csearchtest-master-3%5CImages%5C1691516144420.png'
+
+
+    //2.5% difference
+    let diff = await imageDiff(img1, img2)
+    console.log(diff)    
 
     
 
+    
     
 
     // let imageArr=[];

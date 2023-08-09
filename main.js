@@ -5,7 +5,7 @@ import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 /* import various methods from methods.js */
 import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, displayUnvisitedNodes } from './methods.js';
 import { displayPath } from './methods.js';
-import { findImage, masterJSON } from './helpers.js';
+import { masterJSON } from './helpers.js';
 
 import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
@@ -178,7 +178,9 @@ function displayMasterGraph() {
 * Function to generate child coverage graph
 */
 async function generateCoverageGraph() {
+    console.log('calculating')
     const maxDiff = 0.015
+    
     
     // other options: masterSearchGroup, hiltonMasterGroup, hotelSearchNodeGroup
     // const masterNodeGroup = hotelSearchNodeGroup
@@ -192,16 +194,10 @@ async function generateCoverageGraph() {
 
     // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
     const masterGraph = Graph.from(JSON.parse(localStorage.getItem('masterGraph')));
-    // var masterGraph = Graph.from(hotelSearchGraph)
-    
-    // var notVisitedHotel = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff)
-    // console.log(notVisitedHotel)
-    // var notvisitedHotelSearch  = 
-    
-    
+    // var masterGraph = Graph.from(hotelSearchGraph)    
 
     // options: unvisitedNodeSignin, UnvisitedNodeSearch, unvisitedTest
-    // var notVisitedNodes=unvisitedTest
+    // var notVisitedNodes=unvisitedNoSignIn
     var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff);
     // console.log(notVisitedNodes)
     displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes)

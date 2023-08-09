@@ -1,6 +1,8 @@
+// File containing helper functions
+
 import Pixelmatch from "pixelmatch";
 var allowedDiff = 0.005
-// File containing helper functions
+
 
 /* 
 * Function to check if given string is a valid JSON
@@ -14,24 +16,13 @@ function isValidJSON(str) {
     }
 }
 
-/* 
-* Function to get the name of a node from a JSON object
-*/
-function getName(nodeArr, index) {
-    var fullName = nodeArr[index].activityName;
-    var lastPeriodIndex = fullName.lastIndexOf('.');
-    if (lastPeriodIndex==-1)
-        return fullName;
-    else
-        return fullName.substring(lastPeriodIndex + 1).trim();
-}
 
 /* 
 * Function to get all required node information from JSON
 */
 function getNode(jsonArr, idx) {
     var node = {
-        nodeID: jsonArr.scenario[idx].selectedComponent.xpathChecksum+jsonArr.scenario[idx].actionIndex,
+        nodeID: generateIDs(),
         actionID: parseInt(jsonArr.scenario[idx].actionIndex)+1,
         image: jsonArr.scenario[idx].snapshotLocation,
         subNodes: []
@@ -43,7 +34,7 @@ function getNode(jsonArr, idx) {
 
 function getSubNode(jsonArr, idx) {
     var node = {
-        nodeID: jsonArr.scenario[idx].selectedComponent.xpathChecksum+jsonArr.scenario[idx].actionIndex,
+        nodeID: generateIDs,
         actionID: parseInt(jsonArr.scenario[idx].actionIndex)+1,
         image: jsonArr.scenario[idx].snapshotLocation,
     }
@@ -52,23 +43,6 @@ function getSubNode(jsonArr, idx) {
 }
 
 
-
-/* 
-* Function to get the image of a node from a JSON object
-*/
-function getImage(jsonArr, index) {
-    return jsonArr.scenario[index].snapshotLocation;
-}
-
-/* 
-* Function to find image associated with node
-*/
-function findImage(nodeArr, nodeToFind) {
-    for (var node of nodeArr) {
-        if (node[0]==nodeToFind)
-            return node[1];
-    }
-}
 /**
  * This function takes a master file an activity name and then returns the entire scenario data
  */
@@ -83,6 +57,10 @@ function getScenario(master, nodeID) {
     alert('node not found');
 }
 
+
+/**
+ * Retainer function for masterJSON
+ */
 var masterJSON = (function() {
     var retainedValue;
   
@@ -107,7 +85,7 @@ var masterJSON = (function() {
 async function imageDiff(image1, image2) {
     
 
-    
+
     let diff= await compareImages(image1, image2)
     return diff;
   
@@ -149,12 +127,11 @@ async function imageDiff(image1, image2) {
                 threshold: 0.1, // Adjust the threshold as needed (0.1 by default)
             });
     
-    
-            //console.log("Number of different pixels:", numDiffPixels);
-    
             let percentDiff = numDiffPixels/(width*height);
             //console.log("Percent Difference: ", percentDiff)
             return percentDiff;
+        
+        
         } catch (error) {
             console.error("Error:", error);
         }
@@ -235,10 +212,35 @@ async function addNode(jsonArr, i, arrLength, nodeArr) {
 }
 
 
+var existingIds=new Set();
+
+function generateIDs() {
+    const characters = '0123456789';
+    const idLength = 10;
+    
+    while (true) {
+        let newId = '';
+        for (let i = 0; i < idLength; i++)
+            newId += characters.charAt(Math.floor(Math.random() * characters.length));
+        
+        if (!existingIds.has(newId)) {
+            existingIds.add(newId)
+            return newId;
+        }
+            
+    }
+}
+
+function removeEdge(masterGraph, startNode, endNode) {
+    if (masterGraph.hasEdge(startNode.nodeID, endNode.nodeID))
+        masterGraph.dropEdge(startNode.nodeID, endNode.nodeID)
+}
 
 
 
 
-export { isValidJSON, getName, getImage, findImage, masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode,  }
+
+
+export { isValidJSON, masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge }
 
 
