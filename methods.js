@@ -344,7 +344,7 @@ function displayPath(masterGraph, masterNodeGroup, path) {
     buttonContainer.innerHTML='';
     let button = document.createElement('button');
     button.textContent = "Download Path";
-    button.addEventListener("click", downloadPath.bind(null, path));
+    button.addEventListener("click", downloadPath.bind(null, pathArr));
     buttonContainer.appendChild(button);
 
 }
@@ -353,8 +353,8 @@ function displayPath(masterGraph, masterNodeGroup, path) {
 function downloadPath(path) {
     console.log(path)
     // Get master JSON
-    // var master = JSON.parse(masterJSON.getValue());
-    const master = hiltonMaster;
+    const master = JSON.parse(masterJSON.getValue());
+    // const master = Graph.from(localStorage.getItem(master));
     
     var newJSON = createPathJSON(master, path);
     
@@ -378,7 +378,7 @@ function createPathJSON(master, path) {
 
     // for each node on the path, add the node to the scenario
     for (var node of path)
-        newJSON.scenario.push(getScenario(master, node));
+        newJSON.scenario.push(getScenario(master, node.nodeID));
     
     return newJSON
 }
