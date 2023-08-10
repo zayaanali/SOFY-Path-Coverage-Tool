@@ -1,6 +1,7 @@
 // File containing helper functions
 
 import Pixelmatch from "pixelmatch";
+import { makeNodeGroup, makeSubNode } from "./helpers2";
 var allowedDiff = 0.005
 
 
@@ -34,7 +35,7 @@ function getNode(jsonArr, idx) {
 
 function getSubNode(jsonArr, idx) {
     var node = {
-        nodeID: generateIDs,
+        nodeID: generateIDs(),
         actionID: parseInt(jsonArr.scenario[idx].actionIndex)+1,
         image: jsonArr.scenario[idx].snapshotLocation,
     }
@@ -46,15 +47,16 @@ function getSubNode(jsonArr, idx) {
 /**
  * This function takes a master file an activity name and then returns the entire scenario data
  */
-function getScenario(master, nodeID) {
-    
+function getScenario(master, node) {
+    console.log('nodeID:', node.actionID)
     for (let scenario of master.scenario) {
-        let id= scenario.selectedComponent.xpathChecksum+scenario.actionIndex;
-        if (id==nodeID)
+        let id= parseInt(scenario.actionIndex)+1;
+        console.log(id)
+        if (id==node.actionID)
             return scenario
     }
     
-    alert('node not found');
+    //alert('node not found');
 }
 
 
@@ -236,11 +238,96 @@ function removeEdge(masterGraph, startNode, endNode) {
         masterGraph.dropEdge(startNode.nodeID, endNode.nodeID)
 }
 
+function displayMasterGroup() {
+
+    const imageContainer = document.getElementById('node-group-display');
+    imageContainer.innerHTML='';
+    
+    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    let checkedItems=[];
+
+    for (let node of masterNodeGroup) {
+        // Create div for entire group
+        const nodeGroupDiv = document.createElement('div'); 
+        nodeGroupDiv.className = 'node-group-div'   
+        
+        // Create image div for the representative node of node group
+        const nodeDiv = document.createElement('div');
+        nodeDiv.className='image-div'
+        
+        const nodeImage = document.createElement('img');
+        nodeImage.src=node.image;
+        
+        const checkbox = document.createElement('input');
+        checkbox.className='checkboxes'
+        checkbox.type = 'checkbox';
+        checkbox.dataset.id = node.nodeID;
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                checkedItems.push(node);
+            } else {
+                const indexToRemove = checkedItems.findIndex(item => item.nodeID === node.nodeID);
+                if (indexToRemove !== -1)
+                    checkedItems.splice(indexToRemove, 1);
+            }
+        });
+        nodeDiv.appendChild(nodeImage)
+        nodeDiv.appendChild(checkbox)
+
+        nodeGroupDiv.appendChild(nodeDiv)
+        
+        // insert subnodes of after the representative node
+        for (let subNode of node.subNodes) {
+            // Create image div for the subNode of node group
+            const subNodeDiv = document.createElement('div');
+            subNodeDiv.className='image-div'
+            
+            const subNodeImage = document.createElement('img');
+            subNodeImage.src=subNode.image;
+            
+            const checkbox2 = document.createElement('input');
+            checkbox2.className='checkboxes'
+            checkbox2.type = 'checkbox';
+            checkbox2.dataset.id = node.nodeID;
+            checkbox2.addEventListener('change', () => {
+                if (checkbox2.checked) {
+                    checkedItems.push(subNode);
+                } else {
+                    const indexToRemove = checkedItems.findIndex(item => item.nodeID === subNode.nodeID);
+                    if (indexToRemove !== -1)
+                        checkedItems.splice(indexToRemove, 1);
+                }
+            });
+            subNodeDiv.appendChild(subNodeImage)
+            subNodeDiv.appendChild(checkbox2)
+
+            nodeGroupDiv.appendChild(subNodeDiv)
+        }
+
+        imageContainer.appendChild(nodeGroupDiv);
+    }
+    
+    const createNodeGroupButton = document.getElementById('make-node-group');
+    createNodeGroupButton.addEventListener("click", () => makeNodeGroup(checkedItems));
+
+    const makeSubNodeButton = document.getElementById('make-subnode');
+    makeSubNodeButton.addEventListener("click", () => makeSubNode(checkedItems));
+
+
+    
+}
+
+function displayChildGroup() {
+    const imageContainer = document.getElementById('node-group-display');
+    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    const childNodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
+}
 
 
 
 
 
-export { isValidJSON, masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge }
+
+export { isValidJSON, masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, displayChildGroup, displayMasterGroup }
 
 

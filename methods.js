@@ -1,4 +1,4 @@
-import { isValidJSON, getScenario, masterJSON, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge } from './helpers.js';
+import { isValidJSON, getScenario, masterJSON, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, displayMasterGroup, displayChildGroup } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import { allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -262,6 +262,9 @@ function displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes) {
 
     }
     document.getElementById('merge-nodes').addEventListener('click', mergeNodes)
+    document.getElementById('show-master-group').addEventListener('click', () => displayMasterGroup())
+    document.getElementById('show-child-group').addEventListener('click', () => displayChildGroup())
+    
 }
 
 /**
@@ -354,7 +357,6 @@ function downloadPath(path) {
     console.log(path)
     // Get master JSON
     const master = JSON.parse(masterJSON.getValue());
-    // const master = Graph.from(localStorage.getItem(master));
     
     var newJSON = createPathJSON(master, path);
     
@@ -378,7 +380,7 @@ function createPathJSON(master, path) {
 
     // for each node on the path, add the node to the scenario
     for (var node of path)
-        newJSON.scenario.push(getScenario(master, node.nodeID));
+        newJSON.scenario.push(getScenario(master, node));
     
     return newJSON
 }
@@ -401,8 +403,8 @@ async function testFunction() {
     
     
     
-    const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C8f2038bd-38d0-4f0b-9eee-5e162fdb5fce%5Csearchtest-master-3%5CImages%5C1691516144270.png'
-    const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.hilton.android.hhonors%5C8f2038bd-38d0-4f0b-9eee-5e162fdb5fce%5Csearchtest-master-3%5CImages%5C1691516144420.png'
+    const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688008832.png'
+    const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688011753.png'
 
 
     //2.5% difference

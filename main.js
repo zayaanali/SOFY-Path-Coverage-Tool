@@ -10,23 +10,6 @@ import { masterJSON } from './helpers.js';
 import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
-import { hiltonChildNoHotel } from './old-run-data/hilton-child-nohotelsearch.js';
-import { hiltonChildNoSignIn } from './old-run-data/hilton-child-nosignin.js';
-import { hiltonMasterGraph } from './old-run-data/hilton-master-graph.js';
-import { hiltonMasterGroup } from './old-run-data/hilton-master-group.js'
-import { notVisited } from './old-src/notVisited.js';
-import { unvisitedNodeSearch } from './old-run-data/unvisited-node-search.js';
-import { unvisitedNodeSignIn } from './old-run-data/unvisited-nodes-signin.js';
-import { masterSearchGroup } from './old-run-data/master-search-node-group-hilton.js';
-import { hiltonSearchGraph } from './old-run-data/search-mastergraph-hilton.js';
-import { unvisitedTest } from './old-run-data/unvisited-test.js';
-import { checkoutChildNodeGroup } from './old-run-data/checkout-nodegroup-child.js';
-import { hotelSearchGraph } from './run-data/hotel-search-master-graph.js';
-import { hotelSearchNodeGroup } from './run-data/hotel-search-master-nodegroup.js';
-import { hotelNoSignInChild } from './run-data/hotel-search-nosignin-child.js';
-import { unvisitedNoSignIn } from './run-data/unvisitedNoSignIn.js';
-import { hotelSignInChild } from './run-data/hotel-search-signin-child.js';
-import { unvisitedSignIn } from './run-data/unvisitedSignIn.js';
 
 
 
@@ -173,7 +156,10 @@ function displayMasterGraph() {
 }
 
 
-
+import { hotelSearchGraph } from './hilton-run-data/hotel-search-master-graph.js';
+import { hotelSearchNodeGroup } from './hilton-run-data/hotel-search-master-nodegroup.js';
+import { hotelNoSignInChild } from './hilton-run-data/hotel-search-nosignin-child.js';
+import { unvisitedSignIn } from './hilton-run-data/unvisitedSignIn.js'
 /* 
 * Function to generate child coverage graph
 */
@@ -183,22 +169,22 @@ async function generateCoverageGraph() {
     
     
     // other options: masterSearchGroup, hiltonMasterGroup, hotelSearchNodeGroup
-    // const masterNodeGroup = hotelSearchNodeGroup
-    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    const masterNodeGroup = hotelSearchNodeGroup
+    // const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
     
     // const childNodeGroup = hiltonChildNoHotel;
     // options: childNoHotel, childNoSignIn, checkoutChildNodeGroup, hotelnosigninchild, hotelsigninchild
-    const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"))
-    // const childNodeGroup = hotelNoSignInChild
+    // const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"))
+    const childNodeGroup = hotelNoSignInChild
 
 
     // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
-    const masterGraph = Graph.from(JSON.parse(localStorage.getItem('masterGraph')));
-    // var masterGraph = Graph.from(hotelSearchGraph)    
+    // const masterGraph = Graph.from(JSON.parse(localStorage.getItem('masterGraph')));
+    var masterGraph = Graph.from(hotelSearchGraph)    
 
     // options: unvisitedNodeSignin, UnvisitedNodeSearch, unvisitedTest
-    // var notVisitedNodes=unvisitedNoSignIn
-    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff);
+    var notVisitedNodes=unvisitedSignIn
+    // var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff);
     // console.log(notVisitedNodes)
     displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes)
 

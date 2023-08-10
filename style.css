@@ -141,5 +141,20 @@ img {
     text-align: center;
 }
 
+#node-group-display {
+    max-height: 500px;
+    max-width: 900px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.node-group-div {
+    display: flex;
+    overflow-x: scroll;
+    white-space: nowrap;
+    width: 90%;
+    padding: 10px
+}
+
 
 
