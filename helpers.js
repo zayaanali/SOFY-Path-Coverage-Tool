@@ -1,21 +1,11 @@
 // File containing helper functions
 
 import Pixelmatch from "pixelmatch";
-import { makeNodeGroup, makeSubNode } from "./helpers2";
+
 var allowedDiff = 0.005
 
 
-/* 
-* Function to check if given string is a valid JSON
-*/
-function isValidJSON(str) {
-    try {
-      JSON.parse(str);
-      return true;
-    } catch (e) {
-      return false;
-    }
-}
+
 
 
 /* 
@@ -41,6 +31,17 @@ function getSubNode(jsonArr, idx) {
     }
 
     return node;
+}
+
+function updateCheckboxArray(checked, checkedItems, node) {
+    
+    if (checked) {
+        checkedItems.push(node);
+    } else {
+        const indexToRemove = checkedItems.findIndex(item => item.nodeID === node.nodeID);
+        if (indexToRemove !== -1)
+            checkedItems.splice(indexToRemove, 1);
+    }
 }
 
 
@@ -238,89 +239,29 @@ function removeEdge(masterGraph, startNode, endNode) {
         masterGraph.dropEdge(startNode.nodeID, endNode.nodeID)
 }
 
-function displayMasterGroup() {
 
-    const imageContainer = document.getElementById('node-group-display');
-    imageContainer.innerHTML='';
-    
-    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
-    let checkedItems=[];
 
-    for (let node of masterNodeGroup) {
-        // Create div for entire group
-        const nodeGroupDiv = document.createElement('div'); 
-        nodeGroupDiv.className = 'node-group-div'   
-        
-        // Create image div for the representative node of node group
-        const nodeDiv = document.createElement('div');
-        nodeDiv.className='image-div'
-        
-        const nodeImage = document.createElement('img');
-        nodeImage.src=node.image;
-        
-        const checkbox = document.createElement('input');
-        checkbox.className='checkboxes'
-        checkbox.type = 'checkbox';
-        checkbox.dataset.id = node.nodeID;
-        checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                checkedItems.push(node);
-            } else {
-                const indexToRemove = checkedItems.findIndex(item => item.nodeID === node.nodeID);
-                if (indexToRemove !== -1)
-                    checkedItems.splice(indexToRemove, 1);
-            }
-        });
-        nodeDiv.appendChild(nodeImage)
-        nodeDiv.appendChild(checkbox)
 
-        nodeGroupDiv.appendChild(nodeDiv)
-        
-        // insert subnodes of after the representative node
-        for (let subNode of node.subNodes) {
-            // Create image div for the subNode of node group
-            const subNodeDiv = document.createElement('div');
-            subNodeDiv.className='image-div'
-            
-            const subNodeImage = document.createElement('img');
-            subNodeImage.src=subNode.image;
-            
-            const checkbox2 = document.createElement('input');
-            checkbox2.className='checkboxes'
-            checkbox2.type = 'checkbox';
-            checkbox2.dataset.id = node.nodeID;
-            checkbox2.addEventListener('change', () => {
-                if (checkbox2.checked) {
-                    checkedItems.push(subNode);
-                } else {
-                    const indexToRemove = checkedItems.findIndex(item => item.nodeID === subNode.nodeID);
-                    if (indexToRemove !== -1)
-                        checkedItems.splice(indexToRemove, 1);
-                }
-            });
-            subNodeDiv.appendChild(subNodeImage)
-            subNodeDiv.appendChild(checkbox2)
-
-            nodeGroupDiv.appendChild(subNodeDiv)
-        }
-
-        imageContainer.appendChild(nodeGroupDiv);
+function getNodeIndex(nodeGroup, nodeToCheck) {
+    for (let idx=0; idx<nodeGroup.length; idx++) {
+        if (nodeGroup[idx].nodeID==nodeToCheck.nodeID)
+            return idx;
     }
-    
-    const createNodeGroupButton = document.getElementById('make-node-group');
-    createNodeGroupButton.addEventListener("click", () => makeNodeGroup(checkedItems));
-
-    const makeSubNodeButton = document.getElementById('make-subnode');
-    makeSubNodeButton.addEventListener("click", () => makeSubNode(checkedItems));
-
-
-    
+    console.error('node not found')
 }
 
-function displayChildGroup() {
-    const imageContainer = document.getElementById('node-group-display');
-    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
-    const childNodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
+function removeSubNode(masterNodeGroup, subNodeToRemove) {
+    for (let node of masterNodeGroup) {
+        for (let i=0; i<node.subNodes.length; i++) {
+            if (node.subNodes[i].nodeID==subNodeToRemove.nodeID)
+                node.subNodes.splice(i, 1);
+        }
+    }
+}
+
+function removeNodeGroup(nodeGroup, nodeToRemove) {
+    const nodeIndex = getNodeIndex(nodeGroup, nodeToRemove);
+    nodeGroup.splice(nodeIndex, 1);
 }
 
 
@@ -328,6 +269,8 @@ function displayChildGroup() {
 
 
 
-export { isValidJSON, masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, displayChildGroup, displayMasterGroup }
+
+
+export { masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup }
 
 

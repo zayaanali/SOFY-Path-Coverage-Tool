@@ -37,7 +37,26 @@
                 <button id="generate-coverage">Find Unvisited Paths</button>
             </div>
         </div>
-        <div id="test-container"></div>
+        
+        <div class="node-processing-container">
+            <h4>Node Group Processing</h4>
+            <div>
+                <button id="show-master-group">Show Master Groups</button>
+                <button id="show-child-group">Show Child Groups</button>
+                <button id="close-node-processing">Close</button>
+            </div>
+            <div id="node-group-display"></div> 
+            <div>
+                <button id="make-node-group">Make Node Group</button>
+                <button id="make-subnode">Make Sub Node</button>
+                <button id="merge-node-groups">Merge Node Groups</button>
+                <button id="merge-nodes">Merge Nodes</button>
+            </div>
+            
+            
+        </div>
+
+
         <div class="graph-display-container">   
             <div class="master-graph-container">
                 <h3>Master Graph</h3>
@@ -47,20 +66,14 @@
 
         
         <div class="unvisited-node-container">
+            
+            
+             
+            
             <h4 class="center">Unvisited Nodes</h4>
             <div class="unvisited-node-display"></div>
-            <div>
-                <button id="show-master-group">Show Master Groups</button>
-                <button id="show-child-group">Show Child Groups</button>
-            </div>
-            <div id="node-group-display"></div>  
 
             
-            <div>
-                <button id="make-node-group">Make Node Group</button>
-                <button id="make-subnode">Make Sub Node</button>
-                <button id="merge-nodes">Merge Nodes</button>
-            </div>
             
         </div>
     
@@ -77,7 +90,6 @@
 
         <script src="methods.js" type="module"></script>
         <script src="main.js" type="module"></script>
-        <script src="https://cdnjs.deepai.org/deepai.min.js"></script>
 
         
 </body>

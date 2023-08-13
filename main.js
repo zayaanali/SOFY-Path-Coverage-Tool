@@ -3,12 +3,21 @@ import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 /* import various methods from methods.js */
-import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, displayUnvisitedNodes } from './methods.js';
-import { displayPath } from './methods.js';
+
+
+import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, displayUnvisitedNodes, getNodeGroupRow, makeNodeGroup, makeSubNode } from './methods.js';
+import { displayPath, mergeNodeGroups } from './methods.js';
+
 import { masterJSON } from './helpers.js';
+
+import { isValidJSON } from './tools.js';
+
+
 
 import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
+
+
 
 
 
@@ -21,7 +30,7 @@ var allowedDiff = 0.005;
 * file name to local storage as well as processes the file to build master graph and node groups
 */
 function masterFileSelect(evt) {
-    var nodeArr=[];
+    var masterNodeGroup=[];
     
     localStorage.clear();
 
@@ -33,11 +42,10 @@ function masterFileSelect(evt) {
         localStorage.setItem("masterFileName", file.name);
         
         // Build master graph as well as master node groups and save it
-        let masterGraph= await buildGraph(e.target.result, nodeArr);
-        localStorage.setItem("masterGraph", JSON.stringify(masterGraph.export()));
-        localStorage.setItem("masterNodeGroup", JSON.stringify(nodeArr))
-        console.log(nodeArr)
-        console.log(masterGraph.export())
+
+        await parseJSON(e.target.result, masterNodeGroup);
+        localStorage.setItem("masterNodeGroup", JSON.stringify(masterNodeGroup))
+
         // Save the master itself to retainer function
         masterJSON.setValue(e.target.result);
                 
@@ -46,6 +54,10 @@ function masterFileSelect(evt) {
     };
     reader.readAsText(file);   
 }
+
+
+
+
 
 
 /* 
@@ -101,11 +113,59 @@ function childFileSelect(evt) {
     });
 }
 
+/**
+ * display master group
+ */
+var checkedItems=[];
+var displayingMaster;
+function displayMasterGroup() {
+    displayingMaster=true;
+    checkedItems=[];
+    const imageContainer = document.getElementById('node-group-display');
+    imageContainer.innerHTML='';
+    
+    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    console.log(getTotal(masterNodeGroup))
+
+
+    // For each node group
+    for (let node of masterNodeGroup) {
+        // get div with representative and subnodes and display
+        imageContainer.appendChild( getNodeGroupRow(node, checkedItems) );
+    }
+}
+
+function displayChildGroup() {
+    displayingMaster=false;
+    checkedItems=[];
+    const imageContainer = document.getElementById('node-group-display');
+    imageContainer.innerHTML='';
+    
+    const childNodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
+    console.log(getTotal(childNodeGroup))
+
+
+    // For each node group
+    for (let node of childNodeGroup) {
+        // get div with representative and subnodes and display
+        imageContainer.appendChild( getNodeGroupRow(node, checkedItems) );
+    }
+}
+
+
+function getTotal(nodeGroup) {
+    let total=0;
+    for (let node of nodeGroup) {
+        total+= node.subNodes.length+1
+    }
+    return total;
+}
 /* 
 * Function to generate master graph given input JSON file
 */
+
 function displayMasterGraph() {    
-   
+
     var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
 
     
@@ -156,6 +216,7 @@ function displayMasterGraph() {
 }
 
 
+
 import { hotelSearchGraph } from './hilton-run-data/hotel-search-master-graph.js';
 import { hotelSearchNodeGroup } from './hilton-run-data/hotel-search-master-nodegroup.js';
 import { hotelNoSignInChild } from './hilton-run-data/hotel-search-nosignin-child.js';
@@ -169,31 +230,67 @@ async function generateCoverageGraph() {
     
     
     // other options: masterSearchGroup, hiltonMasterGroup, hotelSearchNodeGroup
-    const masterNodeGroup = hotelSearchNodeGroup
-    // const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    // const masterNodeGroup = hotelSearchNodeGroup
+    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
     
     // const childNodeGroup = hiltonChildNoHotel;
     // options: childNoHotel, childNoSignIn, checkoutChildNodeGroup, hotelnosigninchild, hotelsigninchild
-    // const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"))
-    const childNodeGroup = hotelNoSignInChild
+    const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"))
+    // const childNodeGroup = hotelNoSignInChild
 
 
     // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
-    // const masterGraph = Graph.from(JSON.parse(localStorage.getItem('masterGraph')));
-    var masterGraph = Graph.from(hotelSearchGraph)    
+    const masterGraph = Graph.from(JSON.parse(localStorage.getItem('masterGraph')));
+    // var masterGraph = Graph.from(hotelSearchGraph)    
 
     // options: unvisitedNodeSignin, UnvisitedNodeSearch, unvisitedTest
-    var notVisitedNodes=unvisitedSignIn
-    // var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff);
+    // var notVisitedNodes=unvisitedSignIn
+    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff);
     // console.log(notVisitedNodes)
     displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes)
 
 }
 
 
+export { displayMasterGroup, displayChildGroup}
+
+
 // /* Functions to run on button press */
-document.getElementById('generate-master').addEventListener('click', testFunction);
+// document.getElementById('generate-master').addEventListener('click', testFunction);
 document.getElementById('generate-coverage').addEventListener('click', generateCoverageGraph);
 document.getElementById('master-json').addEventListener('change', masterFileSelect);
 document.getElementById('child-json').addEventListener('change', childFileSelect);
+
+document.getElementById('show-master-group').addEventListener('click', displayMasterGroup);
+document.getElementById('show-child-group').addEventListener('click', displayChildGroup);
+
+document.getElementById('close-node-processing').addEventListener('click', ()=> document.getElementById('node-group-display').innerHTML='' );
+
+const createNodeGroupButton = document.getElementById('make-node-group');
+createNodeGroupButton.addEventListener("mouseup", () => {
+    makeNodeGroup(checkedItems, { master: displayingMaster}); 
+    if (displayingMaster)
+        displayMasterGroup();
+    else
+        displayChildGroup();
+});
+
+const makeSubNodeButton = document.getElementById('make-subnode');
+makeSubNodeButton.addEventListener("mouseup", () => { 
+    makeSubNode(checkedItems, { master: displayingMaster});  
+    if (displayingMaster)
+        displayMasterGroup();
+    else    
+        displayChildGroup();
+});
+
+const mergeGroupsButton = document.getElementById('merge-node-groups');
+mergeGroupsButton.addEventListener("mouseup", () => { 
+    mergeNodeGroups(checkedItems, { master: displayingMaster}); 
+    if (displayingMaster)
+        displayMasterGroup();
+    else
+        displayChildGroup();
+});
+
 

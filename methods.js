@@ -1,4 +1,4 @@
-import { isValidJSON, getScenario, masterJSON, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, displayMasterGroup, displayChildGroup } from './helpers.js';
+import { getScenario, masterJSON, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import { allSimplePaths } from 'graphology-simple-path';
 import { Sigma } from 'sigma';
@@ -8,18 +8,18 @@ import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 
-
+import { isValidJSON } from './tools.js';
 import { hiltonMasterGroup } from './old-run-data/hilton-master-group.js';
 
-var allowedDiff = 0.005;
+
+// var allowedDiff = 0.005;
 
 /*
 * Takes JSON string and returns tuples containing the node and the image link associated with it. Also builds graph
 */
-async function parseJSON(jsonStr, nodeArr) {
+async function parseJSON(jsonStr, nodeGroups) {
     
 
-    var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
     let returnArr=[];
     // Check if the JSON string is a valid JSON
     if (!isValidJSON(jsonStr))
@@ -33,23 +33,205 @@ async function parseJSON(jsonStr, nodeArr) {
     
     // Building concise node array (placing identical screen as subnodes)
     for (var i=0; i<arrLength;i++) {
-       i = await addNode(jsonArr, i, arrLength, nodeArr); // adds the node of the given index to the array of representative nodes       
+       i = await addNode(jsonArr, i, arrLength, nodeGroups); // adds the node of the given index to the array of representative nodes       
+    }
+
+}
+
+function getNodeGroupRow(node, checkedItems) {
+    // Create div for entire row and give class
+    const nodeGroupDiv = document.createElement('div'); 
+    nodeGroupDiv.className = 'node-group-div'   
+    
+    // Create div which will contain both image and checkbox for representative node
+    const nodeDiv = document.createElement('div');
+    nodeDiv.className='image-div'
+    
+    // create text
+    const txt = document.createElement('p');
+    txt.className = 'group-text'
+    txt.textContent = "Node Group";
+    
+    // Create image and checkbox elements for representive node
+    const nodeImage = document.createElement('img');
+    nodeImage.src=node.image;
+    
+    const checkbox = document.createElement('input');
+    checkbox.className='checkboxes'
+    checkbox.type = 'checkbox';
+    checkbox.dataset.id = node.nodeID;
+    checkbox.addEventListener('change', () => { let checked = checkbox.checked; updateCheckboxArray(checked, checkedItems, node);  });
+    
+    // add image and checkbox to representative node div
+    nodeDiv.appendChild(txt)
+    nodeDiv.appendChild(nodeImage)
+    nodeDiv.appendChild(checkbox)
+    
+
+    // Insert the node div into the container
+    nodeGroupDiv.appendChild(nodeDiv)
+    
+    // insert subnodes after the representative node
+    for (let subNode of node.subNodes) {
+        // Create div to contain image and checkbox
+        const subNodeDiv = document.createElement('div');
+        subNodeDiv.className='image-div'
+        
+        
+        const txt2 = document.createElement('p');
+        txt2.className = 'group-text'
+        txt2.textContent = "Subnode";
+        // create image and checkbox elements
+        const subNodeImage = document.createElement('img');
+        subNodeImage.src=subNode.image;
+        
+        const checkbox2 = document.createElement('input');
+        checkbox2.className='checkboxes'
+        checkbox2.type = 'checkbox';
+        checkbox2.dataset.id = node.nodeID;
+        checkbox2.addEventListener('change', () => { let checked = checkbox2.checked; updateCheckboxArray(checked, checkedItems, subNode) });
+        subNodeDiv.appendChild(txt2)
+        subNodeDiv.appendChild(subNodeImage)
+        subNodeDiv.appendChild(checkbox2)
+        
+
+        // insert image/checkbox to row
+        nodeGroupDiv.appendChild(subNodeDiv)
+    }
+
+    return nodeGroupDiv
+}
+
+function makeNodeGroup(checkedItems, options) {
+    if (checkedItems.length==0)
+        return;
+    
+    let nodeGroup;
+    
+    if (options && options.master==true)
+        nodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    else if (options && options.master==false)
+        nodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
+    else
+        console.error('specify if master or child node group');  
+
+    // Create a new node to create a new nodeGroup
+    let newNode = {
+        nodeID: checkedItems[0].nodeID,
+        actionID: checkedItems[0].actionID,
+        image: checkedItems[0].image,
+        subNodes: []
     }
     
-    // building full node array
-    for (var i=0; i<arrLength;i++) {
-        returnArr.push(getNode(jsonArr, i))
+    // remove all subnodees
+    for (let subNode of checkedItems) {
+        // Remove the node from the subnode array
+        removeSubNode(nodeGroup, subNode);
     }
-    return returnArr;
+
+    // add subnodes to new node just created
+    for (let i=1; i< checkedItems.length; i++) {
+        newNode.subNodes.push(checkedItems[i])
+    }
+
+    // add node just created into the array   
+    nodeGroup.push(newNode);
+
+    checkedItems=[];
+    
+    // update nodeGroup
+    if (options && options.master==true) 
+        localStorage.setItem('masterNodeGroup', JSON.stringify(nodeGroup));
+     else 
+        localStorage.setItem('childNodeGroup', JSON.stringify(nodeGroup));
+         
 }
+
+function makeSubNode(checkedItems, options) {
+    if (checkedItems.length==0)
+        return;
+    
+    let nodeGroup;
+
+    if (options && options.master==true)
+        nodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    else if (options && options.master==false)
+        nodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
+    else
+        console.error('specify if master or child node group');  
+    
+    // Get index of node group adding to
+    let nodeIndex = getNodeIndex(nodeGroup, checkedItems[0]);
+    
+        
+    
+    // add subnodes to nodeindex
+    for (let i=1; i<checkedItems.length; i++) {
+        removeSubNode(nodeGroup, checkedItems[i]);
+        nodeGroup[nodeIndex].subNodes.push(checkedItems[i])
+    }
+
+    // update masterNodeGroup
+    checkedItems=[];
+    if (options && options.master==true) 
+        localStorage.setItem('masterNodeGroup', JSON.stringify(nodeGroup));
+    else 
+        localStorage.setItem('childNodeGroup', JSON.stringify(nodeGroup));  
+}
+
+function mergeNodeGroups(checkedItems, options) {
+    console.log(checkedItems)
+    
+    if (checkedItems.length==0)
+        return;
+
+    let nodeGroup;
+    if (options && options.master==true)
+        nodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    else if (options && options.master==false)
+        nodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
+    else
+        console.error('specify if master or child node group');  
+    
+    
+    const baseNodeIndex = getNodeIndex(nodeGroup, checkedItems[0]);
+    for (let i=1; i<checkedItems.length; i++) {        
+        // convert old nodeGroup to subNode and add as a subnode to the base node group
+        let newSubNode = {
+            nodeID: checkedItems[i].nodeID,
+            actionID: checkedItems[i].actionID,
+            image: checkedItems[i].image,
+        }
+        nodeGroup[baseNodeIndex].subNodes.push(newSubNode)
+        
+        for (let subNode of checkedItems[i].subNodes) {
+            nodeGroup[baseNodeIndex].subNodes.push(subNode)
+        }
+    }
+
+    // Remove other node groups
+    for (let i=1; i<checkedItems.length; i++) {
+        removeNodeGroup(nodeGroup, checkedItems[i])
+    }
+    
+    // update masterNodeGroup
+    checkedItems=[];
+    if (options && options.master==true) 
+        localStorage.setItem('masterNodeGroup', JSON.stringify(nodeGroup));
+    else 
+        localStorage.setItem('childNodeGroup', JSON.stringify(nodeGroup));  
+
+
+
+}
+
+
 
 async function buildGraph(jsonStr, nodeArr) {
     
-
     var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
     let returnArr=[];
     let node;
-    let tempIndex;
     // Check if the JSON string is a valid JSON
     if (!isValidJSON(jsonStr))
         alert("Invalid JSON");
@@ -261,10 +443,7 @@ function displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes) {
         checkedItems=[]
 
     }
-    document.getElementById('merge-nodes').addEventListener('click', mergeNodes)
-    document.getElementById('show-master-group').addEventListener('click', () => displayMasterGroup())
-    document.getElementById('show-child-group').addEventListener('click', () => displayChildGroup())
-    
+    document.getElementById('merge-nodes').addEventListener('click', mergeNodes)    
 }
 
 /**
@@ -387,13 +566,6 @@ function createPathJSON(master, path) {
 
 
 
-
-
-var idx =24
-
-
-
-
 /*
  * Ignore - this function is used for testing purposes
  */
@@ -401,103 +573,21 @@ async function testFunction() {
     
     
     
+    console.log('here')
     
-    
-    const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688008832.png'
-    const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688011753.png'
+    // const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688008832.png'
+    // const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688011753.png'
 
 
-    //2.5% difference
-    let diff = await imageDiff(img1, img2)
-    console.log(diff)    
+    // //2.5% difference
+    // let diff = await imageDiff(img1, img2)
+    // console.log(diff)    
 
-    
-
-    
-    
-
-    // let imageArr=[];
-    // for (let node of hiltonMasterGroup) {
-    //     let arr=[]
-    //     arr.push(node.image)
-    //     for (let subnode of node.subNodes)
-    //         arr.push(subnode.image)
-
-    //     imageArr.push(arr)
-    // }
-
-    // const imageContainer = document.getElementById('test-container');
-    // imageContainer.innerHTML='';
-    // console.log(imageArr)
-    // imageArr[idx].forEach(imageUrl => {
-    //     const imgElement = document.createElement('img');
-    //     imgElement.src = imageUrl;
-    //     imgElement.classList.add('image');
-
-    //     imageContainer.appendChild(imgElement);
-    // });
-    // if (imageArr[idx].length>=2)
-    //     console.log(100* await imageDiff(imageArr[24][0], imageArr[29][0]))
-    // console.log(imageArr[24][0], imageArr[29][0])
-    // console.log(idx)
-    // idx++;
-    // var masterGraph = Graph.from(hiltonGraph)
-
-    
-    // // Give nodes (x,y) positions in circular manner
-    // circular.assign(masterGraph, { scale: 10 });
-
-    // const sensibleSettings = forceAtlas2.inferSettings(masterGraph);
-    // const fa2Layout = new FA2Layout(masterGraph, {
-    //     settings: sensibleSettings,
-    // });
-
-    // fa2Layout.start();
-
-    // // change edge sizes
-    // masterGraph.edges().forEach(key => {
-    //     masterGraph.setEdgeAttribute(key, 'size', 3);
-    // })
-    
-    // // output to page
-    // const container = document.getElementById('master-graph-display');
-    // container.innerHTML='';
-
-    // let hoveredEdge = null;
-    // const renderer = new Sigma(masterGraph, container, {
-    //     nodeProgramClasses: {
-    //         image: getNodeProgramImage()
-    //     },
-    //     enableEdgeHoverEvents: "debounce",
-    //     edgeReducer(edge, data) {
-    //         const res = { ...data };
-    //         if (edge === hoveredEdge) res.color = "#cc0000";
-    //         return res;
-    //     },
-    // });
-    
-    // renderer.on("enterEdge", ({ edge }) => {
-    //     hoveredEdge = edge;
-    //     renderer.refresh();
-    // });
-    // renderer.on("leaveEdge", ({ edge }) => {
-    //     hoveredEdge = null;
-    //     renderer.refresh();
-    // });
-
-    // renderer.refresh();
 
 }
 
 
 
 
-
-
-
-
-
-
-
-export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes };
-export { displayPath, displayUnvisitedNodes }
+export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, makeNodeGroup, makeSubNode };
+export { displayPath, displayUnvisitedNodes, getNodeGroupRow, mergeNodeGroups }
