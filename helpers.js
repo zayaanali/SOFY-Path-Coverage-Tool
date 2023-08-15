@@ -13,7 +13,7 @@ var allowedDiff = 0.005
 */
 function getNode(jsonArr, idx) {
     var node = {
-        nodeID: generateIDs(),
+        nodeID: jsonArr.scenarioGUID+'->'+jsonArr.scenario[idx].actionIndex,
         actionID: parseInt(jsonArr.scenario[idx].actionIndex)+1,
         image: jsonArr.scenario[idx].snapshotLocation,
         subNodes: []
@@ -25,7 +25,7 @@ function getNode(jsonArr, idx) {
 
 function getSubNode(jsonArr, idx) {
     var node = {
-        nodeID: generateIDs(),
+        nodeID: jsonArr.scenarioGUID+'->'+jsonArr.scenario[idx].actionIndex,
         actionID: parseInt(jsonArr.scenario[idx].actionIndex)+1,
         image: jsonArr.scenario[idx].snapshotLocation,
     }

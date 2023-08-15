@@ -22,19 +22,15 @@
                     <p>Current Master JSON: </p>
                     <p id="master-display"></p>
                 </div>
-                
-                <button id="generate-master">Visualize Master Graph</button>
             </div>
             
             <div class="child-request">
-                <h3>Please upload your child file(s)</h3>
-                <input type="file" id="child-json" multiple>
+                <h3>Please upload your child file(s)</h3>                
+                <input type="file" id="child-json" accept=".json" multiple>
                 <div class="file-display">
                     <p> Current Child File(s):</p>
                     <p id="child-display"></p>
                 </div>
-                
-                <button id="generate-coverage">Find Unvisited Paths</button>
             </div>
         </div>
         
@@ -43,6 +39,7 @@
             <div>
                 <button id="show-master-group">Show Master Groups</button>
                 <button id="show-child-group">Show Child Groups</button>
+                <button id="download-node-group">Download Node Group</button>
                 <button id="close-node-processing">Close</button>
             </div>
             <div id="node-group-display"></div> 
@@ -51,10 +48,23 @@
                 <button id="make-subnode">Make Sub Node</button>
                 <button id="merge-node-groups">Merge Node Groups</button>
                 <button id="merge-nodes">Merge Nodes</button>
+            </div>  
+        </div>
+        
+        <div class="request-container">
+            <div class="master-request">
+                <h3>Optional: upload master node group</h3>
+                <input type="file" id="master-node-group" accept=".json" />                
+                <button id="generate-master">Visualize Master Graph</button>
             </div>
             
-            
+            <div class="child-request">
+                <h3>Optional: upload child node group</h3>                
+                <input type="file" id="child-node-group" multiple>
+                <button id="generate-coverage">Find Unvisited Paths</button>
+            </div>
         </div>
+
 
 
         <div class="graph-display-container">   

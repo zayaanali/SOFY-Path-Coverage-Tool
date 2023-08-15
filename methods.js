@@ -17,7 +17,7 @@ import { hiltonMasterGroup } from './old-run-data/hilton-master-group.js';
 /*
 * Takes JSON string and returns tuples containing the node and the image link associated with it. Also builds graph
 */
-async function parseJSON(jsonStr, nodeGroups) {
+async function parseJSON(jsonStr, nodeGroups, ) {
     
 
     let returnArr=[];
@@ -225,91 +225,41 @@ function mergeNodeGroups(checkedItems, options) {
 
 }
 
+/**
+ * 
+ * builds a graph given the master JSON as well as the master node groups
+ */
 
+function buildGraph(masterJSON, nodeGroup) {
+    const scenario = masterJSON.scenario
+    console.log(scenario)
+    let newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
+ 
+    for (let i=0; i<scenario.length; i++) {
+        let curNode = getRepresentativeNode(nodeGroup, masterJSON.scenarioGUID+'->'+scenario[i].actionIndex)
+        newGraph.mergeNode(curNode.nodeID, { type: "image", label: curNode.actionID, image: curNode.image, size: 10 });
 
-async function buildGraph(jsonStr, nodeArr) {
-    
-    var newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
-    let returnArr=[];
-    let node;
-    // Check if the JSON string is a valid JSON
-    if (!isValidJSON(jsonStr))
-        alert("Invalid JSON");
-    
-    // parse the JSON to get it from string to JSON object    
-    var jsonArr = JSON.parse(jsonStr);
-
-    // Get number of nodes in the JSON
-    const arrLength = jsonArr.scenario.length;
-    let lastNodeIndex=0; // index of last node that was found
-    node=getNode(jsonArr,0);
-    newGraph.mergeNode(node.nodeID, { type: "image", label: node.actionID, image: node.image, size: 10 }); // add node to graph
-    nodeArr.push(node); // add the node to the array
-
-    // Building concise node array (placing identical screen as subnodes)
-    for (var i=1; i<arrLength;i++) {
-        
-        // Get the image of the current node
-        let curNode = jsonArr.scenario[i];
-        
-        // get the index of the node if it already exists in the array
-        
-        let nodeIndex = await doesNodeExist(nodeArr, curNode.snapshotLocation);
-        
-        
-        // if already exists in array
-        if (nodeIndex!=-1) {
-            
-            nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, i));
-            if (!newGraph.hasEdge(nodeArr[nodeIndex].nodeID, nodeArr[lastNodeIndex].nodeID))
-                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, nodeArr[nodeIndex].nodeID, { type: "arrow" }); // add an edge between the last node in the array and the node that is being added
-            
-            lastNodeIndex=nodeIndex; // set the last node as representative node that was just processed
-            
-        } else { // does not exist in the array yet
-            node=getNode(jsonArr,i);
-            newGraph.mergeNode(node.nodeID, { type: "image", label: node.actionID, image: node.image, size: 10 }); // add node to graph
-            if (!newGraph.hasEdge(node.nodeID, nodeArr[lastNodeIndex].nodeID))
-                newGraph.mergeEdge(nodeArr[lastNodeIndex].nodeID, node.nodeID, {type: "arrow" }); // add an edge between the last node in the array and the node that is being added
-            
-            nodeArr.push(node); // add the node to the array
-            lastNodeIndex=nodeArr.length-1; // last node is now set to node that was just processed
+        if (i+1<scenario.length) {
+            let nextNode = getRepresentativeNode(nodeGroup, masterJSON.scenarioGUID+'->'+scenario[i+1].actionIndex)
+            newGraph.mergeNode(nextNode.nodeID, { type: "image", label: nextNode.actionID, image: nextNode.image, size: 10 });
+            newGraph.mergeEdge(curNode.nodeID, nextNode.nodeID);
         }
-            
-        
-        let nextIndex = i+1;
-        let done = false;
-        
-        // for all next nodes check if they are subnodes
-        while (!done && nextIndex<arrLength) {
-            
-            // Get the next image and compute difference between current and next image
-            let nextImage = jsonArr.scenario[nextIndex].snapshotLocation;
-            let diff = await imageDiff(curNode.snapshotLocation, nextImage);
+    }
 
-            // if the difference is less than 5% they are subnodes
-            if (diff<=allowedDiff) {
-                // check if the node that compared to is a subnode or representative node
-                if (nodeIndex!=-1) // subnode
-                    nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, nextIndex)); // use the index found previously
-                else // representative node
-                    nodeArr[nodeArr.length-1].subNodes.push(getSubNode(jsonArr, nextIndex)); // use the index of the node that was just added to the array
-                
-                nextIndex++; // increment the temp index
-            } else { // difference is more than 5% so don't do anything
-                done=true;
-                i = nextIndex-1; // will be incremented by the forloop
-                // return nextIndex-1;
+    return newGraph
+
+
+    function getRepresentativeNode(nodeGroup, findIDX) {
+        for (const node of nodeGroup) {
+            if (node.nodeID==findIDX)
+                return node;
+
+            for (const subNode of node.subNodes) {
+                if (subNode.nodeID==findIDX)
+                    return node;
             }
         }
     }
-    
-    // building full node array
-    for (var i=0; i<arrLength;i++) {
-        returnArr.push(getNode(jsonArr, i))
-    }
-    
-    return newGraph;
 }
 
 async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff) {

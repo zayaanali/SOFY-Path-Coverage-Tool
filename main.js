@@ -9,7 +9,7 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 
 
 /* import from helper files */
-import { parseJSON, getNotVisitedNodes, displayUnvisitedNodes, getNodeGroupRow, makeNodeGroup, makeSubNode, mergeNodeGroups } from './methods.js';
+import { parseJSON, getNotVisitedNodes, displayUnvisitedNodes, getNodeGroupRow, makeNodeGroup, makeSubNode, mergeNodeGroups, buildGraph } from './methods.js';
 import { masterJSON } from './helpers.js';
 
 
@@ -20,7 +20,7 @@ var allowedDiff = 0.005;
 * Function to run when master file is uploaded. Function saves the master file and 
 * file name to local storage as well as processes the file to build master node groups
 */
-function masterFileSelect(evt) {
+function masterFileSelect(evt) {    
     var masterNodeGroup=[];
     localStorage.clear();
 
@@ -28,12 +28,16 @@ function masterFileSelect(evt) {
     var file = evt.target.files[0];
     var reader = new FileReader();
     reader.onload = async function(e) {
+        
         // Save the file name
         localStorage.setItem("masterFileName", file.name);
-        
+    
         // Process input, build master node group and save to local storage
         await parseJSON(e.target.result, masterNodeGroup);
         localStorage.setItem("masterNodeGroup", JSON.stringify(masterNodeGroup))
+
+        // Build master graph
+        const masterGraph = 
 
         // Save the master itself to retainer function
         masterJSON.setValue(e.target.result);
@@ -168,6 +172,40 @@ function getTotal(nodeGroup) {
     return total;
 }
 
+/**
+ * Function to download node groups on button press
+ */
+
+function downloadNodeGroup() {
+    // download whichever node group is being viewed
+    if (displayingMaster)
+        console.log(JSON.parse(localStorage.getItem('masterNodeGroup')))
+    else if (!displayingMaster)
+        console.log(JSON.parse(localStorage.getItem('childNodeGroup')))
+}
+
+function storeMasterNodeGroup(evt) {
+    // Read file
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.onload = async function(e) {    
+        // save the file to local storage
+        localStorage.setItem("masterNodeGroup", JSON.stringify(e.target.result))
+    };
+    reader.readAsText(file);   
+}
+
+function storeChildNodeGroup(evt) {
+    // Read file
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.onload = async function(e) {    
+        // save the file to local storage
+        localStorage.setItem("childNodeGroup", JSON.stringify(e.target.result))
+    };
+    reader.readAsText(file);   
+}
+
 
 /* 
 * Function to generate master graph given input JSON file
@@ -234,6 +272,8 @@ async function generateUnvisited() {
     console.log('calculating')
     const maxDiff = 0.015
     
+    // get master file
+    const master = JSON.parse(masterJSON.getValue());
     
     // other options: masterSearchGroup, hiltonMasterGroup, hotelSearchNodeGroup
     // const masterNodeGroup = hotelSearchNodeGroup
@@ -244,10 +284,11 @@ async function generateUnvisited() {
     const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"))
     // const childNodeGroup = hotelNoSignInChild
 
-
     // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
-    const masterGraph = Graph.from(JSON.parse(localStorage.getItem('masterGraph')));
-    // var masterGraph = Graph.from(hotelSearchGraph)    
+    const masterGraph = buildGraph(master, masterNodeGroup)
+    console.log(masterGraph)
+    // var masterGraph = Graph.from(hotelSearchGraph) 
+
 
     // options: unvisitedNodeSignin, UnvisitedNodeSearch, unvisitedTest
     // var notVisitedNodes=unvisitedSignIn
@@ -299,4 +340,8 @@ mergeGroupsButton.addEventListener("mouseup", () => {
         displayChildGroup();
 });
 
+document.getElementById('download-node-group').addEventListener('mouseup', downloadNodeGroup);
+
+document.getElementById('master-node-group').addEventListener('change', storeMasterNodeGroup);
+document.getElementById('child-node-group').addEventListener('change', storeChildNodeGroup);
 

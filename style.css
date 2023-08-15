@@ -23,12 +23,16 @@
 }
 
 .master-request {
-    height: 150px;
+    height: 250px;
     width: 400px;
+    display: flex;
+    flex-direction: column;
 }
 
 .child-request {
-    height: 150px;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
     width: 400px;
 }
 
@@ -36,6 +40,7 @@
     overflow-x: auto;
     height: 100px;
     margin-bottom: 5px;
+
 }
 
 
