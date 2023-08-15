@@ -1,37 +1,27 @@
+/* Import graph/render libraries used */
 import Graph, { DirectedGraph } from 'graphology';
 import { Sigma } from 'sigma';
 import circular from 'graphology-layout/circular';
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
-/* import various methods from methods.js */
-
-
-import { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, displayUnvisitedNodes, getNodeGroupRow, makeNodeGroup, makeSubNode } from './methods.js';
-import { displayPath, mergeNodeGroups } from './methods.js';
-
-import { masterJSON } from './helpers.js';
-
-import { isValidJSON } from './tools.js';
-
-
-
 import FA2Layout from "graphology-layout-forceatlas2/worker";
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
 
 
+/* import from helper files */
+import { parseJSON, getNotVisitedNodes, displayUnvisitedNodes, getNodeGroupRow, makeNodeGroup, makeSubNode, mergeNodeGroups } from './methods.js';
+import { masterJSON } from './helpers.js';
 
 
-
-
+// Global variable for amount of pixel difference excepted for nodes to be declared the same
 var allowedDiff = 0.005;
 
 /* 
 * Function to run when master file is uploaded. Function saves the master file and 
-* file name to local storage as well as processes the file to build master graph and node groups
+* file name to local storage as well as processes the file to build master node groups
 */
 function masterFileSelect(evt) {
     var masterNodeGroup=[];
-    
     localStorage.clear();
 
     // Read file
@@ -41,8 +31,7 @@ function masterFileSelect(evt) {
         // Save the file name
         localStorage.setItem("masterFileName", file.name);
         
-        // Build master graph as well as master node groups and save it
-
+        // Process input, build master node group and save to local storage
         await parseJSON(e.target.result, masterNodeGroup);
         localStorage.setItem("masterNodeGroup", JSON.stringify(masterNodeGroup))
 
@@ -62,7 +51,7 @@ function masterFileSelect(evt) {
 
 /* 
 * Function to run when child files are uploaded. Function saves the child file contents
-* the file names to local storage as well as creates child node groups
+* the file names to local storage as well as creates child node groups. Child node groups are saved to local storage
 */
 function childFileSelect(evt) {    
 
@@ -73,7 +62,7 @@ function childFileSelect(evt) {
     // array to contains names of all child files
     var childFilesNames=[];
     
-    // array containing parsed json content (node name + image) + temp array
+    // array containing child node groups
     let childNodeGroup=[];
     
     // function used to read file content
@@ -104,7 +93,6 @@ function childFileSelect(evt) {
         // store file names and file contents in local storage
         localStorage.setItem("childFilesNames", JSON.stringify(childFilesNames))
         localStorage.setItem("childNodeGroup", JSON.stringify(childNodeGroup));
-        console.log(childNodeGroup)
         // display the currently uploaded files to the page
         document.getElementById('child-display').textContent = childFilesNames;
 
@@ -113,46 +101,65 @@ function childFileSelect(evt) {
     });
 }
 
-/**
- * display master group
- */
+// array maintaining all checked items
 var checkedItems=[];
+
+// Boolean, is true when master groups is being displayed, false when child groups are being displayed
 var displayingMaster;
+
+/**
+ * Function to display master node groups for editing
+ */
 function displayMasterGroup() {
+    // set master as being displayed as well as set checked items to empty array
     displayingMaster=true;
     checkedItems=[];
+    
+    // Get container for displaying all node images and remove previous content
     const imageContainer = document.getElementById('node-group-display');
     imageContainer.innerHTML='';
     
+    // get the master node group from local storage
     const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
     console.log(getTotal(masterNodeGroup))
 
 
-    // For each node group
+    // For each node group get row of images (node group + subnodes)
     for (let node of masterNodeGroup) {
         // get div with representative and subnodes and display
         imageContainer.appendChild( getNodeGroupRow(node, checkedItems) );
     }
 }
 
+
+/**
+ * Function to display child node groups
+ */
 function displayChildGroup() {
+    // set displaying master as false, reset checked items array
     displayingMaster=false;
     checkedItems=[];
+    
+    // Get image container for displaying node group and remove previously displayed content
     const imageContainer = document.getElementById('node-group-display');
     imageContainer.innerHTML='';
     
+    // Get childnodeGroup from local storage
     const childNodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
     console.log(getTotal(childNodeGroup))
 
 
-    // For each node group
+    // For each node group display row of images (child node group + subnodes)
     for (let node of childNodeGroup) {
         // get div with representative and subnodes and display
         imageContainer.appendChild( getNodeGroupRow(node, checkedItems) );
     }
 }
 
-
+/**
+ * 
+ * helper function used to add up the total number of nodes in the nodeGroup
+ */
 function getTotal(nodeGroup) {
     let total=0;
     for (let node of nodeGroup) {
@@ -160,10 +167,11 @@ function getTotal(nodeGroup) {
     }
     return total;
 }
+
+
 /* 
 * Function to generate master graph given input JSON file
 */
-
 function displayMasterGraph() {    
 
     var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
@@ -216,15 +224,13 @@ function displayMasterGraph() {
 }
 
 
-
-import { hotelSearchGraph } from './hilton-run-data/hotel-search-master-graph.js';
-import { hotelSearchNodeGroup } from './hilton-run-data/hotel-search-master-nodegroup.js';
-import { hotelNoSignInChild } from './hilton-run-data/hotel-search-nosignin-child.js';
-import { unvisitedSignIn } from './hilton-run-data/unvisitedSignIn.js'
 /* 
-* Function to generate child coverage graph
+* Function to generate unvisited nodes, as well as find all the paths to said nodes
+* calls other functions to display paths/nodes
 */
-async function generateCoverageGraph() {
+async function generateUnvisited() {
+    
+    // set the max diff allowed for to match pixels
     console.log('calculating')
     const maxDiff = 0.015
     
@@ -257,7 +263,7 @@ export { displayMasterGroup, displayChildGroup}
 
 // /* Functions to run on button press */
 // document.getElementById('generate-master').addEventListener('click', testFunction);
-document.getElementById('generate-coverage').addEventListener('click', generateCoverageGraph);
+document.getElementById('generate-coverage').addEventListener('click', generateUnvisited);
 document.getElementById('master-json').addEventListener('change', masterFileSelect);
 document.getElementById('child-json').addEventListener('change', childFileSelect);
 
