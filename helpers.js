@@ -48,6 +48,8 @@ function getSubNode(jsonArr, idx) {
     return node;
 }
 
+
+
 function updateCheckboxArray(checked, checkedItems, node) {
     
     if (checked) {

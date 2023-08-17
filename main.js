@@ -273,8 +273,8 @@ async function generateUnvisited() {
     // const childNodeGroup = hotelNoSignInChild
 
     // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
-    const masterGraph = buildGraph(master, masterNodeGroup)
-    console.log(masterGraph)
+    const masterGraph = buildGraph(master, masterNodeGroup);
+    
     // var masterGraph = Graph.from(hotelSearchGraph) 
 
 

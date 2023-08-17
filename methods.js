@@ -326,55 +326,49 @@ function getNotVisitedPaths(masterGraph, targetNode) {
  * on the page with buttons for each node
  */
 function displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes) {
+    // Array to hold all checked items
     var checkedItems=[];
-    displayImages();
 
-    function displayImages() {
+    // Container for all unvisited nodes
+    const imageContainer = document.querySelector('.unvisited-node-display');
+    imageContainer.innerHTML = ''; // Clear previous content
+    
+    // For each unvisited node
+    for (const node of notVisitedNodes) {
+        // Add each node div to the container
+        imageContainer.appendChild(displayUnvisitedNode(node));
+    }
+
+    function displayUnvisitedNode(node) {
+        const imageElement = document.createElement('img');
+        imageElement.src = node.image;
+    
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className='image-button';
+        removeButton.addEventListener('click', () => removeImage(node.nodeID));
+
+        const button = document.createElement('button');
+        button.className = 'image-button';
+        button.textContent = 'Generate Paths';
+        button.addEventListener('click', () => {
+            displayPathButtons(masterGraph, masterNodeGroup, node.nodeID)
+        });
+
+        const checkbox = document.createElement('input');
+        checkbox.className='checkboxes'
+        checkbox.type = 'checkbox';
+        checkbox.dataset.id = node.nodeID;
+        checkbox.addEventListener('change', () => { let checked = checkbox.checked; updateCheckboxArray(checked, checkedItems, node);  });
         
-        const imageContainer = document.querySelector('.unvisited-node-display');
-        imageContainer.innerHTML = ''; // Clear previous content
-      
-        for (const node of notVisitedNodes) {
-            const imageElement = document.createElement('img');
-            imageElement.src = node.image;
-        
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove';
-            removeButton.className='image-button';
-            removeButton.addEventListener('click', () => removeImage(node.nodeID));
+        const imageContainerDiv = document.createElement('div');
+        imageContainerDiv.className = 'image-div'
+        imageContainerDiv.appendChild(imageElement);
+        imageContainerDiv.appendChild(button);
+        imageContainerDiv.appendChild(removeButton);
+        imageContainerDiv.appendChild(checkbox);
 
-            const button = document.createElement('button');
-            button.className = 'image-button';
-            button.textContent = 'Generate Paths';
-            button.addEventListener('click', () => {
-                displayPathButtons(masterGraph, masterNodeGroup, node.nodeID)
-            });
-
-            const checkbox = document.createElement('input');
-            checkbox.className='checkboxes'
-            checkbox.type = 'checkbox';
-            checkbox.dataset.id = node.nodeID;
-            checkbox.addEventListener('change', () => {
-                if (checkbox.checked) {
-                    checkedItems.push(node);
-                } else {
-                    const indexToRemove = checkedItems.findIndex(item => item.nodeID === node.nodeID);
-                    if (indexToRemove !== -1) {
-                        checkedItems.splice(indexToRemove, 1);
-                    }
-                }
-                console.log('Checked Items:', checkedItems); // Display checked items in console
-            });
-
-            const imageContainerDiv = document.createElement('div');
-            imageContainerDiv.className = 'image-div'
-            imageContainerDiv.appendChild(imageElement);
-            imageContainerDiv.appendChild(button);
-            imageContainerDiv.appendChild(removeButton);
-            imageContainerDiv.appendChild(checkbox);
-            
-            imageContainer.appendChild(imageContainerDiv);
-        }
+        return imageContainerDiv
     }
     function removeImage(id) {
         const indexToRemove = notVisitedNodes.findIndex(item => item.nodeID == id);
