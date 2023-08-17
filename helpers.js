@@ -4,8 +4,23 @@ import Pixelmatch from "pixelmatch";
 
 var allowedDiff = 0.005
 
+/**
+ * Given a node Group (group nodes + subnodes) find the representative node given a node ID
+ */
+function getRepresentativeNode(nodeGroup, findIDX) {
+    // Go for each node in the node group
+    for (const node of nodeGroup) {
+        // if is the node looking for then return
+        if (node.nodeID==findIDX)
+            return node;
 
-
+        // scan the subnode array, return if is the node looking for
+        for (const subNode of node.subNodes) {
+            if (subNode.nodeID==findIDX)
+                return node;
+        }
+    }
+}
 
 
 /* 
@@ -272,5 +287,5 @@ function removeNodeGroup(nodeGroup, nodeToRemove) {
 
 
 export { masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup }
-
+export { getRepresentativeNode }
 

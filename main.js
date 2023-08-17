@@ -49,10 +49,6 @@ function masterFileSelect(evt) {
 }
 
 
-
-
-
-
 /* 
 * Function to run when child files are uploaded. Function saves the child file contents
 * the file names to local storage as well as creates child node groups. Child node groups are saved to local storage
@@ -110,7 +106,6 @@ var checkedItems=[];
 
 // Boolean, is true when master groups is being displayed, false when child groups are being displayed
 var displayingMaster;
-
 /**
  * Function to display master node groups for editing
  */
@@ -125,8 +120,6 @@ function displayMasterGroup() {
     
     // get the master node group from local storage
     const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
-    console.log(getTotal(masterNodeGroup))
-
 
     // For each node group get row of images (node group + subnodes)
     for (let node of masterNodeGroup) {
@@ -150,7 +143,6 @@ function displayChildGroup() {
     
     // Get childnodeGroup from local storage
     const childNodeGroup = JSON.parse(localStorage.getItem('childNodeGroup'));
-    console.log(getTotal(childNodeGroup))
 
 
     // For each node group display row of images (child node group + subnodes)
@@ -158,18 +150,6 @@ function displayChildGroup() {
         // get div with representative and subnodes and display
         imageContainer.appendChild( getNodeGroupRow(node, checkedItems) );
     }
-}
-
-/**
- * 
- * helper function used to add up the total number of nodes in the nodeGroup
- */
-function getTotal(nodeGroup) {
-    let total=0;
-    for (let node of nodeGroup) {
-        total+= node.subNodes.length+1
-    }
-    return total;
 }
 
 /**
@@ -184,6 +164,10 @@ function downloadNodeGroup() {
         console.log(JSON.parse(localStorage.getItem('childNodeGroup')))
 }
 
+/**
+ * 
+ * function to take master node group input and replace existing node group files (if has already been downloaded)
+ */
 function storeMasterNodeGroup(evt) {
     // Read file
     var file = evt.target.files[0];
@@ -195,6 +179,10 @@ function storeMasterNodeGroup(evt) {
     reader.readAsText(file);   
 }
 
+/**
+ * 
+ * function to take child node group input and replace existing node group file (if has already been downloaded)
+ */
 function storeChildNodeGroup(evt) {
     // Read file
     var file = evt.target.files[0];
@@ -208,7 +196,7 @@ function storeChildNodeGroup(evt) {
 
 
 /* 
-* Function to generate master graph given input JSON file
+* Function to display master graph
 */
 function displayMasterGraph() {    
 
@@ -263,7 +251,7 @@ function displayMasterGraph() {
 
 
 /* 
-* Function to generate unvisited nodes, as well as find all the paths to said nodes
+* Function to generate unvisited nodes, as well as find all the paths to unvisited nodes
 * calls other functions to display paths/nodes
 */
 async function generateUnvisited() {
@@ -302,7 +290,7 @@ async function generateUnvisited() {
 export { displayMasterGroup, displayChildGroup}
 
 
-// /* Functions to run on button press */
+/* Functions to run on button press */
 // document.getElementById('generate-master').addEventListener('click', testFunction);
 document.getElementById('generate-coverage').addEventListener('click', generateUnvisited);
 document.getElementById('master-json').addEventListener('change', masterFileSelect);
@@ -313,8 +301,7 @@ document.getElementById('show-child-group').addEventListener('click', displayChi
 
 document.getElementById('close-node-processing').addEventListener('click', ()=> document.getElementById('node-group-display').innerHTML='' );
 
-const createNodeGroupButton = document.getElementById('make-node-group');
-createNodeGroupButton.addEventListener("mouseup", () => {
+document.getElementById('make-node-group').addEventListener("mouseup", () => {
     makeNodeGroup(checkedItems, { master: displayingMaster}); 
     if (displayingMaster)
         displayMasterGroup();
@@ -322,8 +309,7 @@ createNodeGroupButton.addEventListener("mouseup", () => {
         displayChildGroup();
 });
 
-const makeSubNodeButton = document.getElementById('make-subnode');
-makeSubNodeButton.addEventListener("mouseup", () => { 
+document.getElementById('make-subnode').addEventListener("mouseup", () => { 
     makeSubNode(checkedItems, { master: displayingMaster});  
     if (displayingMaster)
         displayMasterGroup();
@@ -331,8 +317,7 @@ makeSubNodeButton.addEventListener("mouseup", () => {
         displayChildGroup();
 });
 
-const mergeGroupsButton = document.getElementById('merge-node-groups');
-mergeGroupsButton.addEventListener("mouseup", () => { 
+document.getElementById('merge-node-groups').addEventListener("mouseup", () => { 
     mergeNodeGroups(checkedItems, { master: displayingMaster}); 
     if (displayingMaster)
         displayMasterGroup();

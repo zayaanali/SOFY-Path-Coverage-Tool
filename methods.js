@@ -1,29 +1,18 @@
-import { getScenario, masterJSON, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup } from './helpers.js';
+import { getScenario, masterJSON, imageDiff, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup, getRepresentativeNode } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import { allSimplePaths } from 'graphology-simple-path';
-import { Sigma } from 'sigma';
-import circular from 'graphology-layout/circular';
-
-import FA2Layout from "graphology-layout-forceatlas2/worker";
-import forceAtlas2 from "graphology-layout-forceatlas2";
-import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
-
 import { isValidJSON } from './tools.js';
-import { hiltonMasterGroup } from './old-run-data/hilton-master-group.js';
 
-
-// var allowedDiff = 0.005;
 
 /*
-* Takes JSON string and returns tuples containing the node and the image link associated with it. Also builds graph
+* Takes JSON string and builds array of node groups based on it. Node Groups passed as parameter so that node groups 
+* can be added onto when processing multiple files
 */
-async function parseJSON(jsonStr, nodeGroups, ) {
-    
+async function parseJSON(jsonStr, nodeGroups) {
 
-    let returnArr=[];
     // Check if the JSON string is a valid JSON
     if (!isValidJSON(jsonStr))
-        alert("Invalid JSON");
+        console.error("Invalid JSON");
     
     // parse the JSON to get it from string to JSON object    
     var jsonArr = JSON.parse(jsonStr);
@@ -31,13 +20,17 @@ async function parseJSON(jsonStr, nodeGroups, ) {
     // Get number of nodes in the JSON
     const arrLength = jsonArr.scenario.length;
     
-    // Building concise node array (placing identical screen as subnodes)
-    for (var i=0; i<arrLength;i++) {
-       i = await addNode(jsonArr, i, arrLength, nodeGroups); // adds the node of the given index to the array of representative nodes       
-    }
+    // Building concise node array (placing identical screen as subnodes). Add each node in JSON array
+    for (var i=0; i<arrLength;i++)
+       i = await addNode(jsonArr, i, arrLength, nodeGroups); // adds the node of the given index to the array of representative nodes
 
 }
 
+
+/*
+* Given a single node group (representative node + subnodes) build a div with images of representative
+* node and subnodes in a row. Maintains an array of which items are checked to be used node group array modification
+*/
 function getNodeGroupRow(node, checkedItems) {
     // Create div for entire row and give class
     const nodeGroupDiv = document.createElement('div'); 
@@ -47,7 +40,7 @@ function getNodeGroupRow(node, checkedItems) {
     const nodeDiv = document.createElement('div');
     nodeDiv.className='image-div'
     
-    // create text
+    // create text signifying node group
     const txt = document.createElement('p');
     txt.className = 'group-text'
     txt.textContent = "Node Group";
@@ -71,7 +64,7 @@ function getNodeGroupRow(node, checkedItems) {
     // Insert the node div into the container
     nodeGroupDiv.appendChild(nodeDiv)
     
-    // insert subnodes after the representative node
+    // insert subnodes after the representative node. Create and insert div for each subnode
     for (let subNode of node.subNodes) {
         // Create div to contain image and checkbox
         const subNodeDiv = document.createElement('div');
@@ -94,7 +87,6 @@ function getNodeGroupRow(node, checkedItems) {
         subNodeDiv.appendChild(subNodeImage)
         subNodeDiv.appendChild(checkbox2)
         
-
         // insert image/checkbox to row
         nodeGroupDiv.appendChild(subNodeDiv)
     }
@@ -102,12 +94,20 @@ function getNodeGroupRow(node, checkedItems) {
     return nodeGroupDiv
 }
 
+/**
+ * Takes an array of checkedItems (from master/child group display). Each of the elements of checkedItems must be subNode
+ * Makes the first element of checkedItems the new Group node and the following elements subNodes of the first element
+ * To call this function pass the following:
+ * makeNodeGroup(checkedItems, {master: [true/false] })
+ * second paremeter denotes whether this should be editing the master group or the child group
+ */
 function makeNodeGroup(checkedItems, options) {
-    if (checkedItems.length==0)
+    // If there are no elements in checked items array then return
+    if (!checkedItems)
         return;
     
+    // Depending on parameter option passed through set nodeGroup as child or master group
     let nodeGroup;
-    
     if (options && options.master==true)
         nodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
     else if (options && options.master==false)
@@ -115,7 +115,7 @@ function makeNodeGroup(checkedItems, options) {
     else
         console.error('specify if master or child node group');  
 
-    // Create a new node to create a new nodeGroup
+    // Make new representative node (to contain a number of sub nodes) containing info from first element
     let newNode = {
         nodeID: checkedItems[0].nodeID,
         actionID: checkedItems[0].actionID,
@@ -123,23 +123,27 @@ function makeNodeGroup(checkedItems, options) {
         subNodes: []
     }
     
-    // remove all subnodees
+    // Make sure all elements of checkedItems are subNodes
     for (let subNode of checkedItems) {
-        // Remove the node from the subnode array
-        removeSubNode(nodeGroup, subNode);
+        if ('subNodes' in subNode)
+            console.error('only subnodes should be added');        
     }
 
-    // add subnodes to new node just created
+    // Remove first subnode
+    removeSubNode(nodeGroup, checkedItems[0]);
+    
+    // Remove the subnode from its original place in the array and add it to the subnode array of node just created
     for (let i=1; i< checkedItems.length; i++) {
-        newNode.subNodes.push(checkedItems[i])
+        removeSubNode(nodeGroup, checkedItems[i]);
+        newNode.subNodes.push(checkedItems[i]);
     }
 
-    // add node just created into the array   
+    // add node just created into the node group array 
     nodeGroup.push(newNode);
 
-    checkedItems=[];
     
-    // update nodeGroup
+    // Reset checkedItems and update nodeGroup in localstorage
+    checkedItems=[];
     if (options && options.master==true) 
         localStorage.setItem('masterNodeGroup', JSON.stringify(nodeGroup));
      else 
@@ -147,12 +151,19 @@ function makeNodeGroup(checkedItems, options) {
          
 }
 
+/**
+ * This function takes an array of checkedItems and options parameter to specify if master is used (see makeNodeGroup function definition for usage)
+ * First element of checked items must be representative node (node group element) and the rest must be subnodes
+ * Moves all of the subnodes in the checkedItems array to representative node
+ */
+
 function makeSubNode(checkedItems, options) {
-    if (checkedItems.length==0)
+    // if checkedItems empty then return
+    if (!checkedItems)
         return;
     
+    // Depending on the options parameter set nodeGroup to child or master group, get from localstorage
     let nodeGroup;
-
     if (options && options.master==true)
         nodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
     else if (options && options.master==false)
@@ -160,18 +171,24 @@ function makeSubNode(checkedItems, options) {
     else
         console.error('specify if master or child node group');  
     
-    // Get index of node group adding to
+    // Get the index of the node adding to in nodeGroup (index of first element of checkedItems)
     let nodeIndex = getNodeIndex(nodeGroup, checkedItems[0]);
     
-        
+    // Make sure first node is Group Node, all remaining nodes are subnodes
+    for (let i=0; i<checkedItems.length; i++) {
+        if (i==0 && !('subNodes' in checkedItems[i]))
+            console.error('First element must be Group Node')
+        else if (i!=0 && 'subNodes' in checkedItems[i])
+            console.error('All elements but first must be sub nodes')
+    }
     
-    // add subnodes to nodeindex
+    // remove subNodes from original localtion add subnodes to representative node
     for (let i=1; i<checkedItems.length; i++) {
         removeSubNode(nodeGroup, checkedItems[i]);
         nodeGroup[nodeIndex].subNodes.push(checkedItems[i])
     }
 
-    // update masterNodeGroup
+    // update masterNodeGroup and reset checkedItems array
     checkedItems=[];
     if (options && options.master==true) 
         localStorage.setItem('masterNodeGroup', JSON.stringify(nodeGroup));
@@ -179,12 +196,17 @@ function makeSubNode(checkedItems, options) {
         localStorage.setItem('childNodeGroup', JSON.stringify(nodeGroup));  
 }
 
-function mergeNodeGroups(checkedItems, options) {
-    console.log(checkedItems)
-    
-    if (checkedItems.length==0)
+/**
+ * Function takes an array of checkedItems and option parameter which specifies if modification is being done master or child groups
+ * All elements in the checkedItems array should be group nodes (representative nodes)
+ * First element of checkedItems array is the base node, all other group nodes (+subnodes) are merged into the base node
+ */
+function mergeNodeGroups(checkedItems, options) {    
+    // Return if checkedItems is empty 
+    if (!checkedItems)
         return;
 
+    // Set node group based on option parameter
     let nodeGroup;
     if (options && options.master==true)
         nodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
@@ -194,19 +216,31 @@ function mergeNodeGroups(checkedItems, options) {
         console.error('specify if master or child node group');  
     
     
+    // ensure all elements of checkedItems are node Groups
+    for (let element of checkedItems) {
+        if (!('subNodes' in element))
+            console.error('All checked elements must be group nodes')
+    }
+
+
+    // Get index of base Node (first element of checkedItem array) in it's original array
     const baseNodeIndex = getNodeIndex(nodeGroup, checkedItems[0]);
+    
+    // For each element in checked items other than first one
     for (let i=1; i<checkedItems.length; i++) {        
-        // convert old nodeGroup to subNode and add as a subnode to the base node group
+        // create subNode to replace the group node
         let newSubNode = {
             nodeID: checkedItems[i].nodeID,
             actionID: checkedItems[i].actionID,
             image: checkedItems[i].image,
         }
+        
+        // Add the subnode to the base node
         nodeGroup[baseNodeIndex].subNodes.push(newSubNode)
         
-        for (let subNode of checkedItems[i].subNodes) {
-            nodeGroup[baseNodeIndex].subNodes.push(subNode)
-        }
+        // add the subnodes of the original array 
+        for (let subNode of checkedItems[i].subNodes)
+            nodeGroup[baseNodeIndex].subNodes.push(subNode);      
     }
 
     // Remove other node groups
@@ -214,54 +248,44 @@ function mergeNodeGroups(checkedItems, options) {
         removeNodeGroup(nodeGroup, checkedItems[i])
     }
     
-    // update masterNodeGroup
+    // update masterNodeGroup and set checked items to empty
     checkedItems=[];
     if (options && options.master==true) 
         localStorage.setItem('masterNodeGroup', JSON.stringify(nodeGroup));
     else 
         localStorage.setItem('childNodeGroup', JSON.stringify(nodeGroup));  
 
-
-
 }
 
 /**
- * 
- * builds a graph given the master JSON as well as the master node groups
+ * Builds graph given masterJSON and node Groups. 
  */
-
 function buildGraph(masterJSON, nodeGroup) {
     const scenario = masterJSON.scenario
-    console.log(scenario)
     let newGraph = new Graph({multi: false, allowSelfLoops: true, type: 'directed'});
  
+    // For each node in the scenario
     for (let i=0; i<scenario.length; i++) {
+        // find the representative node in the node group array and add it as a node in the graph
         let curNode = getRepresentativeNode(nodeGroup, masterJSON.scenarioGUID+'->'+scenario[i].actionIndex)
         newGraph.mergeNode(curNode.nodeID, { type: "image", label: curNode.actionID, image: curNode.image, size: 10 });
 
+        // If there is a node following the currently processed nodes
         if (i+1<scenario.length) {
+            // add representative node of the the next node and add a edge between the two nodes
             let nextNode = getRepresentativeNode(nodeGroup, masterJSON.scenarioGUID+'->'+scenario[i+1].actionIndex)
             newGraph.mergeNode(nextNode.nodeID, { type: "image", label: nextNode.actionID, image: nextNode.image, size: 10 });
             newGraph.mergeEdge(curNode.nodeID, nextNode.nodeID);
         }
     }
-
     return newGraph
-
-
-    function getRepresentativeNode(nodeGroup, findIDX) {
-        for (const node of nodeGroup) {
-            if (node.nodeID==findIDX)
-                return node;
-
-            for (const subNode of node.subNodes) {
-                if (subNode.nodeID==findIDX)
-                    return node;
-            }
-        }
-    }
 }
 
+
+/**
+ * Given master node group and childnode group, return array of nodes that have yet to be visited. Uses image diff to check
+ * node similarity
+ */
 async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff) {
     
     // Create a deep copy of master array 
@@ -282,8 +306,7 @@ async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff) {
 
 }
 /*
-* This function takes a graph as well as list of child nodes and returns all of the
-* paths that have not been traversed yet from the start node (first node in the master)
+* Function takes in a master graph as wall as target node and returns all paths to target node
 */
 function getNotVisitedPaths(masterGraph, targetNode) {
     
@@ -293,13 +316,10 @@ function getNotVisitedPaths(masterGraph, targetNode) {
         masterNodes.push(node);
     });
 
+    // return all simple paths
     return allSimplePaths(masterGraph, masterNodes[0], targetNode)
     
 }
-
-
-
-
 
 /**
  * This function takes in an array of unvisited nodes and displays the image
