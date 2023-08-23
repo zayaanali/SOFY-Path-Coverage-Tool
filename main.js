@@ -36,9 +36,6 @@ function masterFileSelect(evt) {
         await parseJSON(e.target.result, masterNodeGroup);
         localStorage.setItem("masterNodeGroup", JSON.stringify(masterNodeGroup))
 
-        // Build master graph
-        const masterGraph = 
-
         // Save the master itself to retainer function
         masterJSON.setValue(e.target.result);
                 
@@ -78,7 +75,7 @@ function childFileSelect(evt) {
             reader.readAsText(file);
         });
     }
-
+    
     // function used to read multiple files
     async function processFiles() {
         for (var file of files) {
