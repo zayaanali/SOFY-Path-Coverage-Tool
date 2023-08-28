@@ -286,19 +286,25 @@ function buildGraph(masterJSON, nodeGroup) {
  * Given master node group and childnode group, return array of nodes that have yet to be visited. Uses image diff to check
  * node similarity
  */
-async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff) {
+async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff, nodeMatchMap) {
     
     // Create a deep copy of master array 
     let toVisitArr= JSON.parse(JSON.stringify(masterNodeGroup));
     let toRemove=[];
+    let matchedArr=[];
     
     // Iterate through each node of the master. If matched with a node in the child mark for removal
     for (let i=0; i<masterNodeGroup.length; i++) {
         for (let childNode of childNodeGroup) {
             let diff =  await imageDiff(masterNodeGroup[i].image, childNode.image)
-            if (diff<=maxDiff)
+            if (diff<=maxDiff) {
                 toRemove.push(i);
+                matchedArr.push(childNode);
+            }
         }
+        // add the matched nodes to the matched node map
+        nodeMatchMap.set(masterNodeGroup[i], matchedArr);
+        matchedArr=[];
     }
    
     // Remove all nodes that have already been visited and return
@@ -437,9 +443,6 @@ function displayPathButtons(masterGraph, masterNodeGroup, target) {
 }
 
 
-
-
-
 function displayPath(masterGraph, masterNodeGroup, path) {
     
     let pathArr=[];
@@ -507,6 +510,7 @@ function downloadPath(path) {
 }
 
 
+    
 
 
 

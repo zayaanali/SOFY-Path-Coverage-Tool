@@ -251,6 +251,7 @@ function displayMasterGraph() {
 * Function to generate unvisited nodes, as well as find all the paths to unvisited nodes
 * calls other functions to display paths/nodes
 */
+const nodeMatchMap = new Map();
 async function generateUnvisited() {
     
     // set the max diff allowed for to match pixels
@@ -270,6 +271,7 @@ async function generateUnvisited() {
     // const childNodeGroup = hotelNoSignInChild
 
     // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
+    
     const masterGraph = buildGraph(master, masterNodeGroup);
     
     // var masterGraph = Graph.from(hotelSearchGraph) 
@@ -277,10 +279,77 @@ async function generateUnvisited() {
 
     // options: unvisitedNodeSignin, UnvisitedNodeSearch, unvisitedTest
     // var notVisitedNodes=unvisitedSignIn
-    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff);
-    // console.log(notVisitedNodes)
+
+    var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff, nodeMatchMap);
+    console.log(nodeMatchMap)
     displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes)
 
+}
+
+function displayNodeMatches() {
+    
+    const imageContainer = document.querySelector('.unvisited-node-display');
+    imageContainer.className='display-node-match';
+    imageContainer.innerHTML = ''; // Clear previous content
+    
+    console.log(nodeMatchMap)
+    if (!nodeMatchMap) {
+        alert('invalid nodes');
+        return;
+    }
+        
+    for (const [masterNode, matchingArray] of nodeMatchMap) {
+        
+        // Create Div (row) to hold the master as well as the childnode
+        const imageRowDiv = document.createElement('div');
+        imageRowDiv.className = 'temp'
+        
+        const buttonDiv = document.createElement('div');
+        buttonDiv.className = 'button-div'
+        
+        // Create Master Node Div
+        const masterImageDiv = document.createElement('div');
+        masterImageDiv.className = 'image-div'
+        
+        // Create image and buttons
+        const masterNodeImage = document.createElement('img');
+        masterNodeImage.src = masterNode.image;
+        const setUnvisitedButton = document.createElement('button');
+        setUnvisitedButton.textContent = "Unvisited";
+        const setVisitedButton = document.createElement('button');
+        setVisitedButton.textContent = "Visited";
+
+        buttonDiv.appendChild(setUnvisitedButton);
+        buttonDiv.appendChild(setVisitedButton);
+
+        
+
+        // add image and buttons to the div
+        masterImageDiv.appendChild(masterNodeImage);
+        masterImageDiv.appendChild(buttonDiv);
+
+        imageRowDiv.appendChild(masterImageDiv);
+
+        // add all of the matching child nodes
+        console.log(matchingArray)
+        for (let childNode of matchingArray) {
+            console.log(childNode)
+            // Create div for child
+            const childDiv = document.createElement('div');
+            childDiv.className = 'image-div'
+            
+            // Child image element
+            const childNodeImage = document.createElement('img')
+            childNodeImage.src = childNode.image;
+
+            // add the child image element and add it to the row
+            childDiv.appendChild(childNodeImage)
+            imageRowDiv.appendChild(childDiv)
+        }
+        imageContainer.appendChild(imageRowDiv)
+    }
+
+    
 }
 
 
@@ -289,6 +358,7 @@ export { displayMasterGroup, displayChildGroup}
 
 /* Functions to run on button press */
 // document.getElementById('generate-master').addEventListener('click', testFunction);
+document.getElementById('display-node-match').addEventListener('click', displayNodeMatches)
 document.getElementById('generate-coverage').addEventListener('click', generateUnvisited);
 document.getElementById('master-json').addEventListener('change', masterFileSelect);
 document.getElementById('child-json').addEventListener('change', childFileSelect);

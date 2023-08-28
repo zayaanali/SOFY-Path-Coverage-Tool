@@ -87,6 +87,7 @@
     white-space: nowrap;
     width: 90%;
 
+
 }
 
 
@@ -165,7 +166,7 @@ img {
     overflow-x: scroll;
     white-space: nowrap;
     width: 90%;
-    padding: 10px
+    padding: 10px;
 }
 
 .node-processing-container {
@@ -179,7 +180,16 @@ img {
     font-size: 10px;
 }
 
+.display-node-match {
+    max-height: 600px;
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
 
-
-
+.temp {
+    display: flex;
+    flex-direction: row;
+}
 

@@ -285,9 +285,6 @@ function removeNodeGroup(nodeGroup, nodeToRemove) {
 
 
 
-
-
-
 export { masterJSON, getScenario, getNode, imageDiff, getSubNode, doesNodeExist, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup }
 export { getRepresentativeNode }
 
