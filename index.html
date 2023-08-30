@@ -13,8 +13,25 @@
 <body>
         
         <h1 class="title">SOFY Graph Coverage Tool</h1>
-        
-        <div class="request-container">
+        <div class="template-container">
+            <div class="child-request">
+                <h3>Upload Master Template(s)</h3>                
+                <input type="file" id="master-template-json" accept=".json" multiple>
+                <div class="file-display">
+                    <p> Current Template(s):</p>
+                    <p id="master-template-display"></p>
+                </div>
+            </div>
+            <div class="child-request">
+                <h3>Upload Child Template(s)</h3>                
+                <input type="file" id="child-template-json" accept=".json" multiple>
+                <div class="file-display">
+                    <p> Current Template(s):</p>
+                    <p id="child-template-display"></p>
+                </div>
+            </div>
+        </div>
+        <div class="request-container">    
             <div class="master-request">
                 <h3>Please upload your master file</h3>
                 <input type="file" id="master-json" accept=".json" />
@@ -67,19 +84,23 @@
 
 
 
-        <div class="graph-display-container">   
+        <!-- <div class="graph-display-container">   
             <div class="master-graph-container">
                 <h3>Master Graph</h3>
                 <div id="master-graph-display"></div>
             </div>   
-        </div>
+        </div> -->
 
         
         <div class="unvisited-node-container">
             
             <h4 class="center">Unvisited Nodes</h4>
-            <button id="display-node-match">Display Node Matches</button>
-            <div class="unvisited-node-display"></div>            
+            <div>
+                <button id="display-node-match">Display Node Matches</button>
+                <button id="display-unvisited"> Display Unvisited Nodes</button>
+            </div>
+
+            <div id="unvisited-node-display"></div>            
             
         </div>
     

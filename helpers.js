@@ -66,10 +66,10 @@ function updateCheckboxArray(checked, checkedItems, node) {
  * This function takes a master file an activity name and then returns the entire scenario data
  */
 function getScenario(master, node) {
-    console.log('nodeID:', node.actionID)
+
     for (let scenario of master.scenario) {
         let id= parseInt(scenario.actionIndex)+1;
-        console.log(id)
+
         if (id==node.actionID)
             return scenario
     }
@@ -99,13 +99,15 @@ var masterJSON = (function() {
 })();
 
 
+
+
+
+
 /**
  * Function takes in two image URLs and returns the image percentage diff
  */
 async function imageDiff(image1, image2) {
     
-
-
     let diff= await compareImages(image1, image2)
     return diff;
   
@@ -189,19 +191,28 @@ async function doesNodeExist(nodeArr, img) {
 }
 
 
-async function addNode(jsonArr, i, arrLength, nodeArr) {
-     // Get the image of the current node
+async function addNode(jsonArr, i, arrLength, nodeArr, processedNodes) {
+    if (processedNodes.has(jsonArr.scenarioGUID+'->'+jsonArr.scenario[i].actionIndex))
+        return;
+    
+    // Get the image of the current node
      let curNodeImage = jsonArr.scenario[i].snapshotLocation;
         
      // get the index of the node if it already exists in the array
-     let nodeIndex = await doesNodeExist(nodeArr, curNodeImage);
-     // console.log(i+1, " Matches: ", nodeIndex+1)
+    let nodeIndex = await doesNodeExist(nodeArr, curNodeImage);
      
-     // if already exists in array
-     if (nodeIndex!=-1)
-         nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, i));
-     else 
-         nodeArr.push(getNode(jsonArr, i));
+     let tempNode;
+    // if already exists in array
+    if (nodeIndex!=-1) {
+        tempNode = getSubNode(jsonArr, i)
+        nodeArr[nodeIndex].subNodes.push(tempNode);
+        processedNodes.add(tempNode.nodeID)
+    } else {
+        tempNode=getNode(jsonArr, i)
+        nodeArr.push(tempNode);
+        processedNodes.add(tempNode.nodeID)
+    }
+         
      
      let nextIndex = i+1;
      let done = false;
@@ -209,24 +220,29 @@ async function addNode(jsonArr, i, arrLength, nodeArr) {
      // for all next nodes check if they are subnodes
      while (!done && nextIndex<arrLength) {
          
-         // Get the next image and compute difference between current and next image
-         let nextImage = jsonArr.scenario[nextIndex].snapshotLocation;
-         let diff = await imageDiff(curNodeImage, nextImage);
+        // Get the next image and compute difference between current and next image
+        if (jsonArr.scenario[nextIndex].action=="TEMPLATE")
+            return i;
+        let nextImage = jsonArr.scenario[nextIndex].snapshotLocation;
+        let diff = await imageDiff(curNodeImage, nextImage);
 
-         // if the difference is less than 5% they are subnodes
-         if (diff<=allowedDiff) {
-             // check if the node that compared to is a subnode or representative node
-             if (nodeIndex!=-1) // subnode
-                 nodeArr[nodeIndex].subNodes.push(getSubNode(jsonArr, nextIndex)); // use the index found previously
-             else // representative node
-                 nodeArr[nodeArr.length-1].subNodes.push(getSubNode(jsonArr, nextIndex)); // use the index of the node that was just added to the array
-             
-             nextIndex++; // increment the temp index
-         } else { // difference is more than 5% so don't do anything
-             done=true;
+        // if the difference is less than 5% they are subnodes
+        if (diff<=allowedDiff) {
+            // check if the node that compared to is a subnode or representative node
+            if (nodeIndex!=-1) {// subnode 
+                tempNode = getSubNode(jsonArr, nextIndex);
+                nodeArr[nodeIndex].subNodes.push(tempNode); // use the index found previously
+                processedNodes.add(tempNode.nodeID)
+            } else // representative node
+                tempNode = getNode(jsonArr, nextIndex);
+                nodeArr[nodeArr.length-1].subNodes.push(tempNode); // use the index of the node that was just added to the array
+                processedNodes.add(tempNode.nodeID);
+                nextIndex++; // increment the temp index
+            } else { // difference is more than 5% so don't do anything
+                done=true;
             //  i = nextIndex-1; // will be incremented by the forloop
             return nextIndex-1;
-         }
+        }
      }
      return i;    
 }
@@ -264,7 +280,7 @@ function getNodeIndex(nodeGroup, nodeToCheck) {
         if (nodeGroup[idx].nodeID==nodeToCheck.nodeID)
             return idx;
     }
-    console.error('node not found')
+    return -1
 }
 
 function removeSubNode(masterNodeGroup, subNodeToRemove) {

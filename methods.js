@@ -1,15 +1,23 @@
-import { getScenario, masterJSON, imageDiff, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup, getRepresentativeNode } from './helpers.js';
+import { getScenario, masterJSON, imageDiff, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup, getRepresentativeNode, getNode } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import { allSimplePaths } from 'graphology-simple-path';
-import { isValidJSON } from './tools.js';
+import { doesNodeIdExist, isValidJSON } from './tools.js';
 
 
 /*
 * Takes JSON string and builds array of node groups based on it. Node Groups passed as parameter so that node groups 
 * can be added onto when processing multiple files
 */
-async function parseJSON(jsonStr, nodeGroups) {
-
+async function parseJSON(jsonStr, nodeGroups, options) {
+    let templateCounter=0;
+    let templateArr;
+    
+    // Check if processing child or master template
+    if (options && options.child==true)
+        templateArr = JSON.parse(localStorage.getItem("childTemplateArray"));
+    else
+        templateArr = JSON.parse(localStorage.getItem("masterTemplateArray"));
+    
     // Check if the JSON string is a valid JSON
     if (!isValidJSON(jsonStr))
         console.error("Invalid JSON");
@@ -19,12 +27,66 @@ async function parseJSON(jsonStr, nodeGroups) {
 
     // Get number of nodes in the JSON
     const arrLength = jsonArr.scenario.length;
+    let processedNodes= new Set();
+
+    // Building concise node array (placing identical screen as subnodes). Add each node in JSON array
+    for (var i=0; i<arrLength;i++) {
+        // if the action is template, insert node from template
+        if (jsonArr.scenario[i].action == 'TEMPLATE') {
+            // make sure template counter not out of bounds
+            if (templateCounter>=templateArr.length)
+                console.error('template not found for action index: ', i);
+            
+            // add each node in the template to the node group
+            console.log(templateCounter, templateArr.length)
+            console.log(templateArr[templateCounter].scenario.length)
+            // add each node in the template scenario to the node group
+            for (let j=0; j<templateArr[templateCounter].scenario.length; j++) {
+                j= await addNode(templateArr[templateCounter], j, templateArr[templateCounter].scenario.length, nodeGroups, processedNodes);
+            }
+            templateCounter++;
+        } else {
+            //  action is not a template
+            i = await addNode(jsonArr, i, arrLength, nodeGroups, processedNodes); // adds the node of the given index to the array of representative nodes
+        }
+        
+        
+    }
+}
+
+/**
+ * This function parses template from JSON and returns an object representing the template
+ * 
+ * @param {*} jsonStr - String containing template that will be parse
+ * @returns template representing object
+ */
+function parseTemplate(jsonStr) {
+    // Check if the JSON string is a valid JSON
+    if (!isValidJSON(jsonStr))
+        console.error("Invalid JSON");
+
+    // parse the JSON to get it from string to JSON object    
+    var jsonArr = JSON.parse(jsonStr);
+
+    // Create the object representing the template
+    let nodeObject = {
+        scenarioGUID: jsonArr.scenarioGUID,
+        scenario: []
+    }
     
     // Building concise node array (placing identical screen as subnodes). Add each node in JSON array
-    for (var i=0; i<arrLength;i++)
-       i = await addNode(jsonArr, i, arrLength, nodeGroups); // adds the node of the given index to the array of representative nodes
+    for (let node of jsonArr.scenario) {
+        // get information to fill scenario in the template
+        let scenarioObject = {
+            actionIndex: node.actionIndex,
+            snapshotLocation: node.snapshotLocation
+        }
+        nodeObject.scenario.push(scenarioObject); 
+    }
 
+    return nodeObject;
 }
+
 
 
 /*
@@ -315,12 +377,11 @@ async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff, node
 * Function takes in a master graph as wall as target node and returns all paths to target node
 */
 function getNotVisitedPaths(masterGraph, targetNode) {
-    
+    console.log(masterGraph)
     // Get list of nodes in the master
-    var masterNodes=[];
-    masterGraph.forEachNode((node, attributes) => {
-        masterNodes.push(node);
-    });
+    
+    const masterNodes = masterGraph.nodes();
+    console.log(masterNodes)
 
     // return all simple paths
     return allSimplePaths(masterGraph, masterNodes[0], targetNode)
@@ -331,12 +392,18 @@ function getNotVisitedPaths(masterGraph, targetNode) {
  * This function takes in an array of unvisited nodes and displays the image
  * on the page with buttons for each node
  */
-function displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes) {
+function displayUnvisitedNodes() {
+    const masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
+    const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
+    const notVisitedNodes = JSON.parse(localStorage.getItem('notVisitedNodes'));
+
+    console.log(masterGraph, masterNodeGroup, notVisitedNodes)
+    
     // Array to hold all checked items
     var checkedItems=[];
 
     // Container for all unvisited nodes
-    const imageContainer = document.querySelector('.unvisited-node-display');
+    const imageContainer = document.getElementById('unvisited-node-display');
     imageContainer.innerHTML = ''; // Clear previous content
     
     // For each unvisited node
@@ -384,7 +451,7 @@ function displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes) {
         }
     }
     function refreshImages() {
-        const imageContainer = document.querySelector('.unvisited-node-display');
+        const imageContainer = document.getElementById('unvisited-node-display');
         imageContainer.innerHTML = ''; // Clear previous content
         displayImages(); // Display the updated images
     }
@@ -420,8 +487,15 @@ function displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes) {
  * This function takes and displays all of the paths that include the edge
  */
 function displayPathButtons(masterGraph, masterNodeGroup, target) {
-
+    
+    
+    const masterGraphCopy = JSON.parse(JSON.stringify(masterGraph));
+    console.log(masterGraph, masterNodeGroup, target)
+    console.log(masterGraphCopy)
+    
     const notVisitedPaths = getNotVisitedPaths(masterGraph, target, { maxDepth: 20 });
+
+    
     // Get the button container element
     var container = document.getElementById("paths-selection");
     container.innerHTML='';
@@ -533,7 +607,6 @@ function createPathJSON(master, path) {
 }
 
 
-
 /*
  * Ignore - this function is used for testing purposes
  */
@@ -558,4 +631,4 @@ async function testFunction() {
 
 
 export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, makeNodeGroup, makeSubNode };
-export { displayPath, displayUnvisitedNodes, getNodeGroupRow, mergeNodeGroups }
+export { displayPath, displayUnvisitedNodes, getNodeGroupRow, mergeNodeGroups, parseTemplate }

@@ -1,0 +1,64 @@
+{
+    "scenarioVersion": "V00002",
+    "scenarioGUID": "e945dc06-8091-83bc-3701-93db7e845819",
+    "scenarioName": "template-test",
+    "scenario": [
+        {
+            "actionIndex": "0",
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810807129.png"
+        },
+        {
+            "action": "TEMPLATE",
+            "actionValue": "5021",
+            "index": 8
+        },
+        {
+            "action": "TEMPLATE",
+            "actionValue": "5021",
+            "index": 8
+        }
+    ],
+    "generatedBySDK": false,
+    "appInfo": {
+        "pkgName": "com.rover.android",
+        "appIconFile": "C:\\Users\\SEAPRO~1\\AppData\\Local\\Temp\\1692806415783-0\\3b69cb34-30b7-42ce-9069-1c9bce25f114..png",
+        "appFile": "C:\\Users\\SEAPRO~1\\AppData\\Local\\Temp\\1692806415783-0\\SofyRec\\Applications\\null\\ANDROID\\5a0b2eeb-a494-44e4-99e6-ab802842b878.apk",
+        "maxSDK": null,
+        "packageGuid": "15C26E90-1812-41C4-B9F8-A8052E28BF8B",
+        "appName": "Rover",
+        "appVersion": "168900499",
+        "minSDK": "26",
+        "build": "23.0712.00",
+        "compileSDK": "33"
+    },
+    "threshold": {
+        "cpuPercentage": -1,
+        "memoryBytes": -1,
+        "loadTimeMS": -1,
+        "networkTrafficBytes": -1,
+        "powerUtilizedAmpere": -1
+    },
+    "testCaseVariables": [],
+    "apiStepVariables": [],
+    "disableAutoDialogHandler": true,
+    "device": {
+        "platform": "ANDROID",
+        "deviceResolution": "1080x2400",
+        "deviceManufacturer": "SAMSUNG",
+        "deviceAPILevel": "33",
+        "orientationServerPort": 53104,
+        "communicationAgentPort": 53106,
+        "imageServerPort": 53102,
+        "deviceBoard": "kona",
+        "deviceOSBuild": "13",
+        "touchPort": 53103,
+        "deviceAPICode": null,
+        "deviceModel": "SM-G981U1",
+        "deviceCPU": "arm64-v8a",
+        "deviceName": "samsung SM-G981U1",
+        "deviceRAM": "11 GB",
+        "deviceType": "PHYSICAL",
+        "vmAppPort": 53101,
+        "deviceID": "RFCN104M0SP"
+    }
+}

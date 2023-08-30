@@ -16,7 +16,7 @@
 
 .request-container { 
     display: flex;
-    column-gap: 20px;
+    column-gap: 10px;
     justify-content: center;
     align-items: center;
     height: 250px;
@@ -79,7 +79,7 @@
     padding: 10px;
 }
 
-.unvisited-node-display {
+#unvisited-node-display {
     display: flex;
 
     align-items: center;
@@ -188,8 +188,18 @@ img {
     overflow-y: auto;
 }
 
-.temp {
+.image-row {
     display: flex;
     flex-direction: row;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
 }
 
+.template-container {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

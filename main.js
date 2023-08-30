@@ -9,12 +9,106 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 
 
 /* import from helper files */
-import { parseJSON, getNotVisitedNodes, displayUnvisitedNodes, getNodeGroupRow, makeNodeGroup, makeSubNode, mergeNodeGroups, buildGraph } from './methods.js';
-import { masterJSON } from './helpers.js';
+import { parseJSON, getNotVisitedNodes, displayUnvisitedNodes, getNodeGroupRow, makeNodeGroup, makeSubNode, mergeNodeGroups, buildGraph, parseTemplate } from './methods.js';
+import { doesNodeExist, masterJSON } from './helpers.js';
+import { doesNodeIdExist } from './tools.js';
+import { getNodeIndex } from './helpers.js';
 
 
 // Global variable for amount of pixel difference excepted for nodes to be declared the same
 var allowedDiff = 0.005;
+
+function masterTemplateFileSelect(evt) {
+    // Read file
+    var fileInput = evt.target;
+    var files = fileInput.files;
+
+    // array to contains names of all child files
+    var templateFileNames=[];
+    
+    // array containing child node groups
+    let templateArr=[];
+    
+    // function used to read file content
+    async function readFileContent(file) {
+        return new Promise (function(resolve, reject) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                resolve(e.target.result)
+            };
+            reader.onerror = function() {
+                reject(e.target.error)
+            };
+            reader.readAsText(file);
+        });
+    }
+    
+    // function used to read multiple files
+    async function processFiles() {
+        for (var file of files) {
+            templateFileNames.push(file.name);
+            var content = await readFileContent(file);
+            templateArr.push(parseTemplate(content));
+        }
+    }
+
+    // run functions and only process data after files have been read
+    processFiles().then(function() {
+        // store file names and file contents in local storage
+        localStorage.setItem("masterTemplateArray", JSON.stringify(templateArr));
+        // display the currently uploaded files to the page
+        document.getElementById('master-template-display').textContent = templateFileNames;
+    }).catch(function(error) {
+        console.error('Error processing files: ', error);
+    });
+}
+
+function childTemplateFileSelect(evt) {
+    // Read file
+    var fileInput = evt.target;
+    var files = fileInput.files;
+
+    // array to contains names of all child files
+    var templateFileNames=[];
+    
+    // array containing child node groups
+    let templateArr=[];
+    
+    // function used to read file content
+    async function readFileContent(file) {
+        return new Promise (function(resolve, reject) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                resolve(e.target.result)
+            };
+            reader.onerror = function() {
+                reject(e.target.error)
+            };
+            reader.readAsText(file);
+        });
+    }
+    
+    // function used to read multiple files
+    async function processFiles() {
+        for (var file of files) {
+            templateFileNames.push(file.name);
+            var content = await readFileContent(file);
+            templateArr.push(parseTemplate(content));
+        }
+    }
+
+    // run functions and only process data after files have been read
+    processFiles().then(function() {
+        // store file names and file contents in local storage
+        localStorage.setItem("childTemplateArray", JSON.stringify(templateArr));
+        // display the currently uploaded files to the page
+        document.getElementById('child-template-display').textContent = templateFileNames;
+    }).catch(function(error) {
+        console.error('Error processing files: ', error);
+    });
+}
+
+
 
 /* 
 * Function to run when master file is uploaded. Function saves the master file and 
@@ -22,8 +116,8 @@ var allowedDiff = 0.005;
 */
 function masterFileSelect(evt) {    
     var masterNodeGroup=[];
-    localStorage.clear();
-
+    
+    
     // Read file
     var file = evt.target.files[0];
     var reader = new FileReader();
@@ -35,7 +129,7 @@ function masterFileSelect(evt) {
         // Process input, build master node group and save to local storage
         await parseJSON(e.target.result, masterNodeGroup);
         localStorage.setItem("masterNodeGroup", JSON.stringify(masterNodeGroup))
-
+        
         // Save the master itself to retainer function
         masterJSON.setValue(e.target.result);
                 
@@ -81,7 +175,7 @@ function childFileSelect(evt) {
         for (var file of files) {
             childFilesNames.push(file.name);
             var content = await readFileContent(file);
-            await parseJSON(content, childNodeGroup);
+            await parseJSON(content, childNodeGroup, { child: true });
         }
     }
 
@@ -90,6 +184,7 @@ function childFileSelect(evt) {
         // store file names and file contents in local storage
         localStorage.setItem("childFilesNames", JSON.stringify(childFilesNames))
         localStorage.setItem("childNodeGroup", JSON.stringify(childNodeGroup));
+
         // display the currently uploaded files to the page
         document.getElementById('child-display').textContent = childFilesNames;
 
@@ -216,7 +311,7 @@ function displayMasterGraph() {
     })
     
     // output to page
-    const container = document.getElementById('master-graph-display');
+    const container = document.getElementById('unvisited-node-display');
     container.innerHTML='';
 
     let hoveredEdge = null;
@@ -230,6 +325,7 @@ function displayMasterGraph() {
             if (edge === hoveredEdge) res.color = "#cc0000";
             return res;
         },
+        allowInvalidContainer: true,
     });
     
     renderer.on("enterEdge", ({ edge }) => {
@@ -273,7 +369,7 @@ async function generateUnvisited() {
     // options: hiltonSearchGraph, hiltonMasterGraph, hotelSearchGraph
     
     const masterGraph = buildGraph(master, masterNodeGroup);
-    
+    localStorage.setItem('masterGraph', JSON.stringify(masterGraph));
     // var masterGraph = Graph.from(hotelSearchGraph) 
 
 
@@ -281,28 +377,40 @@ async function generateUnvisited() {
     // var notVisitedNodes=unvisitedSignIn
 
     var notVisitedNodes = await getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff, nodeMatchMap);
-    console.log(nodeMatchMap)
-    displayUnvisitedNodes(masterGraph, masterNodeGroup, notVisitedNodes)
+    
+    // Set the locally stored nodes to local storage
+    localStorage.setItem('notVisitedNodes', JSON.stringify(notVisitedNodes))
+
+    displayUnvisitedNodes();
 
 }
 
 function displayNodeMatches() {
-    
-    const imageContainer = document.querySelector('.unvisited-node-display');
+    // get notVisitedNode array from local storage
+    const notVisitedNodes = JSON.parse(localStorage.getItem('notVisitedNodes'));
+    // Get the container for displaying the node matches
+    const imageContainer = document.getElementById('unvisited-node-display');
     imageContainer.className='display-node-match';
     imageContainer.innerHTML = ''; // Clear previous content
     
-    console.log(nodeMatchMap)
+    // Ensure that nodeMatchMap is valid
     if (!nodeMatchMap) {
         alert('invalid nodes');
         return;
     }
-        
+    
     for (const [masterNode, matchingArray] of nodeMatchMap) {
-        
         // Create Div (row) to hold the master as well as the childnode
         const imageRowDiv = document.createElement('div');
-        imageRowDiv.className = 'temp'
+        
+        // Set the background color of the row to red if the master node is unvisited, green if it is visited
+        if (doesNodeIdExist(notVisitedNodes, masterNode.nodeID))
+            imageRowDiv.style.background = 'red';
+        else
+            imageRowDiv.style.background = 'green';
+
+
+        imageRowDiv.className = 'image-row'
         
         const buttonDiv = document.createElement('div');
         buttonDiv.className = 'button-div'
@@ -318,6 +426,8 @@ function displayNodeMatches() {
         setUnvisitedButton.textContent = "Unvisited";
         const setVisitedButton = document.createElement('button');
         setVisitedButton.textContent = "Visited";
+        setVisitedButton.addEventListener('click', () => setVisited(masterNode) );
+        setUnvisitedButton.addEventListener('click', () => setUnvisited(masterNode));
 
         buttonDiv.appendChild(setUnvisitedButton);
         buttonDiv.appendChild(setVisitedButton);
@@ -331,9 +441,7 @@ function displayNodeMatches() {
         imageRowDiv.appendChild(masterImageDiv);
 
         // add all of the matching child nodes
-        console.log(matchingArray)
         for (let childNode of matchingArray) {
-            console.log(childNode)
             // Create div for child
             const childDiv = document.createElement('div');
             childDiv.className = 'image-div'
@@ -347,24 +455,58 @@ function displayNodeMatches() {
             imageRowDiv.appendChild(childDiv)
         }
         imageContainer.appendChild(imageRowDiv)
-    }
+    }    
+}
 
-    
+/**
+ * Set node in notVisitedNodes array as visited
+ */
+function setVisited(node) {
+    const notVisitedNodes = JSON.parse(localStorage.getItem('notVisitedNodes'));
+    // check if node exists in notVisitedNodes array
+    const idx = getNodeIndex(notVisitedNodes, node);
+
+    // if the element exists in the array remove it
+    if (idx!=-1)
+        notVisitedNodes.splice(idx, 1);
+
+    localStorage.setItem('notVisitedNodes', JSON.stringify(notVisitedNodes));
+    displayNodeMatches();
+}
+/**
+ * Set node in notVisitedNodes array as unvisited
+ */
+function setUnvisited(node) {
+    const notVisitedNodes = JSON.parse(localStorage.getItem('notVisitedNodes'));
+
+    // check if node exists in notVisitedNodes array
+    const idx = getNodeIndex(notVisitedNodes, node);
+    if (idx!=-1)
+        return;
+    else
+        notVisitedNodes.push(node);
+
+    localStorage.setItem('notVisitedNodes', JSON.stringify(notVisitedNodes));
+    displayNodeMatches();
 }
 
 
-export { displayMasterGroup, displayChildGroup}
+export { displayMasterGroup, displayChildGroup }
 
 
 /* Functions to run on button press */
-// document.getElementById('generate-master').addEventListener('click', testFunction);
-document.getElementById('display-node-match').addEventListener('click', displayNodeMatches)
+
+
 document.getElementById('generate-coverage').addEventListener('click', generateUnvisited);
 document.getElementById('master-json').addEventListener('change', masterFileSelect);
 document.getElementById('child-json').addEventListener('change', childFileSelect);
+document.getElementById('master-template-json').addEventListener('change', masterTemplateFileSelect);
+document.getElementById('child-template-json').addEventListener('change', childTemplateFileSelect);
 
 document.getElementById('show-master-group').addEventListener('click', displayMasterGroup);
 document.getElementById('show-child-group').addEventListener('click', displayChildGroup);
+
+document.getElementById('generate-master').addEventListener('click', displayMasterGraph);
 
 document.getElementById('close-node-processing').addEventListener('click', ()=> document.getElementById('node-group-display').innerHTML='' );
 
@@ -396,4 +538,5 @@ document.getElementById('download-node-group').addEventListener('mouseup', downl
 
 document.getElementById('master-node-group').addEventListener('change', storeMasterNodeGroup);
 document.getElementById('child-node-group').addEventListener('change', storeChildNodeGroup);
-
+document.getElementById('display-node-match').addEventListener('click', displayNodeMatches)
+document.getElementById('unvisited-node-display').addEventListener('click', displayUnvisitedNodes)
