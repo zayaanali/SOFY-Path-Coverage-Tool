@@ -337,7 +337,8 @@ function buildGraph(masterJSON, nodeGroup) {
             // add representative node of the the next node and add a edge between the two nodes
             let nextNode = getRepresentativeNode(nodeGroup, masterJSON.scenarioGUID+'->'+scenario[i+1].actionIndex)
             newGraph.mergeNode(nextNode.nodeID, { type: "image", label: nextNode.actionID, image: nextNode.image, size: 10 });
-            newGraph.mergeEdge(curNode.nodeID, nextNode.nodeID);
+            if (!newGraph.hasEdge(nextNode.nodeID, curNode.nodeID))
+                newGraph.mergeEdge(curNode.nodeID, nextNode.nodeID);
         }
     }
     return newGraph

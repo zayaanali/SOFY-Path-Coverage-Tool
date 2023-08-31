@@ -292,8 +292,7 @@ function storeChildNodeGroup(evt) {
 */
 function displayMasterGraph() {    
 
-    var masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
-
+    let masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
     
     // Give nodes (x,y) positions in circular manner
     circular.assign(masterGraph, { scale: 10 });
@@ -311,8 +310,8 @@ function displayMasterGraph() {
     })
     
     // output to page
-    const container = document.getElementById('unvisited-node-display');
-    container.innerHTML='';
+    const container = document.getElementById('master-graph-display');
+    container.innerHTML='';  
 
     let hoveredEdge = null;
     const renderer = new Sigma(masterGraph, container, {
@@ -320,6 +319,7 @@ function displayMasterGraph() {
             image: getNodeProgramImage()
         },
         enableEdgeHoverEvents: "debounce",
+        enableEdgeClickEvents: true,
         edgeReducer(edge, data) {
             const res = { ...data };
             if (edge === hoveredEdge) res.color = "#cc0000";
@@ -327,7 +327,13 @@ function displayMasterGraph() {
         },
         allowInvalidContainer: true,
     });
-    
+    renderer.on("clickEdge", ({ edge }) => {
+        console.log("drop edge: ", edge)
+        masterGraph.dropEdge(edge);
+        localStorage.setItem('masterGraph', JSON.stringify(masterGraph));
+        renderer.refresh();
+    });
+
     renderer.on("enterEdge", ({ edge }) => {
         hoveredEdge = edge;
         renderer.refresh();
@@ -335,13 +341,13 @@ function displayMasterGraph() {
     renderer.on("leaveEdge", ({ edge }) => {
         hoveredEdge = null;
         renderer.refresh();
-    });
+    });    
 
     renderer.refresh();
 
 
 }
-
+// comments here
 
 /* 
 * Function to generate unvisited nodes, as well as find all the paths to unvisited nodes
@@ -360,7 +366,6 @@ async function generateUnvisited() {
     // other options: masterSearchGroup, hiltonMasterGroup, hotelSearchNodeGroup
     // const masterNodeGroup = hotelSearchNodeGroup
     const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
-    
     // const childNodeGroup = hiltonChildNoHotel;
     // options: childNoHotel, childNoSignIn, checkoutChildNodeGroup, hotelnosigninchild, hotelsigninchild
     const childNodeGroup = JSON.parse(localStorage.getItem("childNodeGroup"))

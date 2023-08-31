@@ -23,4 +23,6 @@ function doesNodeIdExist(nodeGroupArray, nodeIDToCheck) {
     return false;
 }
 
+
+
 export { isValidJSON, doesNodeIdExist }
