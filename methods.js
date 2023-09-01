@@ -1,7 +1,42 @@
-import { getScenario, masterJSON, imageDiff, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup, getRepresentativeNode, getNode } from './helpers.js';
+import { createPathJSON, masterJSON, imageDiff, addNode, removeEdge, updateCheckboxArray, getNodeIndex, removeSubNode, removeNodeGroup, getRepresentativeNode } from './helpers.js';
 import Graph, { DirectedGraph } from 'graphology';
 import { allSimplePaths } from 'graphology-simple-path';
-import { doesNodeIdExist, isValidJSON } from './tools.js';
+import { isValidJSON } from './tools.js';
+
+
+/**
+ * This function parses a single uploaded template and returns an object containing all information needing to be retained from
+ * the file. This function is used to parse the template and store it in local storage
+ * 
+ * @param {*} jsonStr - String containing template that will be parse
+ * @returns template representing object
+ */
+function parseTemplate(jsonStr) {
+    // Check if the JSON string is a valid JSON
+    if (!isValidJSON(jsonStr))
+        console.error("Invalid JSON");
+
+    // parse the JSON to get it from string to JSON object    
+    let jsonArr = JSON.parse(jsonStr);
+
+    // Create the object representing the template
+    let nodeObject = {
+        scenarioGUID: jsonArr.scenarioGUID,
+        scenario: []
+    }
+    
+    // Iterate through each node in the scenario and add it to an array
+    for (let node of jsonArr.scenario) {
+        // fill node information in object
+        let scenarioObject = {
+            actionIndex: node.actionIndex,
+            snapshotLocation: node.snapshotLocation
+        }
+        nodeObject.scenario.push(scenarioObject); 
+    }
+    // return object containing all template file information
+    return nodeObject;
+}
 
 
 /*
@@ -23,14 +58,14 @@ async function parseJSON(jsonStr, nodeGroups, options) {
         console.error("Invalid JSON");
     
     // parse the JSON to get it from string to JSON object    
-    var jsonArr = JSON.parse(jsonStr);
+    let jsonArr = JSON.parse(jsonStr);
 
     // Get number of nodes in the JSON
     const arrLength = jsonArr.scenario.length;
     let processedNodes= new Set();
 
     // Building concise node array (placing identical screen as subnodes). Add each node in JSON array
-    for (var i=0; i<arrLength;i++) {
+    for (let i=0; i<arrLength;i++) {
         // if the action is template, insert node from template
         if (jsonArr.scenario[i].action == 'TEMPLATE') {
             // make sure template counter not out of bounds
@@ -54,40 +89,6 @@ async function parseJSON(jsonStr, nodeGroups, options) {
     }
 }
 
-/**
- * This function parses template from JSON and returns an object representing the template
- * 
- * @param {*} jsonStr - String containing template that will be parse
- * @returns template representing object
- */
-function parseTemplate(jsonStr) {
-    // Check if the JSON string is a valid JSON
-    if (!isValidJSON(jsonStr))
-        console.error("Invalid JSON");
-
-    // parse the JSON to get it from string to JSON object    
-    var jsonArr = JSON.parse(jsonStr);
-
-    // Create the object representing the template
-    let nodeObject = {
-        scenarioGUID: jsonArr.scenarioGUID,
-        scenario: []
-    }
-    
-    // Building concise node array (placing identical screen as subnodes). Add each node in JSON array
-    for (let node of jsonArr.scenario) {
-        // get information to fill scenario in the template
-        let scenarioObject = {
-            actionIndex: node.actionIndex,
-            snapshotLocation: node.snapshotLocation
-        }
-        nodeObject.scenario.push(scenarioObject); 
-    }
-
-    return nodeObject;
-}
-
-
 
 /*
 * Given a single node group (representative node + subnodes) build a div with images of representative
@@ -105,7 +106,7 @@ function getNodeGroupRow(node, checkedItems) {
     // create text signifying node group
     const txt = document.createElement('p');
     txt.className = 'group-text'
-    txt.textContent = "Node Group";
+    txt.textContent = "Node Group " + node.actionID;
     
     // Create image and checkbox elements for representive node
     const nodeImage = document.createElement('img');
@@ -122,7 +123,6 @@ function getNodeGroupRow(node, checkedItems) {
     nodeDiv.appendChild(nodeImage)
     nodeDiv.appendChild(checkbox)
     
-
     // Insert the node div into the container
     nodeGroupDiv.appendChild(nodeDiv)
     
@@ -131,7 +131,6 @@ function getNodeGroupRow(node, checkedItems) {
         // Create div to contain image and checkbox
         const subNodeDiv = document.createElement('div');
         subNodeDiv.className='image-div'
-        
         
         const txt2 = document.createElement('p');
         txt2.className = 'group-text'
@@ -152,7 +151,6 @@ function getNodeGroupRow(node, checkedItems) {
         // insert image/checkbox to row
         nodeGroupDiv.appendChild(subNodeDiv)
     }
-
     return nodeGroupDiv
 }
 
@@ -320,7 +318,12 @@ function mergeNodeGroups(checkedItems, options) {
 }
 
 /**
- * Builds graph given masterJSON and node Groups. 
+ * Builds graph given masterJSON and nodeGroup. Edges are placed between node in the order they appear in the scenario
+ * @param {*} masterJSON - JSON object of master template
+ * @param {*} nodeGroup - Array of node groups (representative node + subnodes)
+ * @returns Graphology graph object
+ * 
+ * Edges are single directional - bidirectional edges are not allowed
  */
 function buildGraph(masterJSON, nodeGroup) {
     const scenario = masterJSON.scenario
@@ -374,16 +377,14 @@ async function getNotVisitedNodes(masterNodeGroup, childNodeGroup, maxDiff, node
     return toVisitArr.filter((item, index) => !toRemove.includes(index));
 
 }
+
 /*
-* Function takes in a master graph as wall as target node and returns all paths to target node
+ * Function takes in a master graph as wall as target node and returns all paths to target node using allSimplePaths 
+ * Graphology function
 */
 function getNotVisitedPaths(masterGraph, targetNode) {
-    console.log(masterGraph)
     // Get list of nodes in the master
-    
     const masterNodes = masterGraph.nodes();
-    console.log(masterNodes)
-
     // return all simple paths
     return allSimplePaths(masterGraph, masterNodes[0], targetNode)
     
@@ -394,19 +395,23 @@ function getNotVisitedPaths(masterGraph, targetNode) {
  * on the page with buttons for each node
  */
 function displayUnvisitedNodes() {
+    
+    // Get master graph, node group, and unvisited nodes from local storage
     const masterGraph = Graph.from(JSON.parse(localStorage.getItem("masterGraph")));
     const masterNodeGroup = JSON.parse(localStorage.getItem('masterNodeGroup'));
     const notVisitedNodes = JSON.parse(localStorage.getItem('notVisitedNodes'));
-
-    console.log(masterGraph, masterNodeGroup, notVisitedNodes)
     
     // Array to hold all checked items
-    var checkedItems=[];
+    let checkedItems=[];
+
+    // Clear container for unvisited nodes
+    const container2 = document.getElementById('unvisited-node-match');
+    container2.innerHTML = ''; // Clear previous content
 
     // Container for all unvisited nodes
     const imageContainer = document.getElementById('unvisited-node-display');
     imageContainer.innerHTML = ''; // Clear previous content
-    
+
     // For each unvisited node
     for (const node of notVisitedNodes) {
         // Add each node div to the container
@@ -456,57 +461,26 @@ function displayUnvisitedNodes() {
         imageContainer.innerHTML = ''; // Clear previous content
         displayImages(); // Display the updated images
     }
-
-    function mergeNodes() {
-        let baseNode = checkedItems[0].nodeID;
-        
-        // Iterate through each of the check
-        for (let i=1; i<checkedItems.length; i++) {
-            
-            masterGraph.forEachInEdge(checkedItems[i].nodeID,
-                (edge, attributes, source, target, sourceAttributes, targetAttributes) => {
-                    masterGraph.mergeEdge(source, baseNode)
-
-            });
-            
-            masterGraph.forEachOutEdge(checkedItems[i].nodeID,
-                (edge, attributes, source, target, sourceAttributes, targetAttributes) => {
-                    masterGraph.mergeEdge(baseNode, target)
-            });
-            
-            masterGraph.dropNode(checkedItems[i].nodeID)
-            removeImage(checkedItems[i].nodeID)
-            console.log(notVisitedNodes)
-        }
-        checkedItems=[]
-
-    }
-    document.getElementById('merge-nodes').addEventListener('click', mergeNodes)    
 }
 
 /**
- * This function takes and displays all of the paths that include the edge
+ * This function takes in a masterGraph, masterNodeGroup and target node
+ * Display buttons for each path to the target node, when clicked will display the path
  */
 function displayPathButtons(masterGraph, masterNodeGroup, target) {
-    
-    
-    const masterGraphCopy = JSON.parse(JSON.stringify(masterGraph));
-    console.log(masterGraph, masterNodeGroup, target)
-    console.log(masterGraphCopy)
-    
+
+    // Get all not visited paths to target node
     const notVisitedPaths = getNotVisitedPaths(masterGraph, target, { maxDepth: 20 });
 
-    
     // Get the button container element
-    var container = document.getElementById("paths-selection");
+    const container = document.getElementById("paths-selection");
     container.innerHTML='';
 
     // Loop through the paths array
-    for (var i = 0; i < notVisitedPaths.length; i++) {
-        var path = notVisitedPaths[i];
-
+    for (let i = 0; i < notVisitedPaths.length; i++) {
+        let path = notVisitedPaths[i];
         // Create a button for the current path
-        var pathButton = document.createElement("button");
+        let pathButton = document.createElement("button");
         pathButton.textContent = 'Path '+(i+1); // Display the path name
 
         // Add an event listener to the path button
@@ -517,18 +491,28 @@ function displayPathButtons(masterGraph, masterNodeGroup, target) {
 
 }
 
-
+/**
+ * Given path, displays path on page
+ * Path given in array of nodeIDs so need to get the nodes from masterNodeGroup first
+ * @param {*} masterGraph 
+ * @param {*} masterNodeGroup 
+ * @param {*} path 
+ */
 function displayPath(masterGraph, masterNodeGroup, path) {
     
     let pathArr=[];
+    
+    // Create path Arr consisting of node objects instead of nodeIDs
     for (let id of path) {
         let node = masterNodeGroup.find(node => node.nodeID == id);
         pathArr.push(node);
     }
     
+    // Container for displaying paths
     const imageContainer = document.getElementById('paths-display');
     imageContainer.innerHTML='';
     
+    // For each node in the path
     for (let i=0; i<pathArr.length; i++) {
         // create div to hold both image and buttons
         const imageDiv = document.createElement('div');
@@ -553,17 +537,24 @@ function displayPath(masterGraph, masterNodeGroup, path) {
         removeRight.className = 'remove-edge-button'
         removeRight.addEventListener('click', () => removeEdge(masterGraph, pathArr[i], pathArr[i+1]) );
 
+        // create text signifying node group id
+        const txt = document.createElement('p');
+        txt.className = 'group-text'
+        txt.textContent = "Node Group " + pathArr[i].actionID;
+
         // Append buttons to button div
         buttonDiv.appendChild(removeLeft);
         buttonDiv.appendChild(removeRight);
 
         // append elements to imagediv
+        imageDiv.appendChild(txt);
         imageDiv.appendChild(imgElement);
         imageDiv.appendChild(buttonDiv);
 
         imageContainer.appendChild(imageDiv);
     }
 
+    // Create button to download path
     let buttonContainer = document.getElementById('path-download');
     buttonContainer.innerHTML='';
     let button = document.createElement('button');
@@ -573,63 +564,21 @@ function displayPath(masterGraph, masterNodeGroup, path) {
 
 }
 
-
+/**
+ * Given a path (array of nodeIDs) create a SOFY JSON for running the path in SOFY engine
+ * @param {*} path 
+ */
 function downloadPath(path) {
-    console.log(path)
     // Get master JSON
     const master = JSON.parse(masterJSON.getValue());
     
-    var newJSON = createPathJSON(master, path);
+    // Get path JSON
+    const newJSON = createPathJSON(master, path);
     
+    // Log to console (can download/do whatever with it here)
     console.log(newJSON)
 }
 
 
-    
-
-
-
-/*
- * creates a JSON for a corresponding path to be able to run a test
- */
-function createPathJSON(master, path) {
-    
-    // create a deep copy of the master to modify
-    var newJSON = JSON.parse(JSON.stringify(master));
-    
-    // set the scenario to empty
-    newJSON.scenario=[];
-
-    // for each node on the path, add the node to the scenario
-    for (var node of path)
-        newJSON.scenario.push(getScenario(master, node));
-    
-    return newJSON
-}
-
-
-/*
- * Ignore - this function is used for testing purposes
- */
-async function testFunction() {
-    
-    
-    
-    console.log('here')
-    
-    // const img1='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688008832.png'
-    // const img2='http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5Ca9e36657-5634-4db8-addf-2015342cf0b5%5Cmaster-test1%5CImages%5C1691688011753.png'
-
-
-    // //2.5% difference
-    // let diff = await imageDiff(img1, img2)
-    // console.log(diff)    
-
-
-}
-
-
-
-
-export { buildGraph, getNotVisitedPaths, testFunction, parseJSON, createPathJSON, getNotVisitedNodes, makeNodeGroup, makeSubNode };
+export { buildGraph, getNotVisitedPaths, parseJSON, createPathJSON, getNotVisitedNodes, makeNodeGroup, makeSubNode };
 export { displayPath, displayUnvisitedNodes, getNodeGroupRow, mergeNodeGroups, parseTemplate }

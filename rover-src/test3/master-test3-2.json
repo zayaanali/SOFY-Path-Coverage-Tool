@@ -1,0 +1,1070 @@
+{
+    "scenarioVersion": "V00002",
+    "scenarioGUID": "3f8bb0be-98e9-400f-b94b-93c3110f9ec8",
+    "scenarioName": "master-test3",
+    "scenario": [
+        {
+            "actionIndex": 0,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817140832.png"
+        },
+        {
+            "actionIndex": 1,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817141201.png"
+        },
+        {
+            "actionIndex": 2,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817141527.png"
+        },
+        {
+            "actionIndex": 3,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817141703.png"
+        },
+        {
+            "actionIndex": 4,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817141871.png"
+        },
+        {
+            "actionIndex": 5,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817142041.png"
+        },
+        {
+            "actionIndex": 6,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817142205.png"
+        },
+        {
+            "actionIndex": 7,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817142388.png"
+        },
+        {
+            "actionIndex": 8,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817142574.png"
+        },
+        {
+            "actionIndex": 9,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817142724.png"
+        },
+        {
+            "actionIndex": 10,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817142874.png"
+        },
+        {
+            "actionIndex": 11,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817143023.png"
+        },
+        {
+            "actionIndex": 12,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817143186.png"
+        },
+        {
+            "actionIndex": 13,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817143345.png"
+        },
+        {
+            "actionIndex": 14,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817143505.png"
+        },
+        {
+            "actionIndex": 15,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817143711.png"
+        },
+        {
+            "actionIndex": 16,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817143862.png"
+        },
+        {
+            "actionIndex": 17,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C6a4d698c-5283-482e-8068-3e32ef97af33%5Csignin-dropin-onetime(2)%5CImages%5C1692817144021.png"
+        },
+        {
+            "actionIndex": 18,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808743127.png"
+        },
+        {
+            "actionIndex": 19,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808743476.png"
+        },
+        {
+            "actionIndex": 20,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808743627.png"
+        },
+        {
+            "actionIndex": 21,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808743746.png"
+        },
+        {
+            "actionIndex": 22,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808743915.png"
+        },
+        {
+            "actionIndex": 23,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808744065.png"
+        },
+        {
+            "actionIndex": 24,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808744260.png"
+        },
+        {
+            "actionIndex": 25,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808744415.png"
+        },
+        {
+            "actionIndex": 26,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808744576.png"
+        },
+        {
+            "actionIndex": 27,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808744747.png"
+        },
+        {
+            "actionIndex": 28,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808744895.png"
+        },
+        {
+            "actionIndex": 29,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808745077.png"
+        },
+        {
+            "actionIndex": 30,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808745300.png"
+        },
+        {
+            "actionIndex": 31,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808745496.png"
+        },
+        {
+            "actionIndex": 32,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808745692.png"
+        },
+        {
+            "actionIndex": 33,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808745944.png"
+        },
+        {
+            "actionIndex": 34,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808746142.png"
+        },
+        {
+            "actionIndex": 35,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808746335.png"
+        },
+        {
+            "actionIndex": 36,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808746554.png"
+        },
+        {
+            "actionIndex": 37,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808746732.png"
+        },
+        {
+            "actionIndex": 38,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-boarding%5CImages%5C1692808746884.png"
+        },
+        {
+            "actionIndex": 39,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811521414.png"
+        },
+        {
+            "actionIndex": 40,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811521872.png"
+        },
+        {
+            "actionIndex": 41,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811521995.png"
+        },
+        {
+            "actionIndex": 42,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811522156.png"
+        },
+        {
+            "actionIndex": 43,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811522312.png"
+        },
+        {
+            "actionIndex": 44,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811522473.png"
+        },
+        {
+            "actionIndex": 45,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811522632.png"
+        },
+        {
+            "actionIndex": 46,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811522787.png"
+        },
+        {
+            "actionIndex": 47,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811522946.png"
+        },
+        {
+            "actionIndex": 48,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811523105.png"
+        },
+        {
+            "actionIndex": 49,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811523263.png"
+        },
+        {
+            "actionIndex": 50,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811523414.png"
+        },
+        {
+            "actionIndex": 51,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811523577.png"
+        },
+        {
+            "actionIndex": 52,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811523745.png"
+        },
+        {
+            "actionIndex": 53,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811523903.png"
+        },
+        {
+            "actionIndex": 54,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811524089.png"
+        },
+        {
+            "actionIndex": 55,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811524250.png"
+        },
+        {
+            "actionIndex": 56,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811524412.png"
+        },
+        {
+            "actionIndex": 57,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811524589.png"
+        },
+        {
+            "actionIndex": 58,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811524755.png"
+        },
+        {
+            "actionIndex": 59,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811524902.png"
+        },
+        {
+            "actionIndex": 60,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Ccreate-pet%5CImages%5C1692811525067.png"
+        },
+        {
+            "actionIndex": 61,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812914814.png"
+        },
+        {
+            "actionIndex": 62,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812915136.png"
+        },
+        {
+            "actionIndex": 63,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812915321.png"
+        },
+        {
+            "actionIndex": 64,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812915514.png"
+        },
+        {
+            "actionIndex": 65,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812915704.png"
+        },
+        {
+            "actionIndex": 66,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812915840.png"
+        },
+        {
+            "actionIndex": 67,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812915975.png"
+        },
+        {
+            "actionIndex": 68,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812916163.png"
+        },
+        {
+            "actionIndex": 69,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812916321.png"
+        },
+        {
+            "actionIndex": 70,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812916502.png"
+        },
+        {
+            "actionIndex": 71,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812916673.png"
+        },
+        {
+            "actionIndex": 72,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812916847.png"
+        },
+        {
+            "actionIndex": 73,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812917017.png"
+        },
+        {
+            "actionIndex": 74,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812917208.png"
+        },
+        {
+            "actionIndex": 75,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812917386.png"
+        },
+        {
+            "actionIndex": 76,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812917562.png"
+        },
+        {
+            "actionIndex": 77,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812917741.png"
+        },
+        {
+            "actionIndex": 78,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812917919.png"
+        },
+        {
+            "actionIndex": 79,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812918111.png"
+        },
+        {
+            "actionIndex": 80,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812918297.png"
+        },
+        {
+            "actionIndex": 81,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812918484.png"
+        },
+        {
+            "actionIndex": 82,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812918663.png"
+        },
+        {
+            "actionIndex": 83,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812918854.png"
+        },
+        {
+            "actionIndex": 84,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812919048.png"
+        },
+        {
+            "actionIndex": 85,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812919263.png"
+        },
+        {
+            "actionIndex": 86,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812919478.png"
+        },
+        {
+            "actionIndex": 87,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812919677.png"
+        },
+        {
+            "actionIndex": 88,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812919874.png"
+        },
+        {
+            "actionIndex": 89,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812920082.png"
+        },
+        {
+            "actionIndex": 90,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5CAPI-Messages-WIFI-Toggle-Checkout%5CImages%5C1692812920298.png"
+        },
+        {
+            "actionIndex": 91,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811351666.png"
+        },
+        {
+            "actionIndex": 92,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811351977.png"
+        },
+        {
+            "actionIndex": 93,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811352145.png"
+        },
+        {
+            "actionIndex": 94,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811352314.png"
+        },
+        {
+            "actionIndex": 95,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811352484.png"
+        },
+        {
+            "actionIndex": 96,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811352654.png"
+        },
+        {
+            "actionIndex": 97,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811352825.png"
+        },
+        {
+            "actionIndex": 98,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353013.png"
+        },
+        {
+            "actionIndex": 99,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353153.png"
+        },
+        {
+            "actionIndex": 100,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353303.png"
+        },
+        {
+            "actionIndex": 101,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353456.png"
+        },
+        {
+            "actionIndex": 102,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353595.png"
+        },
+        {
+            "actionIndex": 103,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353756.png"
+        },
+        {
+            "actionIndex": 104,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353877.png"
+        },
+        {
+            "actionIndex": 105,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811353995.png"
+        },
+        {
+            "actionIndex": 106,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811354152.png"
+        },
+        {
+            "actionIndex": 107,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811354289.png"
+        },
+        {
+            "actionIndex": 108,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811354459.png"
+        },
+        {
+            "actionIndex": 109,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811354659.png"
+        },
+        {
+            "actionIndex": 110,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811354843.png"
+        },
+        {
+            "actionIndex": 111,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811355008.png"
+        },
+        {
+            "actionIndex": 112,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811355187.png"
+        },
+        {
+            "actionIndex": 113,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811355359.png"
+        },
+        {
+            "actionIndex": 114,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811355569.png"
+        },
+        {
+            "actionIndex": 115,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811355741.png"
+        },
+        {
+            "actionIndex": 116,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-checkout%5CImages%5C1692811355883.png"
+        },
+        {
+            "actionIndex": 117,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811191604.png"
+        },
+        {
+            "actionIndex": 118,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811191933.png"
+        },
+        {
+            "actionIndex": 119,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811192088.png"
+        },
+        {
+            "actionIndex": 120,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811192219.png"
+        },
+        {
+            "actionIndex": 121,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811192377.png"
+        },
+        {
+            "actionIndex": 122,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811192540.png"
+        },
+        {
+            "actionIndex": 123,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811192741.png"
+        },
+        {
+            "actionIndex": 124,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811192899.png"
+        },
+        {
+            "actionIndex": 125,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811193061.png"
+        },
+        {
+            "actionIndex": 126,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811193214.png"
+        },
+        {
+            "actionIndex": 127,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811193357.png"
+        },
+        {
+            "actionIndex": 128,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811193523.png"
+        },
+        {
+            "actionIndex": 129,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811193726.png"
+        },
+        {
+            "actionIndex": 130,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811193917.png"
+        },
+        {
+            "actionIndex": 131,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811194111.png"
+        },
+        {
+            "actionIndex": 132,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811194290.png"
+        },
+        {
+            "actionIndex": 133,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811194467.png"
+        },
+        {
+            "actionIndex": 134,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811194649.png"
+        },
+        {
+            "actionIndex": 135,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811194828.png"
+        },
+        {
+            "actionIndex": 136,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811195010.png"
+        },
+        {
+            "actionIndex": 137,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811195175.png"
+        },
+        {
+            "actionIndex": 138,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811195347.png"
+        },
+        {
+            "actionIndex": 139,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-checkout%5CImages%5C1692811195532.png"
+        },
+        {
+            "actionIndex": 140,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignout%5CImages%5C1692810883729.png"
+        },
+        {
+            "actionIndex": 141,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignout%5CImages%5C1692810884226.png"
+        },
+        {
+            "actionIndex": 142,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignout%5CImages%5C1692810884399.png"
+        },
+        {
+            "actionIndex": 143,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignout%5CImages%5C1692810884595.png"
+        },
+        {
+            "actionIndex": 144,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810807129.png"
+        },
+        {
+            "actionIndex": 145,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810807454.png"
+        },
+        {
+            "actionIndex": 146,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810807630.png"
+        },
+        {
+            "actionIndex": 147,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810807799.png"
+        },
+        {
+            "actionIndex": 148,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810807973.png"
+        },
+        {
+            "actionIndex": 149,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810808144.png"
+        },
+        {
+            "actionIndex": 150,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin%5CImages%5C1692810808320.png"
+        },
+        {
+            "actionIndex": 151,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810728392.png"
+        },
+        {
+            "actionIndex": 152,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810728704.png"
+        },
+        {
+            "actionIndex": 153,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810728850.png"
+        },
+        {
+            "actionIndex": 154,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810728970.png"
+        },
+        {
+            "actionIndex": 155,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810729125.png"
+        },
+        {
+            "actionIndex": 156,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810729273.png"
+        },
+        {
+            "actionIndex": 157,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810729458.png"
+        },
+        {
+            "actionIndex": 158,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810729619.png"
+        },
+        {
+            "actionIndex": 159,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810729786.png"
+        },
+        {
+            "actionIndex": 160,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810729952.png"
+        },
+        {
+            "actionIndex": 161,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810730119.png"
+        },
+        {
+            "actionIndex": 162,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810730270.png"
+        },
+        {
+            "actionIndex": 163,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810730424.png"
+        },
+        {
+            "actionIndex": 164,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810730595.png"
+        },
+        {
+            "actionIndex": 165,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810730747.png"
+        },
+        {
+            "actionIndex": 166,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810730957.png"
+        },
+        {
+            "actionIndex": 167,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810731220.png"
+        },
+        {
+            "actionIndex": 168,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810731430.png"
+        },
+        {
+            "actionIndex": 169,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810731584.png"
+        },
+        {
+            "actionIndex": 170,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Cnosignin-dropin-weekly%5CImages%5C1692810731757.png"
+        },
+        {
+            "actionIndex": 171,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810137118.png"
+        },
+        {
+            "actionIndex": 172,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810137445.png"
+        },
+        {
+            "actionIndex": 173,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810137627.png"
+        },
+        {
+            "actionIndex": 174,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810137806.png"
+        },
+        {
+            "actionIndex": 175,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810137974.png"
+        },
+        {
+            "actionIndex": 176,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810138142.png"
+        },
+        {
+            "actionIndex": 177,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810138312.png"
+        },
+        {
+            "actionIndex": 178,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810138502.png"
+        },
+        {
+            "actionIndex": 179,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810138670.png"
+        },
+        {
+            "actionIndex": 180,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810138855.png"
+        },
+        {
+            "actionIndex": 181,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810139032.png"
+        },
+        {
+            "actionIndex": 182,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810139211.png"
+        },
+        {
+            "actionIndex": 183,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810139375.png"
+        },
+        {
+            "actionIndex": 184,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810139536.png"
+        },
+        {
+            "actionIndex": 185,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810139703.png"
+        },
+        {
+            "actionIndex": 186,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810139872.png"
+        },
+        {
+            "actionIndex": 187,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810140021.png"
+        },
+        {
+            "actionIndex": 188,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810140221.png"
+        },
+        {
+            "actionIndex": 189,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810140484.png"
+        },
+        {
+            "actionIndex": 190,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810140685.png"
+        },
+        {
+            "actionIndex": 191,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810140840.png"
+        },
+        {
+            "actionIndex": 192,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-dropin-weekly%5CImages%5C1692810141013.png"
+        },
+        {
+            "actionIndex": 193,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809312523.png"
+        },
+        {
+            "actionIndex": 194,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809312846.png"
+        },
+        {
+            "actionIndex": 195,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313022.png"
+        },
+        {
+            "actionIndex": 196,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313200.png"
+        },
+        {
+            "actionIndex": 197,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313385.png"
+        },
+        {
+            "actionIndex": 198,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313560.png"
+        },
+        {
+            "actionIndex": 199,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313739.png"
+        },
+        {
+            "actionIndex": 200,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313932.png"
+        },
+        {
+            "actionIndex": 201,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314137.png"
+        },
+        {
+            "actionIndex": 202,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314331.png"
+        },
+        {
+            "actionIndex": 203,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314532.png"
+        },
+        {
+            "actionIndex": 204,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314726.png"
+        },
+        {
+            "actionIndex": 205,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314921.png"
+        },
+        {
+            "actionIndex": 206,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315067.png"
+        },
+        {
+            "actionIndex": 207,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315233.png"
+        },
+        {
+            "actionIndex": 208,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315360.png"
+        },
+        {
+            "actionIndex": 209,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315484.png"
+        },
+        {
+            "actionIndex": 210,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315644.png"
+        },
+        {
+            "actionIndex": 211,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315792.png"
+        },
+        {
+            "actionIndex": 212,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315956.png"
+        },
+        {
+            "actionIndex": 213,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809316114.png"
+        },
+        {
+            "actionIndex": 214,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809316262.png"
+        },
+        {
+            "actionIndex": 215,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318564.png"
+        },
+        {
+            "actionIndex": 216,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318767.png"
+        },
+        {
+            "actionIndex": 217,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318941.png"
+        },
+        {
+            "actionIndex": 218,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809319086.png"
+        },
+        {
+            "actionIndex": 219,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809312523.png"
+        },
+        {
+            "actionIndex": 220,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809312846.png"
+        },
+        {
+            "actionIndex": 221,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313022.png"
+        },
+        {
+            "actionIndex": 222,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313200.png"
+        },
+        {
+            "actionIndex": 223,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313385.png"
+        },
+        {
+            "actionIndex": 224,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313560.png"
+        },
+        {
+            "actionIndex": 225,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313739.png"
+        },
+        {
+            "actionIndex": 226,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809313932.png"
+        },
+        {
+            "actionIndex": 227,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314137.png"
+        },
+        {
+            "actionIndex": 228,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314331.png"
+        },
+        {
+            "actionIndex": 229,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314532.png"
+        },
+        {
+            "actionIndex": 230,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314726.png"
+        },
+        {
+            "actionIndex": 231,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809314921.png"
+        },
+        {
+            "actionIndex": 232,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315067.png"
+        },
+        {
+            "actionIndex": 233,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315233.png"
+        },
+        {
+            "actionIndex": 234,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315360.png"
+        },
+        {
+            "actionIndex": 235,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315484.png"
+        },
+        {
+            "actionIndex": 236,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315644.png"
+        },
+        {
+            "actionIndex": 237,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315792.png"
+        },
+        {
+            "actionIndex": 238,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809315956.png"
+        },
+        {
+            "actionIndex": 239,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809316114.png"
+        },
+        {
+            "actionIndex": 240,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809316262.png"
+        },
+        {
+            "actionIndex": 241,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809316435.png"
+        },
+        {
+            "actionIndex": 242,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809316643.png"
+        },
+        {
+            "actionIndex": 243,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809316837.png"
+        },
+        {
+            "actionIndex": 244,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809317050.png"
+        },
+        {
+            "actionIndex": 245,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809317317.png"
+        },
+        {
+            "actionIndex": 246,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809317571.png"
+        },
+        {
+            "actionIndex": 247,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809317743.png"
+        },
+        {
+            "actionIndex": 248,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318000.png"
+        },
+        {
+            "actionIndex": 249,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318174.png"
+        },
+        {
+            "actionIndex": 250,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318377.png"
+        },
+        {
+            "actionIndex": 251,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318564.png"
+        },
+        {
+            "actionIndex": 252,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318767.png"
+        },
+        {
+            "actionIndex": 253,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809318941.png"
+        },
+        {
+            "actionIndex": 254,
+            "snapshotLocation": "http://portalvhdsld5gs9t7pkkvf.blob.core.windows.net/qbot/quantyzdandroidruns/Scenarios%5Ccom.rover.android%5C8b631385-3d14-4a73-b9f8-29e8e0e46cb1%5Csignin-boarding-full%5CImages%5C1692809319086.png"
+        }
+    ],
+    "generatedBySDK": false,
+    "appInfo": {
+        "appIconFile": "C:\\Users\\SEAPRO~1\\AppData\\Local\\Temp\\1692816423953-0\\58de767f-8598-49e4-88b1-3d6ef25dc6a1..png",
+        "packageGuid": "15C26E90-1812-41C4-B9F8-A8052E28BF8B",
+        "appName": "Rover",
+        "minSDK": "26",
+        "compileSDK": "33",
+        "build": "23.0712.00",
+        "appFile": "C:\\Users\\SEAPRO~1\\AppData\\Local\\Temp\\1692816423953-0\\SofyRec\\Applications\\null\\ANDROID\\db02a305-0493-4f80-9fde-5d15deba8ced.apk",
+        "appVersion": "168900499",
+        "pkgName": "com.rover.android",
+        "maxSDK": null
+    },
+    "threshold": {
+        "cpuPercentage": -1,
+        "memoryBytes": -1,
+        "loadTimeMS": -1,
+        "networkTrafficBytes": -1,
+        "powerUtilizedAmpere": -1
+    },
+    "testCaseVariables": [],
+    "apiStepVariables": [],
+    "disableAutoDialogHandler": true,
+    "device": {
+        "platform": "ANDROID",
+        "deviceID": "RFCN104M0SP",
+        "vmAppPort": 61975,
+        "deviceAPILevel": "33",
+        "deviceResolution": "1080x2400",
+        "orientationServerPort": 61978,
+        "deviceManufacturer": "SAMSUNG",
+        "communicationAgentPort": 61980,
+        "imageServerPort": 61976,
+        "deviceBoard": "kona",
+        "deviceModel": "SM-G981U1",
+        "deviceCPU": "arm64-v8a",
+        "deviceType": "PHYSICAL",
+        "deviceRAM": "11 GB",
+        "deviceName": "samsung SM-G981U1",
+        "touchPort": 61977,
+        "deviceOSBuild": "13",
+        "deviceAPICode": null
+    }
+}

@@ -11,8 +11,9 @@
 </head>
 
 <body>
-        
+
         <h1 class="title">SOFY Graph Coverage Tool</h1>
+        
         <div class="template-container">
             <div class="child-request">
                 <h3>Upload Master Template(s)</h3>                
@@ -31,6 +32,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="request-container">    
             <div class="master-request">
                 <h3>Please upload your master file</h3>
@@ -64,7 +66,6 @@
                 <button id="make-node-group">Make Node Group</button>
                 <button id="make-subnode">Make Sub Node</button>
                 <button id="merge-node-groups">Merge Node Groups</button>
-                <button id="merge-nodes">Merge Nodes</button>
             </div>  
         </div>
         
@@ -93,15 +94,13 @@
 
         
         <div class="unvisited-node-container">
-            
             <h4 class="center">Unvisited Nodes</h4>
             <div>
                 <button id="display-node-match">Display Node Matches</button>
                 <button id="display-unvisited"> Display Unvisited Nodes</button>
             </div>
-
-            <div id="unvisited-node-display"></div>            
-            
+            <div id="unvisited-node-display"></div>       
+            <div id="unvisited-node-match"></div>            
         </div>
     
         <div class="paths-container">
@@ -111,10 +110,6 @@
             <div id="path-download"></div>
         </div>
         
-        
-        
-        
-
         <script src="methods.js" type="module"></script>
         <script src="main.js" type="module"></script>
 
